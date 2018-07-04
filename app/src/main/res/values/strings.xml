@@ -1,0 +1,89 @@
+<resources>
+    <string name="app_name">US National Park Guide</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="NPSapiKey">x3KgSjbtohfsZJa5IZu8cSrQb7tAqH14mlkqtt1I</string>
+    <string name="OWMapiKey">89e0382eaf47ee925e53bc1c8c2b63f2</string>
+    <string name="fields">addresses,operatingHours,contacts,images,entranceFees,entrancePasses</string>
+    <string name="units">imperial</string>
+    <string name="title_item_list">Items</string>
+    <string name="title_item_detail">Item Detail</string>
+    <string name="state_prompt">Choose a state</string>
+    <string name="info">Info</string>
+    <string name="weather">Weather</string>
+    <string name="trails">Trails</string>
+    <string name="campgrounds">Campgrounds</string>
+    <string name="alerts">Alerts</string>
+    <string name="NA">NA</string>
+    <string name="sunrise">Sunrise</string>
+    <string name="sunset">Sunset</string>
+    <string name="wind">Wind</string>
+    <string name="humidity">Humidity</string>
+    <string name="temp_min">Min Temp</string>
+    <string name="temp_max">Max Temp</string>
+
+
+
+    <string-array name="state_arrays">
+        <item>AL</item>
+        <item>AK</item>
+        <item>AZ</item>
+        <item>AR</item>
+        <item>CA</item>
+        <item>CO</item>
+        <item>CT</item>
+        <item>DE</item>
+        <item>FL</item>
+        <item>GA</item>
+        <item>HI</item>
+        <item>ID</item>
+        <item>IL</item>
+        <item>IN</item>
+        <item>IA</item>
+        <item>KS</item>
+        <item>KY</item>
+        <item>LA</item>
+        <item>ME</item>
+        <item>MD</item>
+        <item>MA</item>
+        <item>MI</item>
+        <item>MN</item>
+        <item>MS</item>
+        <item>MO</item>
+        <item>MT</item>
+        <item>NE</item>
+        <item>NV</item>
+        <item>NH</item>
+        <item>NJ</item>
+        <item>NM</item>
+        <item>NY</item>
+        <item>NC</item>
+        <item>ND</item>
+        <item>OH</item>
+        <item>OK</item>
+        <item>OR</item>
+        <item>PA</item>
+        <item>RI</item>
+        <item>SC</item>
+        <item>SD</item>
+        <item>TN</item>
+        <item>TX</item>
+        <item>UT</item>
+        <item>VT</item>
+        <item>VA</item>
+        <item>WA</item>
+        <item>WV</item>
+        <item>WI</item>
+        <item>WY</item>
+    </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Weather fragment</string>
+    <string name="info_fragment">Info fragment</string>
+    <string name="solid_circle">\u25CF</string>
+    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Convallis a cras semper auctor neque vitae. Morbi tristique senectus et netus et malesuada fames ac. Lacus laoreet non curabitur gravida arcu. Amet nulla facilisi morbi tempus iaculis urna id. Non odio euismod lacinia at quis risus sed. Purus in mollis nunc sed id semper risus in. Vulputate odio ut enim blandit volutpat maecenas volutpat blandit. Vestibulum sed arcu non odio euismod lacinia. Ut sem nulla pharetra diam sit. Mi in nulla posuere sollicitudin. Orci porta non pulvinar neque. Porttitor rhoncus dolor purus non enim. Eget est lorem ipsum dolor. Amet consectetur adipiscing elit ut. Ac turpis egestas maecenas pharetra convallis. Pellentesque id nibh tortor id aliquet. Nisi lacus sed viverra tellus in hac habitasse. Purus non enim praesent elementum facilisis. Cras tincidunt lobortis feugiat vivamus. Egestas diam in arcu cursus euismod quis viverra nibh. Quis lectus nulla at volutpat diam ut venenatis tellus. Lacinia quis vel eros donec ac odio. Tellus integer feugiat scelerisque varius. Neque viverra justo nec ultrices dui sapien eget mi proin. Quis lectus nulla at volutpat diam ut. In nibh mauris cursus mattis molestie. Enim nunc faucibus a pellentesque sit amet porttitor eget dolor. Volutpat lacus laoreet non curabitur gravida arcu ac. Magna etiam tempor orci eu lobortis elementum nibh tellus molestie. Tincidunt eget nullam non nisi est sit. Ipsum consequat nisl vel pretium lectus. Vitae tempus quam pellentesque nec nam aliquam. Aenean euismod elementum nisi quis eleifend quam adipiscing. Tristique senectus et netus et malesuada. Adipiscing enim eu turpis egestas. Libero enim sed faucibus turpis. Tortor id aliquet lectus proin nibh nisl condimentum. Dolor sit amet consectetur adipiscing. Ornare aenean euismod elementum nisi quis eleifend. Aliquet nibh praesent tristique magna. Proin sed libero enim sed faucibus turpis in eu. Leo vel fringilla est ullamcorper eget. Sed enim ut sem viverra aliquet. Neque gravida in fermentum et sollicitudin ac orci. Et leo duis ut diam quam. Nisl nunc mi ipsum faucibus vitae aliquet nec. Sit amet justo donec enim. Egestas sed tempus urna et pharetra pharetra. Odio morbi quis commodo odio aenean sed adipiscing diam donec. Sollicitudin nibh sit amet commodo nulla facilisi nullam vehicula. Nunc sed augue lacus viverra vitae congue. Enim diam vulputate ut pharetra sit amet. Mi tempus imperdiet nulla malesuada pellentesque elit eget. Sed faucibus turpis in eu mi bibendum. Orci phasellus egestas tellus rutrum tellus pellentesque eu. Neque gravida in fermentum et. Facilisi cras fermentum odio eu feugiat pretium nibh ipsum consequat. Augue eget arcu dictum varius duis. Velit egestas dui id ornare arcu odio ut. Ultricies lacus sed turpis tincidunt id aliquet risus feugiat in. Sed tempus urna et pharetra pharetra massa massa ultricies. Ut morbi tincidunt augue interdum velit. Netus et malesuada fames ac turpis egestas sed tempus urna. Amet consectetur adipiscing elit ut aliquam purus sit amet luctus. Habitant morbi tristique senectus et. Sit amet luctus venenatis lectus. Eu feugiat pretium nibh ipsum consequat nisl. Gravida rutrum quisque non tellus orci ac auctor. Tellus rutrum tellus pellentesque eu tincidunt. Nulla pellentesque dignissim enim sit. Fames ac turpis egestas sed tempus urna. Et netus et malesuada fames ac turpis egestas integer. Feugiat scelerisque varius morbi enim nunc faucibus. Nisl condimentum id venenatis a condimentum vitae. Mauris commodo quis imperdiet massa.</string>
+</resources>

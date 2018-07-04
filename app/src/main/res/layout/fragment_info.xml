@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/horizontal_margin"
+    android:background="@color/White"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:id="@+id/main_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/park_title"
+                style="@style/TextAppearance.AppCompat.Headline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:maxLines="1"
+                tools:text="National Park Name"
+                android:textColor="@color/primaryText"
+                android:textStyle="bold"
+                android:visibility="visible" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/park_designation"
+                    style="@style/TextAppearance.AppCompat.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Designation"
+                    android:textColor="@color/tertiaryText" />
+
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:text="@string/solid_circle"
+                    android:textColor="@color/tertiaryText" />
+
+                <TextView
+                    android:id="@+id/park_state"
+                    style="@style/TextAppearance.AppCompat.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="CA"
+                    android:textColor="@color/tertiaryText" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/horizontal_margin"
+            android:layout_marginTop="@dimen/horizontal_margin"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+
+            <ImageButton
+                android:id="@+id/park_latlong"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:background="@color/White"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_map" />
+
+            <ImageButton
+                android:id="@+id/park_phone"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:background="@color/White"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_local_phone" />
+
+            <ImageButton
+                android:id="@+id/park_email"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:background="@color/White"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_email" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/address_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/horizontal_margin"
+            android:orientation="horizontal">
+
+
+            <ImageView
+                android:id="@+id/address_marker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_location_on" />
+
+            <TextView
+                android:id="@+id/park_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:textIsSelectable="true"
+                tools:text="address, CA 95134" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/park_description"
+            style="@style/TextAppearance.AppCompat.Subhead"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/horizontal_margin"
+            android:autoLink="web"
+            android:linksClickable="true"
+            tools:text="@string/lorem_ipsum"
+            android:textColor="@color/secondaryText" />
+    </LinearLayout>
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/share_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|right|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:clickable="true"
+        android:src="@drawable/ic_favorite"
+        app:backgroundTint="@color/colorAccent"
+        app:borderWidth="0dp"
+        app:elevation="@dimen/fab_elevation"
+        app:fabSize="normal" />
+
+</FrameLayout>
