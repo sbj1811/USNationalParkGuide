@@ -21,10 +21,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.usnationalparkguide.Data.ParkContract;
 import com.example.android.usnationalparkguide.R;
-import com.example.android.usnationalparkguide.Utils.StringToGPSCordinates;
+import com.example.android.usnationalparkguide.Utils.StringToGPSCoordinates;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -145,15 +146,15 @@ public class InfoFragment extends Fragment implements LoaderManager.LoaderCallba
         cursor = data;
         cursor.moveToPosition(position);
 //        Log.e(TAG, "onLoadFinished HERE: URI: "+uri+"\npark_id: "+parkId+"position: "+position);
-//        Log.e(TAG, "onLoadFinished HERE: "+ DatabaseUtils.dumpCursorToString(cursor));
+        Log.e(TAG, "onLoadFinished : "+ DatabaseUtils.dumpCursorToString(cursor));
         final String parkName = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_NAME));
         titleTextview.setText(parkName);
         designationTextview.setText(cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_DESIGNATION)));
         stateextview.setText(cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_STATES)));
         addressTextview.setText(cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_ADDRESS)));
         descriptionTextview.setText(cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_DESCRIPTION)));
-        StringToGPSCordinates stringToGPSCordinates = new StringToGPSCordinates();
-        final String gpsCoodinates[] = stringToGPSCordinates.convertToGPS(latLong);
+        StringToGPSCoordinates stringToGPSCoordinates = new StringToGPSCoordinates();
+        final String gpsCoodinates[] = stringToGPSCoordinates.convertToGPS(latLong);
         mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -163,21 +164,32 @@ public class InfoFragment extends Fragment implements LoaderManager.LoaderCallba
             }
         });
         final String phoneNumber = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_PHONE));
+        if (phoneNumber.equals(getActivity().getResources().getString(R.string.na))) {
+
+        }
         phoneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber));
-                startActivity(intent);
+                if (phoneNumber.equals(getActivity().getResources().getString(R.string.na))) {
+                    Toast.makeText(getContext(),"No Phone Available",Toast.LENGTH_SHORT).show();
+                }  else {
+                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber));
+                    startActivity(intent);
+                }
             }
         });
         final String emailId = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_EMAIL));
         emailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.setType("text/html");
-                intent.putExtra(Intent.EXTRA_EMAIL, emailId);
-                startActivity(intent);
+                if (emailId.equals(getActivity().getResources().getString(R.string.na))) {
+                    Toast.makeText(getContext(),"No Email Available",Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent intent = new Intent(Intent.ACTION_SEND);
+                    intent.setType("text/html");
+                    intent.putExtra(Intent.EXTRA_EMAIL, emailId);
+                    startActivity(intent);
+                }
             }
         });
 

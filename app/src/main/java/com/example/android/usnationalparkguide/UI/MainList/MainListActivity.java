@@ -1,5 +1,13 @@
 package com.example.android.usnationalparkguide.UI.MainList;
 
+import android.app.Fragment;
+import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,18 +25,46 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.android.usnationalparkguide.Data.ParkContract;
+import com.example.android.usnationalparkguide.Data.ParkDbHelper;
+import com.example.android.usnationalparkguide.Models.Weather.CurrentWeather;
 import com.example.android.usnationalparkguide.R;
+import com.example.android.usnationalparkguide.UI.Details.DetailsActivity;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.stetho.Stetho;
+
+import java.io.File;
 
 public class MainListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemSelectedListener {
 
+    private static final String TAG = MainListActivity.class.getSimpleName();
     private static final String SELECTED_STATE = "selected_state";
+    private static final String URI = "uri";
+    private static final String PARK_ID = "park_id";
+    private static final String POSITION = "position";
+    private static final String LATLONG = "latlong";
+    private static final String PARKCODE = "parkcode";
+    private static final String FROM_FAV = "from_fav";
 
     private Spinner spinner;
     private String state;
     private ListFragment listFragment;
+
+    private static final String[] PROJECTION = new String[]{
+            ParkContract.ParkEntry._ID,
+            ParkContract.ParkEntry.COLUMN_PARK_ID,
+            ParkContract.ParkEntry.COLUMN_PARK_NAME,
+            ParkContract.ParkEntry.COLUMN_PARK_STATES,
+            ParkContract.ParkEntry.COLUMN_PARK_CODE,
+            ParkContract.ParkEntry.COLUMN_PARK_LATLONG,
+            ParkContract.ParkEntry.COLUMN_PARK_DESCRIPTION,
+            ParkContract.ParkEntry.COLUMN_PARK_DESIGNATION,
+            ParkContract.ParkEntry.COLUMN_PARK_ADDRESS,
+            ParkContract.ParkEntry.COLUMN_PARK_PHONE,
+            ParkContract.ParkEntry.COLUMN_PARK_EMAIL,
+            ParkContract.ParkEntry.COLUMN_PARK_IMAGE
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +97,11 @@ public class MainListActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        Fragment fragment = getFragmentManager().findFragmentById(R.id.details);
+        if(getResources().getBoolean(R.bool.dual_pane)){
+
+        }
+
     }
 
     @Override
@@ -96,17 +137,32 @@ public class MainListActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_fav) {
+            if(doesTableExist("favorite")) {
+                Cursor cursor = getContentResolver().query(ParkContract.ParkEntry.CONTENT_URI_FAVORITES,
+                        null,
+                        null,
+                        null, null);
+                cursor.moveToNext();
+                Uri uri = ParkContract.ParkEntry.CONTENT_URI_FAVORITES;
+                String parkId = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_ID));
+                int position = cursor.getPosition();
+                String latLong = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_LATLONG));
+                String parkCode = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_CODE));
+                Intent intent = new Intent(this, DetailsActivity.class);
+                intent.putExtra(PARK_ID, parkId);
+                intent.putExtra(POSITION, position);
+                intent.putExtra(URI, uri);
+                intent.putExtra(LATLONG, latLong);
+                intent.putExtra(PARKCODE, parkCode);
+                intent.putExtra(FROM_FAV,true);
+                startActivity(intent);
+            } else {
+                Toast.makeText(this,"No Favorites",Toast.LENGTH_LONG).show();
+            }
+        } else if (id == R.id.nav_settings) {
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_logout) {
 
         }
 
@@ -128,4 +184,21 @@ public class MainListActivity extends AppCompatActivity
     public void onNothingSelected(AdapterView<?> adapterView) {
         Toast.makeText(this,"Please select a state",Toast.LENGTH_SHORT).show();
     }
+
+
+    public boolean doesTableExist(String tableName) {
+        ParkDbHelper mOpenHelper = new ParkDbHelper(this);
+        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        Cursor cursor = getContentResolver().query(ParkContract.ParkEntry.CONTENT_URI_FAVORITES,PROJECTION,null,null,null);
+    //    Log.e(TAG, "doesTableExist: "+cursor.getCount()+"   "+cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_ID)));
+        if (cursor != null) {
+            if (cursor.getCount() == 1 && cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_ID) != -1) {
+                cursor.close();
+                return true;
+            }
+            cursor.close();
+        }
+        return false;
+    }
+
 }

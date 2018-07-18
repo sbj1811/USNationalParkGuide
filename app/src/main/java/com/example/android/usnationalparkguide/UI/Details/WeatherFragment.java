@@ -11,8 +11,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.android.usnationalparkguide.Models.Park.Parks;
 import com.example.android.usnationalparkguide.Models.Weather.CurrentWeather;
 import com.example.android.usnationalparkguide.Models.Weather.Main;
@@ -21,10 +23,16 @@ import com.example.android.usnationalparkguide.Models.Weather.Weather;
 import com.example.android.usnationalparkguide.Models.Weather.Wind;
 import com.example.android.usnationalparkguide.R;
 import com.example.android.usnationalparkguide.Utils.NetworkSync.Weather.OpenWeatherMapApiConnection;
-import com.example.android.usnationalparkguide.Utils.StringToGPSCordinates;
+import com.example.android.usnationalparkguide.Utils.StringToGPSCoordinates;
+import com.example.android.usnationalparkguide.Utils.WeatherUtils;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,6 +66,8 @@ public class WeatherFragment extends Fragment {
     TextView minTempTextview;
     @BindView(R.id.max_temp_value)
     TextView maxTempTextview;
+    @BindView(R.id.weather_condition_image)
+    ImageView weatherConditionImageView;
 
     private Uri uri;
     private String parkId;
@@ -145,14 +155,13 @@ public class WeatherFragment extends Fragment {
 
         String apiKey = getContext().getResources().getString(R.string.OWMapiKey);
         String metric = getContext().getResources().getString(R.string.units);
-        StringToGPSCordinates stringToGPSCordinates = new StringToGPSCordinates();
-        Log.e(TAG, "getCurrentWeather RESPONSE: "+latLong);
-        final String gpsCoodinates[] = stringToGPSCordinates.convertToGPS(latLong);
+        StringToGPSCoordinates stringToGPSCoordinates = new StringToGPSCoordinates();
+        final String gpsCoodinates[] = stringToGPSCoordinates.convertToGPS(latLong);
         Call<CurrentWeather> weatherData = OpenWeatherMapApiConnection.getApi().getWeather(gpsCoodinates[0],gpsCoodinates[1],apiKey,metric);
         Response<CurrentWeather> response = null;
         try {
             response = weatherData.execute();
-            Log.e(TAG, "getCurrentWeather: RESPONSE: DONE");
+            Log.e(TAG, "getCurrentWeather: "+response);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -161,35 +170,40 @@ public class WeatherFragment extends Fragment {
         main = response.body().getMain();
         wind = response.body().getWind();
         sys =  response.body().getSys();
-
-
-//        OpenWeatherMapApiConnection.getApi().getWeather(gpsCoodinates[0],gpsCoodinates[1],apiKey,metric).enqueue(new Callback<CurrentWeather>() {
-//            @Override
-//            public void onResponse(Call<CurrentWeather> call, Response<CurrentWeather> response) {
-//                Log.e(TAG, "onResponse: RESPONSE");
-//                List<Weather> currentWeather;
-//                Main main;
-//                Wind wind;
-//                Sys sys;
-//                currentWeather = response.body().getWeather();
-//                main = response.body().getMain();
-//                wind = response.body().getWind();
-//                sys =  response.body().getSys();
-//                createWeatherview(currentWeather,main,wind,sys);
-//            }
-//
-//            @Override
-//            public void onFailure(Call<CurrentWeather> call, Throwable t) {
-//
-//            }
-//        });
     }
 
     public void createWeatherview(List<Weather> weather, Main main, Wind wind, Sys sys){
-        currentTempTextview.setText(main.getTemp().toString()+"\u00b0"+"F");
+        Double windspeed = wind.getSpeed();
+        Double windDegree = wind.getDeg();
+        Log.e(TAG, "createWeatherview: windspeed: "+windspeed+" windDegree: "+windDegree);
+        String windInfo = WeatherUtils.getFormattedWind(getContext(),windspeed,windDegree);
+        int weatherIconId = WeatherUtils.getResourceIdForWeatherCondition(weather.get(0).getId());
+
+        Long sunriseTimeVal = sys.getSunrise();
+        Long sunsetTimeVal = sys.getSunset();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("h:mm a", Locale.ENGLISH);
+      //  sdf.setTimeZone(Calendar.getInstance().getTimeZone());
+        Date dateSunrise = new Date(sunriseTimeVal*1000);
+        Date dateSunset =  new Date(sunsetTimeVal*1000);
+
+        String sunriseTime = sdf.format(dateSunrise);
+        String sunsetTime = sdf.format(dateSunset);
+
+        sunriseTimeTextview.setText(sunriseTime);
+        sunsetTimeTextview.setText(sunsetTime);
+
+        Glide.with(weatherConditionImageView.getContext())
+                .load(weatherIconId)
+                .fitCenter()
+                .into(weatherConditionImageView);
+        windTextview.setText(windInfo);
+        String humidityInfo = String.format("%d",main.getHumidity())+"\u0025";
+        humidityTextview.setText(humidityInfo);
+        currentTempTextview.setText(String.format("%d\u00b0F",(Long) Math.round(main.getTemp())));
         weatherConditionTextview.setText(weather.get(0).getMain());
-        minTempTextview.setText(main.getTempMin().toString()+"\u00b0"+"F");
-        maxTempTextview.setText(main.getTempMax().toString()+"\u00b0"+"F");
+        minTempTextview.setText(String.format("%d\u00b0F",(Long) Math.round(main.getTempMin())));
+        maxTempTextview.setText(String.format("%d\u00b0F",(Long) Math.round(main.getTempMax())));
     }
 
 

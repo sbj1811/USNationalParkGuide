@@ -9,6 +9,11 @@ public class NPSApiConnection {
 
     public static NPSApiEndpointInterface getApi () {
 
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(logging);
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(NPSApiEndpointInterface.API_ENDPOINT)
                 .addConverterFactory(GsonConverterFactory.create())

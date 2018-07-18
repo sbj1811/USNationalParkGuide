@@ -24,10 +24,10 @@ public class Sys implements Parcelable
     private String country;
     @SerializedName("sunrise")
     @Expose
-    private Integer sunrise;
+    private Long sunrise;
     @SerializedName("sunset")
     @Expose
-    private Integer sunset;
+    private Long sunset;
     public final static Parcelable.Creator<Sys> CREATOR = new Creator<Sys>() {
 
 
@@ -50,8 +50,8 @@ public class Sys implements Parcelable
         this.id = ((Integer) in.readValue((Integer.class.getClassLoader())));
         this.message = ((Double) in.readValue((Double.class.getClassLoader())));
         this.country = ((String) in.readValue((String.class.getClassLoader())));
-        this.sunrise = ((Integer) in.readValue((Integer.class.getClassLoader())));
-        this.sunset = ((Integer) in.readValue((Integer.class.getClassLoader())));
+        this.sunrise = ((Long) in.readValue((Long.class.getClassLoader())));
+        this.sunset = ((Long) in.readValue((Long.class.getClassLoader())));
     }
 
     public Sys() {
@@ -89,19 +89,19 @@ public class Sys implements Parcelable
         this.country = country;
     }
 
-    public Integer getSunrise() {
+    public Long getSunrise() {
         return sunrise;
     }
 
-    public void setSunrise(Integer sunrise) {
+    public void setSunrise(Long sunrise) {
         this.sunrise = sunrise;
     }
 
-    public Integer getSunset() {
+    public Long getSunset() {
         return sunset;
     }
 
-    public void setSunset(Integer sunset) {
+    public void setSunset(Long sunset) {
         this.sunset = sunset;
     }
 

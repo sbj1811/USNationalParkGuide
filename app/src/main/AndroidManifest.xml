@@ -31,7 +31,7 @@
         </activity>
 
         <provider
-            android:name=".Data.ParkContentProvider"
+            android:name=".Data.CommonContentProvider"
             android:authorities="com.example.android.usnationalparkguide"
             android:exported="false" />
 
@@ -58,11 +58,26 @@
                 android:resource="@xml/syncadapter" />
         </service>
 
-        <activity android:name=".UI.Details.DetailsActivity"
+        <activity
+            android:name=".UI.Details.DetailsActivity"
             android:parentActivityName=".UI.MainList.MainListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTVITY"
-                android:value=".UI.MainList.MainListActivity"/>
+                android:value=".UI.MainList.MainListActivity" />
+        </activity>
+        <activity
+            android:name=".UI.Details.Trails.TrailDetailActivity"
+            android:parentActivityName=".UI.MainList.MainListActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTVITY"
+                android:value=".UI.MainList.MainListActivity" />
+        </activity>
+        <activity
+            android:name=".UI.Details.Campgrounds.CampDetailActivity"
+            android:parentActivityName=".UI.MainList.MainListActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTVITY"
+                android:value=".UI.MainList.MainListActivity" />
 
         </activity>
     </application>

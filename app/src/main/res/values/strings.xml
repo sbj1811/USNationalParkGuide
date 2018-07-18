@@ -1,5 +1,5 @@
-<resources>
-    <string name="app_name">US National Park Guide</string>
+<resources xmlns:xliff="http://schemas.android.com/apk/res-auto">
+    <string name="app_name">National Park Guide</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -8,7 +8,9 @@
     <string name="action_settings">Settings</string>
     <string name="NPSapiKey">x3KgSjbtohfsZJa5IZu8cSrQb7tAqH14mlkqtt1I</string>
     <string name="OWMapiKey">89e0382eaf47ee925e53bc1c8c2b63f2</string>
-    <string name="fields">addresses,operatingHours,contacts,images,entranceFees,entrancePasses</string>
+    <string name="HPapiKey">200301827-d1babfd1c36e685d97b5d96c7beb5243</string>
+    <string name="fields">addresses,operatingHours,contacts,images</string>
+    <string name="fields_cg">addresses,operatingHours,contacts</string>
     <string name="units">imperial</string>
     <string name="title_item_list">Items</string>
     <string name="title_item_detail">Item Detail</string>
@@ -25,8 +27,33 @@
     <string name="humidity">Humidity</string>
     <string name="temp_min">Min Temp</string>
     <string name="temp_max">Max Temp</string>
+    <string name="easy">Easy</string>
+    <string name="moderate">Moderate</string>
+    <string name="strenuous">Strenuous</string>
+    <string name="curr_condition">Current Condition:</string>
+    <string name="unknown">Unknown</string>
+    <string name="amenities">Amenities:</string>
+    <string name="cellrecep">Cellular Reception</string>
+    <string name="showers">Showers</string>
+    <string name="toilets">Toilets</string>
+    <string name="internet">Internet</string>
+    <string name="wheelchair">Wheelchair Access:</string>
+    <string name="reservations">Reservations</string>
+    <string name="directions">Directions</string>
+    <string name="favorite">Favorite Park</string>
+    <string name="settings">Settings</string>
+    <string name="logout">Logout</string>
+    <string name="image">Image</string>
+    <string name="na">Not Available</string>
 
+    <string name="format_wind_mph">
+        <xliff:g id="speed">%1$1.0f</xliff:g> mph
+        <xliff:g id="direction">%2$s</xliff:g>
+    </string>
 
+    <string name="format_humidity">
+        <xliff:g id="humidity">%1.0f</xliff:g> %%
+    </string>
 
     <string-array name="state_arrays">
         <item>AL</item>

@@ -27,7 +27,7 @@
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="TextView"
+            tools:text="TextView"
             android:textSize="40sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -42,7 +42,7 @@
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:src="@drawable/ic_thunderstrom"
+            android:contentDescription="@string/image"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
@@ -57,7 +57,7 @@
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="24dp"
-            android:text="TextView"
+            tools:text="TextView"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -85,7 +85,7 @@
                 android:id="@+id/sunrise_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="5:00am"
+                tools:text="5:00am"
                 android:textColor="@color/Black"
                 android:textSize="20sp" />
         </LinearLayout>
@@ -115,7 +115,7 @@
                 android:id="@+id/sunset_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="6:00pm"
+                tools:text="6:00pm"
                 android:textColor="@color/Black"
                 android:textSize="20sp" />
         </LinearLayout>
@@ -143,7 +143,7 @@
                 android:id="@+id/humidity_percent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="83%"
+                tools:text="83%"
                 android:textColor="@color/Black"
                 android:textSize="20sp" />
         </LinearLayout>
@@ -173,7 +173,7 @@
                 android:id="@+id/wind_speed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="5.1mph"
+                tools:text="5.1mph"
                 android:textColor="@color/Black"
                 android:textSize="20sp" />
         </LinearLayout>
@@ -201,7 +201,7 @@
                 android:id="@+id/min_temp_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="72"
+                tools:text="72"
                 android:textColor="@color/Black"
                 android:textSize="20sp" />
         </LinearLayout>
@@ -229,7 +229,7 @@
                 android:id="@+id/max_temp_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="80"
+                tools:text="80"
                 android:textColor="@color/Black"
                 android:textSize="20sp" />
         </LinearLayout>

@@ -1,29 +1,32 @@
 package com.example.android.usnationalparkguide.UI.Details.Trails;
 
+import android.content.Context;
+import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.example.android.usnationalparkguide.Data.TrailContract;
 import com.example.android.usnationalparkguide.R;
-import com.example.android.usnationalparkguide.UI.Details.Trails.TrailFragment.OnListFragmentInteractionListener;
-import com.example.android.usnationalparkguide.UI.Details.Trails.dummy.DummyContent.DummyItem;
+import com.example.android.usnationalparkguide.Utils.Listeners.OnListFragmentInteractionListener;
 
-import java.util.List;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
- */
 public class TrailRecyclerViewAdapter extends RecyclerView.Adapter<TrailRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private static final String TAG = TrailRecyclerViewAdapter.class.getSimpleName();
+    private Context mContext;
     private final OnListFragmentInteractionListener mListener;
+    private Cursor cursor;
 
-    public TrailRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
-        mValues = items;
+    public TrailRecyclerViewAdapter(OnListFragmentInteractionListener listener, Context context) {
+        mContext = context;
         mListener = listener;
     }
 
@@ -36,43 +39,66 @@ public class TrailRecyclerViewAdapter extends RecyclerView.Adapter<TrailRecycler
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
-
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
-                }
-            }
-        });
+        cursor.moveToPosition(position);
+        String title = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_NAME));
+        String imageUrl = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_IMAGE_MED));
+        holder.trailTitleView.setText(title);
+        if (imageUrl.equals("")){
+            Glide.with(holder.trailImageView.getContext())
+                    .load(R.drawable.empty_detail)
+                    .fitCenter()
+                    .into(holder.trailImageView);
+        } else {
+            Glide.with(holder.trailImageView.getContext())
+                    .load(imageUrl)
+                    .fitCenter()
+                    .into(holder.trailImageView);
+        }
     }
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        if(cursor == null){
+            return 0;
+        }
+        return cursor.getCount();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public Cursor swapCursor(Cursor c) {
+        if (cursor == c) {
+            return null;
+        }
+
+        Cursor temp = cursor;
+        this.cursor = c;
+
+        if (c != null) {
+            this.notifyDataSetChanged();
+        }
+        return temp;
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public DummyItem mItem;
+        @BindView(R.id.trail_title)
+        TextView trailTitleView;
+        @BindView(R.id.trail_image)
+        ImageView trailImageView;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.item_number);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(this);
         }
 
         @Override
-        public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+        public void onClick(View view) {
+            int position = getAdapterPosition();
+            cursor.moveToPosition(position);
+            String trailId = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_ID));
+            Log.e(TAG, "onClick: "+trailId+" "+position);
+            mListener.onListFragmentInteraction(trailId,position);
         }
     }
 }

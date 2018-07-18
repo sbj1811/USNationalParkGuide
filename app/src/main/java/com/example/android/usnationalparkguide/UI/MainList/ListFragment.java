@@ -2,17 +2,20 @@ package com.example.android.usnationalparkguide.UI.MainList;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +24,7 @@ import android.widget.ProgressBar;
 import com.example.android.usnationalparkguide.Data.ParkContract;
 import com.example.android.usnationalparkguide.R;
 import com.example.android.usnationalparkguide.UI.Details.DetailsActivity;
+import com.example.android.usnationalparkguide.UI.Details.DetailsFragment;
 import com.example.android.usnationalparkguide.Utils.Listeners.GridItemClickListener;
 import com.example.android.usnationalparkguide.Utils.NetworkSync.NPS.AccountModel;
 import com.example.android.usnationalparkguide.Utils.NetworkSync.NPS.ParkSyncAdapter;
@@ -37,6 +41,8 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
     private static final String PARK_ID = "park_id";
     private static final String POSITION = "position";
     private static final String LATLONG = "latlong";
+    private static final String PARKCODE = "parkcode";
+    private static final String FROM_FAV = "from_fav";
 
 
     @BindView(R.id.rv_main)
@@ -47,6 +53,7 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
     private Uri uri;
     private ListAdapter adapter;
     private String state;
+    private boolean mDualPane;
 
     private static final String[] PROJECTION = new String[]{
             ParkContract.ParkEntry._ID,
@@ -82,6 +89,8 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
         ParkSyncAdapter.performSync(state);
     }
 
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,20 +109,36 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
         ButterKnife.bind(this, view);
         adapter = new ListAdapter(this,getContext());
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
+        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
+        } else {
+            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(4,StaggeredGridLayoutManager.VERTICAL));
+        }
+
+        View detailsView = getActivity().findViewById(R.id.details);
+        mDualPane = detailsView != null && detailsView.getVisibility() == View.VISIBLE;
 
     }
 
     @Override
-    public void onItemClick(String parkId, String latlong ,int position) {
-
-        Intent intent = new Intent(getActivity(), DetailsActivity.class);
-        intent.putExtra(PARK_ID,parkId);
-        intent.putExtra(POSITION,position);
-        intent.putExtra(URI, uri);
-        intent.putExtra(LATLONG,latlong);
-        startActivity(intent);
-
+    public void onItemClick(String parkId, String latlong ,int position, String parkCode) {
+        if(mDualPane){
+            DetailsFragment detailsFragment = DetailsFragment.newInstance(uri,parkId,position,latlong,parkCode,false);
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.details,detailsFragment)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                    .addToBackStack(null)
+                    .commit();
+        } else {
+            Intent intent = new Intent(getActivity(), DetailsActivity.class);
+            intent.putExtra(PARK_ID, parkId);
+            intent.putExtra(POSITION, position);
+            intent.putExtra(URI, uri);
+            intent.putExtra(LATLONG, latlong);
+            intent.putExtra(PARKCODE, parkCode);
+            intent.putExtra(FROM_FAV, false);
+            startActivity(intent);
+        }
     }
 
     @NonNull
