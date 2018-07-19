@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <com.example.android.usnationalparkguide.Custom.MyNestedScrollView
+    <com.sjani.usnationalparkguide.Custom.MyNestedScrollView
         android:id="@+id/nestedscrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,16 +15,16 @@
 
 
 
-        <com.example.android.usnationalparkguide.Custom.WrapContentHeightViewPager
+        <com.sjani.usnationalparkguide.Custom.WrapContentHeightViewPager
             android:id="@+id/detail_viewpager"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
 
 
-        </com.example.android.usnationalparkguide.Custom.WrapContentHeightViewPager>
+        </com.sjani.usnationalparkguide.Custom.WrapContentHeightViewPager>
 
-    </com.example.android.usnationalparkguide.Custom.MyNestedScrollView>
+    </com.sjani.usnationalparkguide.Custom.MyNestedScrollView>
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/detail_app_bar"

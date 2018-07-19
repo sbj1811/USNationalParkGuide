@@ -1,9 +1,17 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'usnationalparkguidekey0'
+            keyPassword 'tornedo999'
+            storeFile file("$rootDir/release.jks")
+            storePassword 'tornedo999'
+        }
+    }
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.example.android.usnationalparkguide"
+        applicationId "com.sjani.usnationalparkguide"
         minSdkVersion 16
         targetSdkVersion 27
         multiDexEnabled true
@@ -15,12 +23,16 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+        }
+        debug {
+            signingConfig signingConfigs.config
         }
     }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
@@ -38,9 +50,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:16.0.1'
     implementation 'com.google.firebase:firebase-auth:16.0.2'
     implementation 'com.google.firebase:firebase-storage:16.0.1'
-    implementation 'com.google.firebase:firebase-messaging:17.1.0'
     implementation 'com.firebaseui:firebase-ui-auth:4.1.0'
     implementation 'com.google.firebase:firebase-config:16.0.0'
+    implementation 'com.google.firebase:firebase-ads:15.0.1'
     implementation 'com.google.android.gms:play-services-auth:15.0.1'
     implementation 'com.google.android.gms:play-services-identity:15.0.1'
     implementation 'com.android.support.test.espresso:espresso-idling-resource:3.0.2'
@@ -51,16 +63,13 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation 'org.parceler:parceler-api:1.1.10'
     annotationProcessor 'org.parceler:parceler:1.1.10'
-    implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
-    implementation 'com.squareup.sqlbrite3:sqlbrite:3.2.0'
     implementation 'com.facebook.stetho:stetho:1.5.0'
     annotationProcessor 'net.simonvt.schematic:schematic-compiler:0.6.8'
-    implementation 'net.simonvt.schematic:schematic:0.6.8'
     implementation 'com.github.bumptech.glide:glide:3.6.1'
     implementation 'com.facebook.fresco:fresco:1.9.0'
-    implementation 'com.jakewharton.timber:timber:4.7.1'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.8.0'
 }
+apply plugin: 'com.google.gms.google-services'

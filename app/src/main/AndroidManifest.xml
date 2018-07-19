@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.android.usnationalparkguide">
+    package="com.sjani.usnationalparkguide">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -31,12 +31,12 @@
         </activity>
 
         <provider
-            android:name=".Data.CommonContentProvider"
-            android:authorities="com.example.android.usnationalparkguide"
+            android:name="com.sjani.usnationalparkguide.Data.CommonContentProvider"
+            android:authorities="com.sjani.usnationalparkguide"
             android:exported="false" />
 
         <service
-            android:name=".Utils.NetworkSync.NPS.AuthenticatorService"
+            android:name="com.sjani.usnationalparkguide.Utils.NetworkSync.NPS.AuthenticatorService"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
@@ -47,7 +47,7 @@
                 android:resource="@xml/authenticator" />
         </service>
         <service
-            android:name=".Utils.NetworkSync.NPS.ParkSyncService"
+            android:name="com.sjani.usnationalparkguide.Utils.NetworkSync.NPS.ParkSyncService"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
@@ -59,7 +59,7 @@
         </service>
 
         <activity
-            android:name=".UI.Details.DetailsActivity"
+            android:name="com.sjani.usnationalparkguide.UI.Details.DetailsActivity"
             android:parentActivityName=".UI.MainList.MainListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTVITY"
@@ -78,8 +78,20 @@
             <meta-data
                 android:name="android.support.PARENT_ACTVITY"
                 android:value=".UI.MainList.MainListActivity" />
-
         </activity>
+
+        <receiver android:name="com.sjani.usnationalparkguide.UI.Widget.ParkWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/park_widget_info" />
+        </receiver>
+        <service android:name="com.sjani.usnationalparkguide.UI.Widget.ParkWidgetService"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
     </application>
 
 </manifest>
