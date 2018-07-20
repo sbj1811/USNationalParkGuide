@@ -220,25 +220,28 @@
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/summary_tv"
-            style="@style/TextAppearance.AppCompat.Subhead"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/horizontal_margin"
-            android:layout_marginLeft="@dimen/horizontal_margin"
-            android:layout_marginRight="@dimen/horizontal_margin"
-            android:layout_marginStart="@dimen/horizontal_margin"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            android:autoLink="web"
-            android:linksClickable="true"
-            android:textColor="@color/secondaryText"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/condition_linear_layout"
-            tools:text="@string/lorem_ipsum" />
+         <TextView
+             android:id="@+id/summary_tv"
+             style="@style/TextAppearance.AppCompat.Subhead"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:paddingBottom="@dimen/horizontal_margin"
+             android:layout_marginBottom="@dimen/horizontal_margin"
+             android:layout_marginEnd="@dimen/horizontal_margin"
+             android:layout_marginLeft="@dimen/horizontal_margin"
+             android:layout_marginRight="@dimen/horizontal_margin"
+             android:layout_marginStart="@dimen/horizontal_margin"
+             android:layout_marginTop="40dp"
+             android:autoLink="web"
+             android:linksClickable="true"
+             android:textColor="@color/secondaryText"
+             app:layout_constraintBottom_toBottomOf="parent"
+             app:layout_constraintEnd_toEndOf="parent"
+             app:layout_constraintHorizontal_bias="0.0"
+             app:layout_constraintStart_toStartOf="parent"
+             app:layout_constraintTop_toBottomOf="@+id/condition_linear_layout"
+             app:layout_constraintVertical_bias="0.0"
+             tools:text="@string/lorem_ipsum" />
 
 
     </android.support.constraint.ConstraintLayout>

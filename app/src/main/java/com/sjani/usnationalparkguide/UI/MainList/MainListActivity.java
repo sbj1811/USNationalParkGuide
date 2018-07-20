@@ -13,6 +13,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +35,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Arrays;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MainListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemSelectedListener {
@@ -75,20 +79,15 @@ public class MainListActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ButterKnife.bind(this);
         setContentView(R.layout.activity_main_list);
 
         FirebaseApp.initializeApp(this);
-
-
-
 
         Fresco.initialize(this);
 //        mFirebaseAuth = FirebaseAuth.getInstance();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
-
 
         listFragment = (ListFragment) getSupportFragmentManager().findFragmentById(R.id.list_container);
 
@@ -114,8 +113,10 @@ public class MainListActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         Fragment fragment = getFragmentManager().findFragmentById(R.id.details);
-        if(getResources().getBoolean(R.bool.dual_pane)){
-
+        if((getResources().getBoolean(R.bool.dual_pane)) && fragment == null){
+                EmptyStateFragment emptyStateFragment = new EmptyStateFragment();
+                this.getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.details, emptyStateFragment).commit();
         }
 
 //        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
@@ -172,7 +173,7 @@ public class MainListActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.main_list, menu);
         MenuItem item = menu.findItem(R.id.spinner);
         spinner = (Spinner) MenuItemCompat.getActionView(item);
-
+        spinner.setDropDownWidth(130);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.state_arrays, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -214,28 +215,29 @@ public class MainListActivity extends AppCompatActivity
             }
         } else if (id == R.id.nav_settings) {
 
-        } else if (id == R.id.nav_logout) {
-//            AuthUI.getInstance().signOut(this);
         }
+//        else if (id == R.id.nav_logout) {
+//            AuthUI.getInstance().signOut(this);
+//        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
 //        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
+//    }
+//
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
 //        if (mAuthStateListener != null) {
 //            mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
 //        }
-    }
+//    }
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
@@ -256,7 +258,6 @@ public class MainListActivity extends AppCompatActivity
         ParkDbHelper mOpenHelper = new ParkDbHelper(this);
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         Cursor cursor = getContentResolver().query(ParkContract.ParkEntry.CONTENT_URI_FAVORITES,PROJECTION,null,null,null);
-    //    Log.e(TAG, "doesTableExist: "+cursor.getCount()+"   "+cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_ID)));
         if (cursor != null) {
             if (cursor.getCount() == 1 && cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_ID) != -1) {
                 cursor.close();
@@ -267,13 +268,13 @@ public class MainListActivity extends AppCompatActivity
         return false;
     }
 
-    private void onSignedInInitialize(String username) {
-        mUsername = username;
-    }
-
-    private void onSignedOutCleanup() {
-        mUsername = ANONYMOUS;
-    }
+//    private void onSignedInInitialize(String username) {
+//        mUsername = username;
+//    }
+//
+//    private void onSignedOutCleanup() {
+//        mUsername = ANONYMOUS;
+//    }
 
 
 

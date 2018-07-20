@@ -12,6 +12,9 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -65,6 +68,9 @@ public class CampDetailFragment extends Fragment implements LoaderManager.Loader
 
 
     private OnFragmentInteractionListener mListener;
+    private String title;
+    private String latitude;
+    private String longitude;
 
     private static final String[] PROJECTION = new String[]{
             CampContract.CampEntry._ID,
@@ -106,6 +112,7 @@ public class CampDetailFragment extends Fragment implements LoaderManager.Loader
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        this.setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragment_camp_details, container, false);
     }
 
@@ -132,6 +139,29 @@ public class CampDetailFragment extends Fragment implements LoaderManager.Loader
         mListener = null;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.share_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // action with ID action_refresh was selected
+            case R.id.action_share:
+                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, title);
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, title+"\nOpen in Google Maps https://maps.google.com/?q="+latitude+","+longitude);
+                startActivity(Intent.createChooser(sharingIntent, "Share via"));
+                break;
+            default:
+                break;
+        }
+        return true;
+    }
+
     @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
@@ -141,8 +171,9 @@ public class CampDetailFragment extends Fragment implements LoaderManager.Loader
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         cursor = data;
+        if (cursor == null) return;
         cursor.moveToPosition(position);
-        String title = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_NAME));
+        title = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_NAME));
         titleTv.setText(title);
         String summary = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_DESCRIPTION));
         summaryTv.setText(summary);
@@ -151,11 +182,13 @@ public class CampDetailFragment extends Fragment implements LoaderManager.Loader
         String latLong = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_LATLONG));
         StringToGPSCoordinates stringToGPSCoordinates = new StringToGPSCoordinates();
         final String gpsCoodinates[] = stringToGPSCoordinates.convertToGPS(latLong);
+        latitude = gpsCoodinates[0];
+        latitude = gpsCoodinates[1];
         addressLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
-                        Uri.parse("geo:"+gpsCoodinates[0]+","+gpsCoodinates[1]+"?q="+gpsCoodinates[0]+","+gpsCoodinates[1]+"?z=10"));
+                        Uri.parse("geo:"+latitude+","+latitude+"?q="+latitude+","+longitude+"?z=10"));
                 startActivity(intent);
             }
         });

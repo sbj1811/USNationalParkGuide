@@ -17,10 +17,8 @@ public class StringToGPSCoordinates {
             splitGPS[1] = "0";
         } else {
             String asd[] = latlong.split(", ");
-            Log.e("StringToGPSCoordinates", "convertToGPS: " + asd);
             splitGPS[0] = asd[0].replaceAll("[\\s+a-zA-Z :]", "");
             splitGPS[1] = asd[1].replaceAll("[\\s+a-zA-Z :]", "");
-            Log.e("StringToGPSCoordinates", "convertToGPS: LAT: " + splitGPS[0] + " LONG: " + splitGPS[1]);
         }
         return splitGPS;
     }

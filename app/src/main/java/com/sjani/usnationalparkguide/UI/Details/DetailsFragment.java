@@ -110,19 +110,16 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
         }
         getLoaderManager().initLoader(LOADER_ID,null,this);
         getLoaderManager().initLoader(FAV_LOADER_ID,null,this);
-        Log.e(TAG, "onAttach: HERE");
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e(TAG, "onCreate: HERE");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.e(TAG, "onCreateView: HERE");
         return inflater.inflate(R.layout.fragment_details, container, false);
     }
 
@@ -132,7 +129,6 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
         ButterKnife.bind(this, view);
         FragmentSelectAdapter selectAdapter = new FragmentSelectAdapter(getFragmentManager(),getContext(),uri,parkId,position,latLong,parkCode);
         mViewPager.setAdapter(selectAdapter);
-        Log.e(TAG, "onViewCreated: HERE");
         if (getContext().getResources().getBoolean(R.bool.dual_pane)) {
             mViewPager.getAdapter().notifyDataSetChanged();
         }
@@ -165,13 +161,11 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
             }
             isFromFavNav = false;
         }
-        Log.e(TAG, "onDestroy: HERE");
     }
 
     @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
-        Log.e(TAG, "onCreateLoader: HERE");
         switch (id) {
             case LOADER_ID:
                 return new CursorLoader(getContext(), uri, PROJECTION, null, null, null);
@@ -190,40 +184,46 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
-        Log.e(TAG, "onLoadFinished: HERE");
         cursor = data;
-        cursor.moveToPosition(position);
-        int id = loader.getId();
-        switch (id) {
-            case LOADER_ID:
-                values = new ContentValues();
-                if (cursor != null) {
-                    DatabaseUtils.cursorRowToContentValues(cursor, values);
-                    String imageUrl = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_IMAGE));
-                    if (imageUrl.equals("")){
-                        Glide.with(parkImageView.getContext())
-                                .load(R.drawable.empty_detail)
-                                .fitCenter()
-                                .into(parkImageView);
-                    } else {
-                        Glide.with(parkImageView.getContext())
-                                .load(imageUrl)
-                                .fitCenter()
-                                .into(parkImageView);
+        if (cursor == null) return;
+        try {
+            cursor.moveToPosition(position);
+            int id = loader.getId();
+            switch (id) {
+                case LOADER_ID:
+                    values = new ContentValues();
+                    if (cursor != null) {
+                        DatabaseUtils.cursorRowToContentValues(cursor, values);
+                        String imageUrl = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_IMAGE));
+                        if (imageUrl.equals("")){
+                            Glide.with(parkImageView.getContext())
+                                    .load(R.drawable.empty_detail)
+                                    .fitCenter()
+                                    .into(parkImageView);
+                        } else {
+                            Glide.with(parkImageView.getContext())
+                                    .load(imageUrl)
+                                    .fitCenter()
+                                    .into(parkImageView);
+                        }
                     }
-                }
-                break;
-            case FAV_LOADER_ID:
-                if (data.getCount() > 0) {
-                    favFab.setImageResource(R.drawable.ic_favorite);
-                    isMarkedFavorite = true;
-                } else {
-                    favFab.setImageResource(R.drawable.ic_favorite_border);
-                    isMarkedFavorite = false;
-                }
-                break;
-            default:
-                throw new RuntimeException("Loader not implemented: " + id);
+                    break;
+                case FAV_LOADER_ID:
+                    if (data.getCount() > 0) {
+                        favFab.setImageResource(R.drawable.ic_favorite);
+                        isMarkedFavorite = true;
+                    } else {
+                        favFab.setImageResource(R.drawable.ic_favorite_border);
+                        isMarkedFavorite = false;
+                    }
+                    break;
+                default:
+                    throw new RuntimeException("Loader not implemented: " + id);
+            }
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        } finally {
+            cursor.close();
         }
     }
 

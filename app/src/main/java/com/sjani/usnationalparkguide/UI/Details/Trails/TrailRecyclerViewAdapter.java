@@ -39,20 +39,26 @@ public class TrailRecyclerViewAdapter extends RecyclerView.Adapter<TrailRecycler
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        cursor.moveToPosition(position);
-        String title = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_NAME));
-        String imageUrl = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_IMAGE_MED));
-        holder.trailTitleView.setText(title);
-        if (imageUrl.equals("")){
-            Glide.with(holder.trailImageView.getContext())
-                    .load(R.drawable.empty_detail)
-                    .fitCenter()
-                    .into(holder.trailImageView);
-        } else {
-            Glide.with(holder.trailImageView.getContext())
-                    .load(imageUrl)
-                    .fitCenter()
-                    .into(holder.trailImageView);
+        try {
+            cursor.moveToPosition(position);
+            String title = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_NAME));
+            String imageUrl = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_IMAGE_MED));
+            holder.trailTitleView.setText(title);
+            if (imageUrl.equals("")){
+                Glide.with(holder.trailImageView.getContext())
+                        .load(R.drawable.empty_detail)
+                        .fitCenter()
+                        .into(holder.trailImageView);
+            } else {
+                Glide.with(holder.trailImageView.getContext())
+                        .load(imageUrl)
+                        .fitCenter()
+                        .into(holder.trailImageView);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+
         }
     }
 
@@ -97,7 +103,6 @@ public class TrailRecyclerViewAdapter extends RecyclerView.Adapter<TrailRecycler
             int position = getAdapterPosition();
             cursor.moveToPosition(position);
             String trailId = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_ID));
-            Log.e(TAG, "onClick: "+trailId+" "+position);
             mListener.onListFragmentInteraction(trailId,position);
         }
     }

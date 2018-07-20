@@ -239,6 +239,8 @@
              style="@style/TextAppearance.AppCompat.Subhead"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
+             android:paddingBottom="@dimen/horizontal_margin"
+             android:layout_marginBottom="@dimen/horizontal_margin"
              android:layout_marginEnd="@dimen/horizontal_margin"
              android:layout_marginLeft="@dimen/horizontal_margin"
              android:layout_marginRight="@dimen/horizontal_margin"

@@ -3,6 +3,7 @@ package com.sjani.usnationalparkguide.UI.Details.Trails;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.net.Uri;
@@ -19,9 +20,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.sjani.usnationalparkguide.Data.TrailContract;
@@ -71,6 +74,8 @@ public class TrailDetailDialogFragment extends DialogFragment implements LoaderM
     TextView summaryTv;
     @BindView(R.id.trail_detail_photo)
     ImageView trailIv;
+    @BindView(R.id.trail_share_button)
+    ImageButton shareButton;
     @BindView(R.id.trail_address_linear_layout)
     LinearLayout addressLl;
 
@@ -177,60 +182,76 @@ public class TrailDetailDialogFragment extends DialogFragment implements LoaderM
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         cursor = data;
-        cursor.moveToPosition(position);
-        Log.e(TAG, "onLoadFinished: "+ DatabaseUtils.dumpCursorToString(cursor));
-        String title = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_NAME));
-        titleTv.setText(title);
-        String distance = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_LENGTH));
-        distanceTv.setText(distance+" miles");
-        String elevation = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_ASCENT));
-        elevationTv.setText(elevation+" ft");
-        String address = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_LOCATION));
-        trailAddressTv.setText(address);
-        final String latitude = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_LAT));
-        final String longitude = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_LONG));
-        addressLl.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
-                        Uri.parse("geo:"+latitude+","+longitude+"?z=10"));
-                startActivity(intent);
+        if (cursor == null) return;
+        try {
+            cursor.moveToPosition(position);
+            final String title = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_NAME));
+            titleTv.setText(title);
+            String distance = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_LENGTH));
+            distanceTv.setText(distance+" miles");
+            String elevation = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_ASCENT));
+            elevationTv.setText(elevation+" ft");
+            String address = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_LOCATION));
+            trailAddressTv.setText(address);
+            final String latitude = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_LAT));
+            final String longitude = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_LONG));
+            addressLl.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("geo:"+latitude+","+longitude+"?z=10"));
+                    startActivity(intent);
+                }
+            });
+            String summary = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_SUMMARY));
+            summaryTv.setText(summary);
+            String condition = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_CONDITION));
+            if (!(condition == null)){
+                if (!condition.equals("")) {
+                    conditionTv.setText(condition);
+                }
+            } else {
+                conditionTv.setText(getActivity().getResources().getString(R.string.na));
             }
-        });
-        String summary = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_SUMMARY));
-        summaryTv.setText(summary);
-        String condition = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_CONDITION));
-        Log.e(TAG, "onLoadFinished: "+condition);
-        if (!(condition == null)){
-            if (!condition.equals("")) {
-                conditionTv.setText(condition);
+            String difficultyMark = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_DIFFICULTY));
+            String difficultyLevel;
+            if (difficultyMark.equals("greenBlue")){
+                difficultyLevel = getContext().getResources().getString(R.string.easy);
+            } else if (difficultyMark.equals("blue")) {
+                difficultyLevel = getContext().getResources().getString(R.string.moderate);
+            } else if (difficultyMark.equals("blueBlack")) {
+                difficultyLevel = getContext().getResources().getString(R.string.strenuous);
+            } else {
+                difficultyLevel = getContext().getResources().getString(R.string.na);
             }
-        } else {
-            conditionTv.setText(getActivity().getResources().getString(R.string.na));
-        }
-        String difficultyMark = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_DIFFICULTY));
-        String difficultyLevel;
-        if (difficultyMark.equals("greenBlue")){
-            difficultyLevel = getContext().getResources().getString(R.string.easy);
-        } else if (difficultyMark.equals("blue")) {
-            difficultyLevel = getContext().getResources().getString(R.string.moderate);
-        } else if (difficultyMark.equals("blueBlack")) {
-            difficultyLevel = getContext().getResources().getString(R.string.strenuous);
-        } else {
-            difficultyLevel = getContext().getResources().getString(R.string.unknown);
-        }
-        difficultyTv.setText(difficultyLevel);
-        String imageUrl = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_IMAGE_MED));
-        if (imageUrl.equals("")){
-            Glide.with(trailIv.getContext())
-                    .load(R.drawable.empty_detail)
-                    .fitCenter()
-                    .into(trailIv);
-        } else {
-            Glide.with(trailIv.getContext())
-                    .load(imageUrl)
-                    .fitCenter()
-                    .into(trailIv);
+            difficultyTv.setText(difficultyLevel);
+            String imageUrl = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_IMAGE_MED));
+            if (imageUrl.equals("")){
+                Glide.with(trailIv.getContext())
+                        .load(R.drawable.empty_detail)
+                        .fitCenter()
+                        .into(trailIv);
+            } else {
+                Glide.with(trailIv.getContext())
+                        .load(imageUrl)
+                        .fitCenter()
+                        .into(trailIv);
+            }
+
+            shareButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                    sharingIntent.setType("text/plain");
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, title);
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, title+"\nOpen in Google Maps https://maps.google.com/?q="+latitude+","+longitude);
+                    startActivity(Intent.createChooser(sharingIntent, "Share via"));
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            cursor.close();
         }
 
     }
@@ -258,7 +279,6 @@ public class TrailDetailDialogFragment extends DialogFragment implements LoaderM
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.e(TAG, "onSaveInstanceState: HERE");
         outState.putParcelable(URI,uriPark);
         outState.putString(PARK_ID,parkId);
         outState.putString(PARKCODE,parkCode);

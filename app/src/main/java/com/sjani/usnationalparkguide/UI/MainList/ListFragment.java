@@ -123,6 +123,7 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         adapter = new ListAdapter(this,getContext());
+        progressBar.setVisibility(View.VISIBLE);
         recyclerView.setAdapter(adapter);
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));

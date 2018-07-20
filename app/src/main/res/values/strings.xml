@@ -45,7 +45,8 @@
     <string name="logout">Logout</string>
     <string name="image">Image</string>
     <string name="na">Not Available</string>
-
+    <string name="none">None</string>
+    <string name="empty_state_text">Select a Destination!</string>
     <string name="format_wind_mph">
         <xliff:g id="speed">%1$1.0f</xliff:g> mph
         <xliff:g id="direction">%2$s</xliff:g>

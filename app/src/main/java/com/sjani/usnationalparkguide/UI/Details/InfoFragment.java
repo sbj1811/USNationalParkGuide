@@ -2,6 +2,7 @@ package com.sjani.usnationalparkguide.UI.Details;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.net.Uri;
@@ -141,55 +142,59 @@ public class InfoFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         cursor = data;
-        cursor.moveToPosition(position);
-//        Log.e(TAG, "onLoadFinished HERE: URI: "+uri+"\npark_id: "+parkId+"position: "+position);
-        Log.e(TAG, "onLoadFinished : "+ DatabaseUtils.dumpCursorToString(cursor));
-        final String parkName = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_NAME));
-        titleTextview.setText(parkName);
-        designationTextview.setText(cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_DESIGNATION)));
-        stateextview.setText(cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_STATES)));
-        addressTextview.setText(cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_ADDRESS)));
-        descriptionTextview.setText(cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_DESCRIPTION)));
-        StringToGPSCoordinates stringToGPSCoordinates = new StringToGPSCoordinates();
-        final String gpsCoodinates[] = stringToGPSCoordinates.convertToGPS(latLong);
-        mapButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
-                        Uri.parse("geo:"+gpsCoodinates[0]+","+gpsCoodinates[1]+"?q="+gpsCoodinates[0]+","+gpsCoodinates[1]+"("+parkName+")?z=10"));
-                startActivity(intent);
-            }
-        });
-        final String phoneNumber = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_PHONE));
-        if (phoneNumber.equals(getActivity().getResources().getString(R.string.na))) {
+        if (cursor == null) return;
+        try {
+            cursor.moveToPosition(position);
+            final String parkName = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_NAME));
+            titleTextview.setText(parkName);
+            designationTextview.setText(cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_DESIGNATION)));
+            stateextview.setText(cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_STATES)));
+            addressTextview.setText(cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_ADDRESS)));
+            descriptionTextview.setText(cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_DESCRIPTION)));
+            StringToGPSCoordinates stringToGPSCoordinates = new StringToGPSCoordinates();
+            final String gpsCoodinates[] = stringToGPSCoordinates.convertToGPS(latLong);
+            mapButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("geo:"+gpsCoodinates[0]+","+gpsCoodinates[1]+"?q="+gpsCoodinates[0]+","+gpsCoodinates[1]+"("+parkName+")?z=10"));
+                    startActivity(intent);
+                }
+            });
+            final String phoneNumber = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_PHONE));
+            if (phoneNumber.equals(getActivity().getResources().getString(R.string.na))) {
 
+            }
+            phoneButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (phoneNumber.equals(getActivity().getResources().getString(R.string.na))) {
+                        Toast.makeText(getContext(),"No Phone Available",Toast.LENGTH_SHORT).show();
+                    }  else {
+                        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber));
+                        startActivity(intent);
+                    }
+                }
+            });
+            final String emailId = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_EMAIL));
+            emailButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (emailId.equals(getActivity().getResources().getString(R.string.na))) {
+                        Toast.makeText(getContext(),"No Email Available",Toast.LENGTH_SHORT).show();
+                    } else {
+                        Intent intent = new Intent(Intent.ACTION_SEND);
+                        intent.setType("text/html");
+                        intent.putExtra(Intent.EXTRA_EMAIL, emailId);
+                        startActivity(intent);
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            cursor.close();
         }
-        phoneButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (phoneNumber.equals(getActivity().getResources().getString(R.string.na))) {
-                    Toast.makeText(getContext(),"No Phone Available",Toast.LENGTH_SHORT).show();
-                }  else {
-                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber));
-                    startActivity(intent);
-                }
-            }
-        });
-        final String emailId = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_EMAIL));
-        emailButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (emailId.equals(getActivity().getResources().getString(R.string.na))) {
-                    Toast.makeText(getContext(),"No Email Available",Toast.LENGTH_SHORT).show();
-                } else {
-                    Intent intent = new Intent(Intent.ACTION_SEND);
-                    intent.setType("text/html");
-                    intent.putExtra(Intent.EXTRA_EMAIL, emailId);
-                    startActivity(intent);
-                }
-            }
-        });
-
 
 
     }

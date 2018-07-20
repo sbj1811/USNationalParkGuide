@@ -81,7 +81,7 @@ public class ParkWidgetService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        if(intent == null) return;
+        if(intent == null || intent.getAction() == null) return;
         if (intent.getAction().equals(UPDATE_WIDGET)) {
             Context context = getApplicationContext();
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
@@ -92,6 +92,7 @@ public class ParkWidgetService extends IntentService {
                     null,
                     null);
             if (cursor != null) {
+                try {
                     cursor.moveToNext();
                     uri = ParkContract.ParkEntry.CONTENT_URI_FAVORITES;
                     parkId = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_ID));
@@ -100,7 +101,12 @@ public class ParkWidgetService extends IntentService {
                     parkCode = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_CODE));
                     imgUrl = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_IMAGE));
                     title = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_NAME));
-                ParkWidgetProvider.updateAppWidgets(context,appWidgetManager,appWidgetIds,uri,parkId,position,latLong,parkCode,true,imgUrl,title);
+                    ParkWidgetProvider.updateAppWidgets(context,appWidgetManager,appWidgetIds,uri,parkId,position,latLong,parkCode,true,imgUrl,title);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    cursor.close();
+                }
             } else {
                 Log.e(TAG, "onHandleIntent: Data NULL");
                 return;

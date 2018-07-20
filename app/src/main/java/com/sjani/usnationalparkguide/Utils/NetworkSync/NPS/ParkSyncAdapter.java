@@ -9,7 +9,9 @@ import android.content.Context;
 import android.content.SyncResult;
 import android.os.Bundle;
 
+import com.sjani.usnationalparkguide.Data.CampContract;
 import com.sjani.usnationalparkguide.Data.ParkContract;
+import com.sjani.usnationalparkguide.Models.Park.Address;
 import com.sjani.usnationalparkguide.Models.Park.Datum;
 import com.sjani.usnationalparkguide.Models.Park.Parks;
 import com.sjani.usnationalparkguide.R;
@@ -88,27 +90,31 @@ public class ParkSyncAdapter extends AbstractThreadedSyncAdapter {
             parkValues.put(ParkContract.ParkEntry.COLUMN_PARK_LATLONG, data.getLatLong());
             parkValues.put(ParkContract.ParkEntry.COLUMN_PARK_DESCRIPTION, data.getDescription());
             parkValues.put(ParkContract.ParkEntry.COLUMN_PARK_DESIGNATION, data.getDesignation());
-            String address;
-            if(data.getAddresses().size() == 0) {
-                parkValues.put(ParkContract.ParkEntry.COLUMN_PARK_ADDRESS, context.getResources().getString(R.string.na));
+            String address = "NA";
+            if(data.getAddresses() == null || data.getAddresses().size() == 0) {
+                parkValues.put(ParkContract.ParkEntry.COLUMN_PARK_ADDRESS, String.valueOf(R.string.NA));
             } else {
-                if (data.getAddresses().get(0).getType().equals("Physical")) {
-                    address = data.getAddresses().get(0).getLine1()+", "
-                            +(data.getAddresses().get(0).getLine2().equals("")?"":data.getAddresses().get(0).getLine2()+", ")
-                            +(data.getAddresses().get(0).getLine3().equals("")?"":data.getAddresses().get(0).getLine3()+", ")
-                            +data.getAddresses().get(0).getCity()+", "
-                            +data.getAddresses().get(0).getStateCode()+" "
-                            +data.getAddresses().get(0).getPostalCode();
-                } else {
-                    address = data.getAddresses().get(1).getLine1()+", "
-                            +(data.getAddresses().get(1).getLine2().equals("")?"":data.getAddresses().get(1).getLine2()+", ")
-                            +(data.getAddresses().get(1).getLine3().equals("")?"":data.getAddresses().get(1).getLine3()+", ")
-                            +data.getAddresses().get(1).getCity()+", "
-                            +data.getAddresses().get(1).getStateCode()+" "
-                            +data.getAddresses().get(1).getPostalCode();
+                for (Address addresses: data.getAddresses()) {
+                    if (addresses.getType().equals("Physical")) {
+                        address = addresses.getLine1()+", "
+                                +(addresses.getLine3().equals("")?"":addresses.getLine3()+", ")
+                                +addresses.getCity()+", "
+                                +addresses.getStateCode()+" "
+                                +addresses.getPostalCode();
+                        break;
+                    } else {
+                        address = addresses.getLine1()+", "
+                                +(addresses.getLine2().equals("")?"":addresses.getLine2()+", ")
+                                +(addresses.getLine3().equals("")?"":addresses.getLine3()+", ")
+                                +addresses.getCity()+", "
+                                +addresses.getStateCode()+" "
+                                +addresses.getPostalCode();
+                    }
                 }
+
                 parkValues.put(ParkContract.ParkEntry.COLUMN_PARK_ADDRESS, address);
             }
+
             if(data.getContacts() == null) {
                 parkValues.put(ParkContract.ParkEntry.COLUMN_PARK_PHONE, context.getResources().getString(R.string.na));
                 parkValues.put(ParkContract.ParkEntry.COLUMN_PARK_EMAIL, context.getResources().getString(R.string.na));

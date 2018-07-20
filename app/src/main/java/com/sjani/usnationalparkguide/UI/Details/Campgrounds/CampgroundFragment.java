@@ -165,11 +165,12 @@ public class CampgroundFragment extends Fragment implements LoaderManager.Loader
         @Override
         protected Void doInBackground(Void... voids) {
             camps = loadCampData();
-            Log.e(TAG, "doInBackground: HERE");
             ContentValues[] campContent = makeContentFromCampList(camps);
             ContentResolver contentResolver =  getContext().getContentResolver();
-            contentResolver.delete(CampContract.CampEntry.CONTENT_URI_CAMP,null,null);
-            contentResolver.bulkInsert(CampContract.CampEntry.CONTENT_URI_CAMP,campContent);
+            if (campContent != null) {
+                contentResolver.delete(CampContract.CampEntry.CONTENT_URI_CAMP, null, null);
+                contentResolver.bulkInsert(CampContract.CampEntry.CONTENT_URI_CAMP, campContent);
+            }
             return null;
         }
 
@@ -183,31 +184,29 @@ public class CampgroundFragment extends Fragment implements LoaderManager.Loader
         Response<Campground> response = null;
         try {
             response = campData.execute();
-            Log.e(TAG, "loadCampData: "+response);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Log.e(TAG, "loadCampData: HERE"+response.body());
-        return response.body().getData();
+        if (response != null) {
+            return response.body().getData();
+        } else
+            return null;
     }
 
     public static ContentValues[] makeContentFromCampList(List<CampDatum> list) {
-        Log.e(TAG, "makeContentFromCampList: HERE: "+list);
         if (list == null) {
-            Log.e(TAG, "makeContentFromCampList: LIST NULL");
             return null;
         }
         ContentValues[] result = new ContentValues[list.size()];
 
         for (int i = 0; i < list.size(); i++) {
             CampDatum data = list.get(i);
-            Log.e(TAG, "makeContentFromCampList: HERE: "+data);
             ContentValues campValues = new ContentValues();
             campValues.put(CampContract.CampEntry.COLUMN_CAMP_ID, data.getId());
             campValues.put(CampContract.CampEntry.COLUMN_CAMP_NAME, data.getName());
             campValues.put(CampContract.CampEntry.COLUMN_CAMP_DESCRIPTION, data.getDescription());
             campValues.put(CampContract.CampEntry.COLUMN_CAMP_PARKCODE, data.getParkCode());
-            String address = "NA";
+            String address = String.valueOf(R.string.NA);
             if(data.getAddresses() == null || data.getAddresses().size() == 0) {
                 campValues.put(CampContract.CampEntry.COLUMN_CAMP_ADDRESSS, String.valueOf(R.string.NA));
             } else {
@@ -236,13 +235,13 @@ public class CampgroundFragment extends Fragment implements LoaderManager.Loader
             if(data.getAmenities().getShowers().size() != 0) {
                 campValues.put(CampContract.CampEntry.COLUMN_CAMP_SHOWERS, data.getAmenities().getShowers().get(0));
             } else {
-                campValues.put(CampContract.CampEntry.COLUMN_CAMP_SHOWERS, "None");
+                campValues.put(CampContract.CampEntry.COLUMN_CAMP_SHOWERS, String.valueOf(R.string.none));
             }
             campValues.put(CampContract.CampEntry.COLUMN_CAMP_INTERNET, data.getAmenities().getInternetConnectivity().toString());
             if (data.getAmenities().getToilets().size() != 0) {
                 campValues.put(CampContract.CampEntry.COLUMN_CAMP_TOILET, data.getAmenities().getToilets().get(0));
             } else {
-                campValues.put(CampContract.CampEntry.COLUMN_CAMP_TOILET, "None");
+                campValues.put(CampContract.CampEntry.COLUMN_CAMP_TOILET, String.valueOf(R.string.none));
             }
             campValues.put(CampContract.CampEntry.COLUMN_CAMP_WHEELCHAIR, data.getAccessibility().getWheelchairAccess());
             campValues.put(CampContract.CampEntry.COLUMN_CAMP_RESERVURL, data.getReservationsUrl());

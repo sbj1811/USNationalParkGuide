@@ -161,49 +161,49 @@ public class WeatherFragment extends Fragment {
         Response<CurrentWeather> response = null;
         try {
             response = weatherData.execute();
-            Log.e(TAG, "getCurrentWeather: "+response);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        currentWeather = response.body().getWeather();
-        main = response.body().getMain();
-        wind = response.body().getWind();
-        sys =  response.body().getSys();
+        if (response != null) {
+            currentWeather = response.body().getWeather();
+            main = response.body().getMain();
+            wind = response.body().getWind();
+            sys = response.body().getSys();
+        }
     }
 
     public void createWeatherview(List<Weather> weather, Main main, Wind wind, Sys sys){
-        Double windspeed = wind.getSpeed();
-        Double windDegree = wind.getDeg();
-        Log.e(TAG, "createWeatherview: windspeed: "+windspeed+" windDegree: "+windDegree);
-        String windInfo = WeatherUtils.getFormattedWind(getContext(),windspeed,windDegree);
-        int weatherIconId = WeatherUtils.getResourceIdForWeatherCondition(weather.get(0).getId());
+        if (main != null && weather != null && wind != null && sys != null) {
+            Double windspeed = wind.getSpeed();
+            Double windDegree = wind.getDeg();
+            String windInfo = WeatherUtils.getFormattedWind(getContext(),windspeed,windDegree);
+            int weatherIconId = WeatherUtils.getResourceIdForWeatherCondition(weather.get(0).getId());
 
-        Long sunriseTimeVal = sys.getSunrise();
-        Long sunsetTimeVal = sys.getSunset();
+            Long sunriseTimeVal = sys.getSunrise();
+            Long sunsetTimeVal = sys.getSunset();
 
-        SimpleDateFormat sdf = new SimpleDateFormat("h:mm a", Locale.ENGLISH);
-      //  sdf.setTimeZone(Calendar.getInstance().getTimeZone());
-        Date dateSunrise = new Date(sunriseTimeVal*1000);
-        Date dateSunset =  new Date(sunsetTimeVal*1000);
+            SimpleDateFormat sdf = new SimpleDateFormat("h:mm a", Locale.ENGLISH);
+            Date dateSunrise = new Date(sunriseTimeVal*1000);
+            Date dateSunset =  new Date(sunsetTimeVal*1000);
 
-        String sunriseTime = sdf.format(dateSunrise);
-        String sunsetTime = sdf.format(dateSunset);
+            String sunriseTime = sdf.format(dateSunrise);
+            String sunsetTime = sdf.format(dateSunset);
 
-        sunriseTimeTextview.setText(sunriseTime);
-        sunsetTimeTextview.setText(sunsetTime);
+            sunriseTimeTextview.setText(sunriseTime);
+            sunsetTimeTextview.setText(sunsetTime);
 
-        Glide.with(weatherConditionImageView.getContext())
-                .load(weatherIconId)
-                .fitCenter()
-                .into(weatherConditionImageView);
-        windTextview.setText(windInfo);
-        String humidityInfo = String.format("%d",main.getHumidity())+"\u0025";
-        humidityTextview.setText(humidityInfo);
-        currentTempTextview.setText(String.format("%d\u00b0F",(Long) Math.round(main.getTemp())));
-        weatherConditionTextview.setText(weather.get(0).getMain());
-        minTempTextview.setText(String.format("%d\u00b0F",(Long) Math.round(main.getTempMin())));
-        maxTempTextview.setText(String.format("%d\u00b0F",(Long) Math.round(main.getTempMax())));
+            Glide.with(weatherConditionImageView.getContext())
+                    .load(weatherIconId)
+                    .fitCenter()
+                    .into(weatherConditionImageView);
+            windTextview.setText(windInfo);
+            String humidityInfo = String.format("%d",main.getHumidity())+"\u0025";
+            humidityTextview.setText(humidityInfo);
+            currentTempTextview.setText(String.format("%d\u00b0F",(Long) Math.round(main.getTemp())));
+            weatherConditionTextview.setText(weather.get(0).getMain());
+            minTempTextview.setText(String.format("%d\u00b0F",(Long) Math.round(main.getTempMin())));
+            maxTempTextview.setText(String.format("%d\u00b0F",(Long) Math.round(main.getTempMax())));
+        }
     }
 
 

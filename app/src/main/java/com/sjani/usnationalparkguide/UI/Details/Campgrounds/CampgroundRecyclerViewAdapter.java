@@ -36,9 +36,14 @@ public class CampgroundRecyclerViewAdapter extends RecyclerView.Adapter<Campgrou
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        cursor.moveToPosition(position);
-        String title = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_NAME));
-        holder.campTitleTv.setText(title);
+        try {
+            cursor.moveToPosition(position);
+            String title = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_NAME));
+            holder.campTitleTv.setText(title);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+        }
     }
 
     @Override

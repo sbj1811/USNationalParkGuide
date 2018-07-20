@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -62,6 +63,8 @@ public class CampDetailDialogFragment extends DialogFragment implements LoaderMa
     Button reservationButton;
     @BindView(R.id.direction_button)
     Button directionButton;
+    @BindView(R.id.camp_share_button)
+    ImageButton shareButton;
     @BindView(R.id.camp_address_linear_layout)
     LinearLayout addressLinearLayout;
 
@@ -160,74 +163,91 @@ public class CampDetailDialogFragment extends DialogFragment implements LoaderMa
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         cursor = data;
-        cursor.moveToPosition(position);
-        String title = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_NAME));
-        titleTv.setText(title);
-        String summary = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_DESCRIPTION));
-        summaryTv.setText(summary);
-        String address = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_ADDRESSS));
-        addressTv.setText(address);
-        String latLong = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_LATLONG));
-        StringToGPSCoordinates stringToGPSCoordinates = new StringToGPSCoordinates();
-        final String gpsCoodinates[] = stringToGPSCoordinates.convertToGPS(latLong);
-        addressLinearLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
-                        Uri.parse("geo:"+gpsCoodinates[0]+","+gpsCoodinates[1]+"?q="+gpsCoodinates[0]+","+gpsCoodinates[1]+"?z=10"));
-                startActivity(intent);
-            }
-        });
-        String cellrecep = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_CELLRECEP));
-        if (cellrecep.equals("Yes - year round")){
-            cellrecepIv.setImageResource(R.drawable.ic_check_circle);
-        } else {
-            cellrecepIv.setImageResource(R.drawable.ic_cancel);
-        }
-        String showers = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_SHOWERS));
-        if (showers.equals("None")){
-            showersIv.setImageResource(R.drawable.ic_cancel);
-        } else {
-            showersIv.setImageResource(R.drawable.ic_check_circle);
-        }
-        String toilets = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_TOILET));
-        if (toilets.equals("None")){
-            toiletsIv.setImageResource(R.drawable.ic_cancel);
-        } else {
-            toiletsIv.setImageResource(R.drawable.ic_check_circle);
-        }
-        String internet = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_INTERNET));
-        if (internet.equals("true")){
-            internetIv.setImageResource(R.drawable.ic_check_circle);
-        } else {
-            internetIv.setImageResource(R.drawable.ic_cancel);
-        }
-        String wheelchair = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_WHEELCHAIR));
-        wheelchairTv.setText(wheelchair);
-        final String reservationUrl = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_RESERVURL));
-        reservationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (reservationUrl.equals("")){
-                    Toast.makeText(getContext(),"Reservation Link unavailable for this site",Toast.LENGTH_SHORT).show();
-                } else {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(reservationUrl));
-                    startActivity(browserIntent);
+        if (cursor == null) return;
+        try {
+            cursor.moveToPosition(position);
+            final String title = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_NAME));
+            titleTv.setText(title);
+            String summary = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_DESCRIPTION));
+            summaryTv.setText(summary);
+            String address = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_ADDRESSS));
+            addressTv.setText(address);
+            String latLong = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_LATLONG));
+            StringToGPSCoordinates stringToGPSCoordinates = new StringToGPSCoordinates();
+            final String gpsCoodinates[] = stringToGPSCoordinates.convertToGPS(latLong);
+            addressLinearLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("geo:"+gpsCoodinates[0]+","+gpsCoodinates[1]+"?q="+gpsCoodinates[0]+","+gpsCoodinates[1]+"?z=10"));
+                    startActivity(intent);
                 }
+            });
+            String cellrecep = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_CELLRECEP));
+            if (cellrecep.equals("Yes - year round")){
+                cellrecepIv.setImageResource(R.drawable.ic_check_circle);
+            } else {
+                cellrecepIv.setImageResource(R.drawable.ic_cancel);
             }
-        });
-        final String directionUrl = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_DIRECTIONURL));
-        directionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (directionUrl.equals("")){
-                    Toast.makeText(getContext(),"Detailed Directions unavailable for this site",Toast.LENGTH_SHORT).show();
-                } else {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(directionUrl));
-                    startActivity(browserIntent);
+            String showers = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_SHOWERS));
+            if (showers.equals("None")){
+                showersIv.setImageResource(R.drawable.ic_cancel);
+            } else {
+                showersIv.setImageResource(R.drawable.ic_check_circle);
+            }
+            String toilets = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_TOILET));
+            if (toilets.equals("None")){
+                toiletsIv.setImageResource(R.drawable.ic_cancel);
+            } else {
+                toiletsIv.setImageResource(R.drawable.ic_check_circle);
+            }
+            String internet = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_INTERNET));
+            if (internet.equals("true")){
+                internetIv.setImageResource(R.drawable.ic_check_circle);
+            } else {
+                internetIv.setImageResource(R.drawable.ic_cancel);
+            }
+            String wheelchair = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_WHEELCHAIR));
+            wheelchairTv.setText(wheelchair);
+            final String reservationUrl = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_RESERVURL));
+            reservationButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (reservationUrl.equals("")){
+                        Toast.makeText(getContext(),"Reservation Link unavailable for this site",Toast.LENGTH_SHORT).show();
+                    } else {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(reservationUrl));
+                        startActivity(browserIntent);
+                    }
                 }
-            }
-        });
+            });
+            final String directionUrl = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_DIRECTIONURL));
+            directionButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (directionUrl.equals("")){
+                        Toast.makeText(getContext(),"Detailed Directions unavailable for this site",Toast.LENGTH_SHORT).show();
+                    } else {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(directionUrl));
+                        startActivity(browserIntent);
+                    }
+                }
+            });
+            shareButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                    sharingIntent.setType("text/plain");
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, title);
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, title+"\nOpen in Google Maps https://maps.google.com/?q="+gpsCoodinates[0]+","+gpsCoodinates[1]);
+                    startActivity(Intent.createChooser(sharingIntent, "Share via"));
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            cursor.close();
+        }
 
     }
 

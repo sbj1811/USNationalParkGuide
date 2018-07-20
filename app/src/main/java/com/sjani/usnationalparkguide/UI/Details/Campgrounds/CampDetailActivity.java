@@ -39,8 +39,6 @@ public class CampDetailActivity extends AppCompatActivity {
             }
         }
 
-
-
     }
 
 

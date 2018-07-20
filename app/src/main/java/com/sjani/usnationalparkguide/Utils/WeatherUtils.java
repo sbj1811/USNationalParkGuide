@@ -10,8 +10,8 @@ public class WeatherUtils {
     private static final String TAG = WeatherUtils.class.getSimpleName();
     public static String getFormattedWind(Context context, Double windSpeed, Double degrees) {
 
-            int windFormat = R.string.format_wind_mph;
-            Double WindSpeed = .621371192237334f * windSpeed;
+        int windFormat = R.string.format_wind_mph;
+        Double WindSpeed = .621371192237334f * windSpeed;
 
         String direction = "";
         if (degrees == null) {
@@ -33,7 +33,6 @@ public class WeatherUtils {
         } else if (degrees >= 292.5 && degrees < 337.5) {
             direction = "NW";
         }
-        Log.e(TAG, "getFormattedWind: "+String.format(context.getString(windFormat), WindSpeed, direction));
         return String.format(context.getString(windFormat), WindSpeed, direction);
     }
 
@@ -68,8 +67,6 @@ public class WeatherUtils {
         } else if (weatherId >= 951 && weatherId <= 957) {
             return R.drawable.ic_sun;
         }
-
-        Log.e(TAG, "Unknown Weather: " + weatherId);
         return R.drawable.ic_sun;
     }
 

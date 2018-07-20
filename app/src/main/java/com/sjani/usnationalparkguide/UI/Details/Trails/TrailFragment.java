@@ -148,8 +148,10 @@ public class TrailFragment extends Fragment implements android.support.v4.app.Lo
             trails = loadTrailData();
             ContentValues[] trailContent = makeContentFromTrailList(trails);
             ContentResolver contentResolver =  getContext().getContentResolver();
-            contentResolver.delete(TrailContract.TrailEntry.CONTENT_URI_TRAIL,null,null);
-            contentResolver.bulkInsert(TrailContract.TrailEntry.CONTENT_URI_TRAIL,trailContent);
+            if (trailContent != null) {
+                contentResolver.delete(TrailContract.TrailEntry.CONTENT_URI_TRAIL, null, null);
+                contentResolver.bulkInsert(TrailContract.TrailEntry.CONTENT_URI_TRAIL, trailContent);
+            }
             return null;
         }
 
@@ -171,11 +173,13 @@ public class TrailFragment extends Fragment implements android.support.v4.app.Lo
         Response<Trail> response = null;
         try {
             response = trailData.execute();
-            Log.e(TAG, "loadTrailData: "+response);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return response.body().getTrails();
+        if (response != null) {
+            return response.body().getTrails();
+        } else
+            return null;
     }
 
     public static ContentValues[] makeContentFromTrailList(List<TrailDatum> list) {
@@ -221,7 +225,6 @@ public class TrailFragment extends Fragment implements android.support.v4.app.Lo
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.e(TAG, "onSaveInstanceState: HERE");
         outState.putParcelable(URI,uri);
         outState.putString(PARK_ID,parkId);
         outState.putString(PARKCODE,parkCode);
