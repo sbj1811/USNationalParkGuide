@@ -111,6 +111,12 @@ public class InfoFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            uri = savedInstanceState.getParcelable(URI);
+            parkId = savedInstanceState.getString(PARK_ID);
+            position = savedInstanceState.getInt(POSITION);
+            latLong = savedInstanceState.getString(LATLONG);
+        }
     }
 
     @Override
@@ -127,10 +133,6 @@ public class InfoFragment extends Fragment implements LoaderManager.LoaderCallba
         ButterKnife.bind(this, view);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-
-    }
 
     @NonNull
     @Override
@@ -142,7 +144,9 @@ public class InfoFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         cursor = data;
-        if (cursor == null) return;
+        if (cursor == null) {
+            return;
+        }
         try {
             cursor.moveToPosition(position);
             final String parkName = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_NAME));
@@ -202,5 +206,15 @@ public class InfoFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
         cursor = null;
+    }
+
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putParcelable(URI,uri);
+        outState.putString(PARK_ID,parkId);
+        outState.putInt(POSITION,position);
+        outState.putString(LATLONG,latLong);
+        super.onSaveInstanceState(outState);
     }
 }

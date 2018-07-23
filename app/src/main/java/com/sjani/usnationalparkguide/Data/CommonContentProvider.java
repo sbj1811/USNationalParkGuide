@@ -225,7 +225,6 @@ public class CommonContentProvider extends ContentProvider {
                 db_park.beginTransaction();
                 try{
                     for (ContentValues value: values) {
-                     //   Log.e(TAG, "bulkInsert: "+value);
                         long ids = db_park.insert(ParkContract.ParkEntry.TABLE_NAME_PARKS,null,value);
                         if(ids != -1){
                             rowsInserted++;
@@ -243,7 +242,6 @@ public class CommonContentProvider extends ContentProvider {
                 db_trail.beginTransaction();
                 try{
                     for (ContentValues value: values) {
-                        //   Log.e(TAG, "bulkInsert: "+value);
                         long ids = db_trail.insert(TrailContract.TrailEntry.TABLE_NAME_TRAIL,null,value);
                         if(ids != -1){
                             rowsInserted++;
@@ -261,7 +259,6 @@ public class CommonContentProvider extends ContentProvider {
                 db_camp.beginTransaction();
                 try{
                     for (ContentValues value: values) {
-                        //   Log.e(TAG, "bulkInsert: "+value);
                         long ids = db_camp.insert(CampContract.CampEntry.TABLE_NAME_CAMP,null,value);
                         if(ids != -1){
                             rowsInserted++;
@@ -279,7 +276,6 @@ public class CommonContentProvider extends ContentProvider {
                 db_alert.beginTransaction();
                 try{
                     for (ContentValues value: values) {
-                        //   Log.e(TAG, "bulkInsert: "+value);
                         long ids = db_alert.insert(AlertContract.AlertEntry.TABLE_NAME_ALERT,null,value);
                         if(ids != -1){
                             rowsInserted++;

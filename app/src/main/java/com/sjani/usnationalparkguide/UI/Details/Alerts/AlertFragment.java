@@ -115,6 +115,11 @@ public class AlertFragment extends Fragment implements LoaderManager.LoaderCallb
         new NetworkCall().execute();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mContext.getContentResolver().delete(AlertContract.AlertEntry.CONTENT_URI_ALERT, null, null);
+    }
 
     private class NetworkCall extends AsyncTask<Void,Void,Void>{
         @Override

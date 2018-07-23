@@ -46,7 +46,6 @@ public class DetailsActivity extends AppCompatActivity {
             latLong = extras.getString(LATLONG);
             parkCode = extras.getString(PARKCODE);
             isFromFavNav = extras.getBoolean(FROM_FAV);
-
         } else {
             uri = savedInstanceState.getParcelable(URI);
             parkId = savedInstanceState.getString(PARK_ID);

@@ -111,7 +111,6 @@ public class ParkWidgetService extends IntentService {
                     cursor.close();
                 }
             } else {
-                Log.e(TAG, "onHandleIntent HERE 2: Data NULL");
                 return;
             }
         }
@@ -120,7 +119,6 @@ public class ParkWidgetService extends IntentService {
     public static void startActionUpdateWidgets(Context context) {
         Intent intent = new Intent(context, ParkWidgetService.class);
         intent.setAction(UPDATE_WIDGET);
-        // context.startService(intent);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             context.startForegroundService(intent);
         } else {

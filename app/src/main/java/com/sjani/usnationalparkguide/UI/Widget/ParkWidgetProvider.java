@@ -18,6 +18,7 @@ import com.bumptech.glide.request.FutureTarget;
 import com.sjani.usnationalparkguide.Data.ParkContract;
 import com.sjani.usnationalparkguide.R;
 import com.sjani.usnationalparkguide.UI.Details.DetailsActivity;
+import com.sjani.usnationalparkguide.UI.MainList.MainListActivity;
 
 import java.util.concurrent.ExecutionException;
 
@@ -69,13 +70,14 @@ public class ParkWidgetProvider extends AppWidgetProvider {
         if(cursor == null) {
             Log.e(TAG, "updateAppWidget: HERE: cursor null");
         }
-        Intent intent = new Intent(context, DetailsActivity.class);
-        intent.putExtra(PARK_ID, parkId);
-        intent.putExtra(POSITION, position);
-        intent.putExtra(URI, uri);
-        intent.putExtra(LATLONG, latLong);
-        intent.putExtra(PARKCODE, parkCode);
-        intent.putExtra(FROM_FAV,true);
+        Intent intent = new Intent(context, MainListActivity.class);
+//        Intent intent = new Intent(context, DetailsActivity.class);
+//        intent.putExtra(PARK_ID, parkId);
+//        intent.putExtra(POSITION, position);
+//        intent.putExtra(URI, uri);
+//        intent.putExtra(LATLONG, latLong);
+//        intent.putExtra(PARKCODE, parkCode);
+//        intent.putExtra(FROM_FAV,true);
         PendingIntent pendingIntent = PendingIntent.getActivity(context,0,intent,0);
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.park_widget);
         if (parkCode.equals("")){

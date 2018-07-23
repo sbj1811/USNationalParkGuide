@@ -99,6 +99,12 @@ public class WeatherFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            uri = savedInstanceState.getParcelable(URI);
+            parkId = savedInstanceState.getString(PARK_ID);
+            position = savedInstanceState.getInt(POSITION);
+            latLong = savedInstanceState.getString(LATLONG);
+        }
     }
 
     @Override
@@ -208,6 +214,12 @@ public class WeatherFragment extends Fragment {
         }
     }
 
-
-
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putParcelable(URI,uri);
+        outState.putString(PARK_ID,parkId);
+        outState.putInt(POSITION,position);
+        outState.putString(LATLONG,latLong);
+        super.onSaveInstanceState(outState);
+    }
 }

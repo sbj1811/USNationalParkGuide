@@ -3,25 +3,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/White"
     tools:context=".UI.MainList.EmptyStateFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/empty_state"
-        android:scaleType="centerCrop"
-        android:contentDescription="@string/image" />
-
-    <TextView
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/White"
-        android:background="#6000"
-        android:padding="40dp"
-        android:textSize="24sp"
-        android:elevation="4dp"
-        android:layout_gravity="center"
-        android:text="@string/empty_state_text"/>
+        android:orientation="vertical"
+        android:layout_gravity="center">
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@mipmap/ic_launcher_round"
+            android:scaleType="centerCrop"
+            android:layout_gravity="center"
+            android:contentDescription="@string/image" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/horizontal_margin"
+            android:textSize="24sp"
+            android:elevation="4dp"
+            android:text="@string/empty_state_text"/>
+
+    </LinearLayout>
+
 
 </FrameLayout>

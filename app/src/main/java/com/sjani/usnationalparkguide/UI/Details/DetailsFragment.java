@@ -127,6 +127,14 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            uri = savedInstanceState.getParcelable(URI);
+            parkId = savedInstanceState.getString(PARK_ID);
+            position = savedInstanceState.getInt(POSITION);
+            latLong = savedInstanceState.getString(LATLONG);
+            parkCode = savedInstanceState.getString(PARKCODE);
+            isFromFavNav = savedInstanceState.getBoolean(FROM_FAV);
+        }
     }
 
     @Override
@@ -181,16 +189,6 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
         });
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (isFromFavNav) {
-            if (!isMarkedFavorite) {
-                getActivity().getContentResolver().delete(ParkContract.ParkEntry.CONTENT_URI_FAVORITES, null, null);
-            }
-            isFromFavNav = false;
-        }
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -272,5 +270,17 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
         cursor = null;
+    }
+
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putParcelable(URI,uri);
+        outState.putString(PARK_ID,parkId);
+        outState.putInt(POSITION,position);
+        outState.putString(LATLONG,latLong);
+        outState.putString(PARKCODE,parkCode);
+        outState.putBoolean(FROM_FAV,isFromFavNav);
+        super.onSaveInstanceState(outState);
     }
 }

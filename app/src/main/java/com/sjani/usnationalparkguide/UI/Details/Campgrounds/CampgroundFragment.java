@@ -160,6 +160,11 @@ public class CampgroundFragment extends Fragment implements LoaderManager.Loader
 
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mContext.getContentResolver().delete(CampContract.CampEntry.CONTENT_URI_CAMP, null, null);
+    }
 
     private class NetworkCall extends AsyncTask<Void, Void, Void> {
 

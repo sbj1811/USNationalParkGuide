@@ -126,6 +126,11 @@ public class TrailFragment extends Fragment implements android.support.v4.app.Lo
         new NetworkCall().execute();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mContext.getContentResolver().delete(TrailContract.TrailEntry.CONTENT_URI_TRAIL, null, null);
+    }
 
     @Override
     public void onListFragmentInteraction(String id, int position) {
