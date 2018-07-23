@@ -77,6 +77,7 @@ public class WeatherFragment extends Fragment {
     private Main main;
     private Wind wind;
     private Sys sys;
+    private Context mContext;
 
 
     public WeatherFragment() {
@@ -123,6 +124,7 @@ public class WeatherFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mContext = context;
         if (getArguments() != null) {
             uri = getArguments().getParcelable(URI);
             parkId = getArguments().getString(PARK_ID);
@@ -153,8 +155,8 @@ public class WeatherFragment extends Fragment {
 
     public void getCurrentWeather(){
 
-        String apiKey = getContext().getResources().getString(R.string.OWMapiKey);
-        String metric = getContext().getResources().getString(R.string.units);
+        String apiKey = mContext.getResources().getString(R.string.OWMapiKey);
+        String metric = mContext.getResources().getString(R.string.units);
         StringToGPSCoordinates stringToGPSCoordinates = new StringToGPSCoordinates();
         final String gpsCoodinates[] = stringToGPSCoordinates.convertToGPS(latLong);
         Call<CurrentWeather> weatherData = OpenWeatherMapApiConnection.getApi().getWeather(gpsCoodinates[0],gpsCoodinates[1],apiKey,metric);

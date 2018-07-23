@@ -1,11 +1,15 @@
 package com.sjani.usnationalparkguide.UI.MainList;
 
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -21,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.sjani.usnationalparkguide.Data.ParkContract;
 import com.sjani.usnationalparkguide.R;
 import com.sjani.usnationalparkguide.UI.Details.DetailsActivity;
@@ -32,6 +37,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.sjani.usnationalparkguide.Utils.ParkIdlingResource;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,6 +65,7 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
     private String state;
     private boolean mDualPane;
     private AdView mAdView;
+    ParkIdlingResource idlingResource;
 
     private static final String[] PROJECTION = new String[]{
             ParkContract.ParkEntry._ID,
@@ -90,8 +97,14 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
     public void onAttach(Context context) {
         super.onAttach(context);
         AccountModel.createSyncAccount(context);
+        idlingResource = (ParkIdlingResource) ((MainListActivity)getActivity()).getIdlingResource();
+        if (idlingResource != null) {
+            idlingResource.setIdleState(true);
+        }
         state = getArguments().getString(SELECTED_STATE);
-        ParkSyncAdapter.performSync(state);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String max_article = sharedPreferences.getString(getString(R.string.settings_max_articles_key), getString(R.string.settings_max_articles_default));
+        ParkSyncAdapter.performSync(state,max_article);
         MobileAds.initialize(getActivity(),"ca-app-pub-1510923228147176~1193226000");
     }
 
@@ -123,6 +136,9 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         adapter = new ListAdapter(this,getContext());
+        if (idlingResource != null) {
+            idlingResource.setIdleState(true);
+        }
         progressBar.setVisibility(View.VISIBLE);
         recyclerView.setAdapter(adapter);
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -153,7 +169,14 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
             intent.putExtra(LATLONG, latlong);
             intent.putExtra(PARKCODE, parkCode);
             intent.putExtra(FROM_FAV, false);
-            startActivity(intent);
+
+//            SimpleDraweeView image = getActivity().findViewById(R.id.park_thumbnail);
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(getActivity(),image,image.getTransitionName());
+//                startActivity(intent, options.toBundle());
+//            } else {
+                startActivity(intent);
+//            }
         }
     }
 

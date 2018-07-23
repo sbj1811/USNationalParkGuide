@@ -22,17 +22,21 @@ public class CommonContentProvider extends ContentProvider {
     private static final int CODE_TRAILS_WITH_ID = 301;
     private static final int CODE_CAMPS = 400;
     private static final int CODE_CAMPS_WITH_ID = 401;
+    private static final int CODE_ALERTS = 500;
+    private static final int CODE_ALERTS_WITH_ID = 501;
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private ParkDbHelper mOpenHelper;
     private TrailDbHelper trailDbHelper;
     private CampDbHelper campDbHelper;
+    private AlertDbHelper alertDbHelper;
 
     public static UriMatcher buildUriMatcher(){
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = ParkContract.CONTENT_AUTHORITY;
         final String trailAuthority = TrailContract.CONTENT_AUTHORITY;
         final String campAuthority = CampContract.CONTENT_AUTHORITY;
+        final String alertAuthority = AlertContract.CONTENT_AUTHORITY;
 
         matcher.addURI(authority, ParkContract.PATH_PARKS, CODE_PARKS);
         matcher.addURI(authority, ParkContract.PATH_PARKS + "/#", CODE_PARKS_WITH_ID);
@@ -45,6 +49,9 @@ public class CommonContentProvider extends ContentProvider {
         matcher.addURI(campAuthority, CampContract.PATH_CAMPS, CODE_CAMPS);
         matcher.addURI(campAuthority, CampContract.PATH_CAMPS + "/#", CODE_CAMPS_WITH_ID);
 
+        matcher.addURI(alertAuthority, AlertContract.PATH_ALERTS, CODE_ALERTS);
+        matcher.addURI(alertAuthority, AlertContract.PATH_ALERTS + "/#", CODE_ALERTS_WITH_ID);
+
         return matcher;
     }
 
@@ -54,6 +61,7 @@ public class CommonContentProvider extends ContentProvider {
         mOpenHelper = new ParkDbHelper(getContext());
         trailDbHelper = new TrailDbHelper(getContext());
         campDbHelper = new CampDbHelper(getContext());
+        alertDbHelper = new AlertDbHelper(getContext());
         return false;
     }
 
@@ -148,6 +156,27 @@ public class CommonContentProvider extends ContentProvider {
                         null,
                         sortOrder);
                 break;
+            case CODE_ALERTS:
+                cursor = alertDbHelper.getReadableDatabase().query(
+                        AlertContract.AlertEntry.TABLE_NAME_ALERT,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder);
+                break;
+            case CODE_ALERTS_WITH_ID:
+                parkId = uri.getLastPathSegment();
+                cursor = alertDbHelper.getReadableDatabase().query(
+                        AlertContract.AlertEntry.TABLE_NAME_ALERT,
+                        projection,
+                        AlertContract.AlertEntry.COLUMN_ALERT_ID + " = ?",
+                        new String[]{parkId},
+                        null,
+                        null,
+                        sortOrder);
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri in query: "+uri);
         }
@@ -189,6 +218,7 @@ public class CommonContentProvider extends ContentProvider {
         final SQLiteDatabase db_park = mOpenHelper.getWritableDatabase();
         final SQLiteDatabase db_trail = trailDbHelper.getWritableDatabase();
         final SQLiteDatabase db_camp = campDbHelper.getWritableDatabase();
+        final SQLiteDatabase db_alert = alertDbHelper.getWritableDatabase();
         int rowsInserted = 0;
         switch (sUriMatcher.match(uri)) {
             case CODE_PARKS:
@@ -245,6 +275,24 @@ public class CommonContentProvider extends ContentProvider {
                     getContext().getContentResolver().notifyChange(uri,null);
                 }
                 return  rowsInserted;
+            case CODE_ALERTS:
+                db_alert.beginTransaction();
+                try{
+                    for (ContentValues value: values) {
+                        //   Log.e(TAG, "bulkInsert: "+value);
+                        long ids = db_alert.insert(AlertContract.AlertEntry.TABLE_NAME_ALERT,null,value);
+                        if(ids != -1){
+                            rowsInserted++;
+                        }
+                    }
+                    db_alert.setTransactionSuccessful();
+                }finally {
+                    db_alert.endTransaction();
+                }
+                if(rowsInserted > 0){
+                    getContext().getContentResolver().notifyChange(uri,null);
+                }
+                return rowsInserted;
             default:
                 return super.bulkInsert(uri,values);
 
@@ -256,6 +304,7 @@ public class CommonContentProvider extends ContentProvider {
         final SQLiteDatabase db_park = mOpenHelper.getWritableDatabase();
         final SQLiteDatabase db_trail = trailDbHelper.getWritableDatabase();
         final SQLiteDatabase db_camp = campDbHelper.getWritableDatabase();
+        final SQLiteDatabase db_alert = alertDbHelper.getWritableDatabase();
         int numRowsDeleted;
         String parkId = uri.getLastPathSegment();
         if (null == selection) selection = "1";
@@ -282,6 +331,12 @@ public class CommonContentProvider extends ContentProvider {
             case CODE_CAMPS:
                 numRowsDeleted = db_camp.delete(
                         CampContract.CampEntry.TABLE_NAME_CAMP,
+                        selection,
+                        selectionArgs);
+                break;
+            case CODE_ALERTS:
+                numRowsDeleted = db_alert.delete(
+                        AlertContract.AlertEntry.TABLE_NAME_ALERT,
                         selection,
                         selectionArgs);
                 break;

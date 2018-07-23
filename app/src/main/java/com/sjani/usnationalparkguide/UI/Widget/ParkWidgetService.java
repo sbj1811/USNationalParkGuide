@@ -56,6 +56,7 @@ public class ParkWidgetService extends IntentService {
         super("ParkWidgetService");
     }
 
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -71,13 +72,15 @@ public class ParkWidgetService extends IntentService {
             notificationManager.createNotificationChannel(mChannel);
         }
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this,NOTIFICATION_CHANNEL_ID)
-                .setContentTitle("Added to Favorite")
+                .setContentTitle("Favorite Updated")
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(largeIcon);
 
         Notification notification = notificationBuilder.build();
+        notificationManager.notify(111,notification);
         startForeground(1,notification);
     }
+
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
@@ -108,7 +111,7 @@ public class ParkWidgetService extends IntentService {
                     cursor.close();
                 }
             } else {
-                Log.e(TAG, "onHandleIntent: Data NULL");
+                Log.e(TAG, "onHandleIntent HERE 2: Data NULL");
                 return;
             }
         }

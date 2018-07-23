@@ -5,9 +5,12 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.NavigationView;
+import android.support.test.espresso.IdlingResource;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -15,6 +18,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,6 +37,8 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.sjani.usnationalparkguide.UI.Settings.SettingsActivity;
+import com.sjani.usnationalparkguide.Utils.ParkIdlingResource;
 
 import java.util.Arrays;
 
@@ -58,7 +64,8 @@ public class MainListActivity extends AppCompatActivity
     private ListFragment listFragment;
 //    private FirebaseAuth mFirebaseAuth;
 //    private FirebaseAuth.AuthStateListener mAuthStateListener;
-    private String mUsername;
+//    private String mUsername;
+    private ParkIdlingResource idlingResource;
 
 
     private static final String[] PROJECTION = new String[]{
@@ -79,6 +86,7 @@ public class MainListActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setupWindowAnimations();
         ButterKnife.bind(this);
         setContentView(R.layout.activity_main_list);
 
@@ -88,7 +96,8 @@ public class MainListActivity extends AppCompatActivity
 //        mFirebaseAuth = FirebaseAuth.getInstance();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.setTitle(R.string.state_prompt);
         listFragment = (ListFragment) getSupportFragmentManager().findFragmentById(R.id.list_container);
 
         if(listFragment == null){
@@ -173,9 +182,11 @@ public class MainListActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.main_list, menu);
         MenuItem item = menu.findItem(R.id.spinner);
         spinner = (Spinner) MenuItemCompat.getActionView(item);
+        item.setTitle(getResources().getString(R.string.state_prompt));
         spinner.setDropDownWidth(130);
+        spinner.setPopupBackgroundResource(R.color.primaryText );
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.state_arrays, android.R.layout.simple_spinner_item);
+                R.array.state_arrays, R.layout.spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
@@ -214,7 +225,8 @@ public class MainListActivity extends AppCompatActivity
                 Toast.makeText(this,"No Favorites",Toast.LENGTH_LONG).show();
             }
         } else if (id == R.id.nav_settings) {
-
+            Intent settingsIntent = new Intent(this, SettingsActivity.class);
+            startActivity(settingsIntent);
         }
 //        else if (id == R.id.nav_logout) {
 //            AuthUI.getInstance().signOut(this);
@@ -255,8 +267,6 @@ public class MainListActivity extends AppCompatActivity
 
 
     public boolean doesTableExist(String tableName) {
-        ParkDbHelper mOpenHelper = new ParkDbHelper(this);
-        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         Cursor cursor = getContentResolver().query(ParkContract.ParkEntry.CONTENT_URI_FAVORITES,PROJECTION,null,null,null);
         if (cursor != null) {
             if (cursor.getCount() == 1 && cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_ID) != -1) {
@@ -268,7 +278,22 @@ public class MainListActivity extends AppCompatActivity
         return false;
     }
 
-//    private void onSignedInInitialize(String username) {
+    @VisibleForTesting
+    @NonNull
+    public IdlingResource getIdlingResource() {
+        if (idlingResource == null) {
+            idlingResource = new ParkIdlingResource();
+        }
+        return idlingResource;
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString(SELECTED_STATE,state);
+        super.onSaveInstanceState(outState);
+    }
+
+    //    private void onSignedInInitialize(String username) {
 //        mUsername = username;
 //    }
 //
@@ -276,7 +301,13 @@ public class MainListActivity extends AppCompatActivity
 //        mUsername = ANONYMOUS;
 //    }
 
-
+    private void setupWindowAnimations() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            android.transition.Transition slide = new android.transition.Slide();
+            slide.setDuration(300);
+            getWindow().setEnterTransition(slide);
+        }
+    }
 
 
 }

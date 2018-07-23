@@ -3,12 +3,14 @@ package com.sjani.usnationalparkguide.UI.Details;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -16,10 +18,18 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.bumptech.glide.Glide;
 import com.sjani.usnationalparkguide.Data.ParkContract;
@@ -39,9 +49,11 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
     @BindView(R.id.detail_viewpager)
     ViewPager mViewPager;
     @BindView(R.id.detail_photo)
-    SimpleDraweeView parkImageView;
-    @BindView(R.id.fav_fab)
-    FloatingActionButton favFab;
+    ImageView parkImageView;
+    @BindView(R.id.fav_button)
+    FloatingActionButton favButton;
+    @BindView(R.id.detail_collapsing_toolbar)
+    CollapsingToolbarLayout collapsingToolbarLayout;
 
     private static final String TAG = DetailsFragment.class.getSimpleName();
     private static final String URI = "uri";
@@ -120,34 +132,51 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_details, container, false);
+        this.setHasOptionsMenu(true);
+        View view = inflater.inflate(R.layout.fragment_details, container, false);
+        return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+        collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
         FragmentSelectAdapter selectAdapter = new FragmentSelectAdapter(getFragmentManager(),getContext(),uri,parkId,position,latLong,parkCode);
         mViewPager.setAdapter(selectAdapter);
         if (getContext().getResources().getBoolean(R.bool.dual_pane)) {
             mViewPager.getAdapter().notifyDataSetChanged();
         }
+        if (mViewPager.getCurrentItem() == (selectAdapter.getCount()-1)){
+            mViewPager.setCurrentItem(selectAdapter.getCount() - 1);
+        }
         mTabLayout.setupWithViewPager(mViewPager);
-        favFab.setOnClickListener(new View.OnClickListener() {
+        favButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(isMarkedFavorite){
-                    favFab.setImageResource(R.drawable.ic_favorite_border);
+                    favButton.setImageResource(R.drawable.ic_favorite_border);
                     isMarkedFavorite = false;
+                    getActivity().getContentResolver().delete(ParkContract.ParkEntry.CONTENT_URI_FAVORITES,null,null);
                     ParkWidgetService.startActionUpdateWidgets(getContext());
                 } else {
-                    favFab.setImageResource(R.drawable.ic_favorite);
+                    favButton.setImageResource(R.drawable.ic_favorite);
                     isMarkedFavorite = true;
                     getActivity().getContentResolver().delete(ParkContract.ParkEntry.CONTENT_URI_FAVORITES,null,null);
                     getActivity().getContentResolver().insert(ParkContract.ParkEntry.CONTENT_URI_FAVORITES,values);
                     ParkWidgetService.startActionUpdateWidgets(getContext());
                 }
-                //        isMarkedFavorite = !isMarkedFavorite;
+//                        isMarkedFavorite = !isMarkedFavorite;
+            }
+        });
+        mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                super.onPageScrollStateChanged(state);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
             }
         });
     }
@@ -161,6 +190,19 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
             }
             isFromFavNav = false;
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // action with ID action_refresh was selected
+            case android.R.id.home:
+                getActivity().onBackPressed();
+                break;
+            default:
+                break;
+        }
+        return true;
     }
 
     @NonNull
@@ -210,10 +252,10 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
                     break;
                 case FAV_LOADER_ID:
                     if (data.getCount() > 0) {
-                        favFab.setImageResource(R.drawable.ic_favorite);
+                        favButton.setImageResource(R.drawable.ic_favorite);
                         isMarkedFavorite = true;
                     } else {
-                        favFab.setImageResource(R.drawable.ic_favorite_border);
+                        favButton.setImageResource(R.drawable.ic_favorite_border);
                         isMarkedFavorite = false;
                     }
                     break;

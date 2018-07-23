@@ -19,8 +19,6 @@ public class CampDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camp_details);
-
-
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         Uri uri = bundle.getParcelable(URI);
@@ -45,7 +43,8 @@ public class CampDetailActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         finish();
+        super.onBackPressed();
+
     }
 }

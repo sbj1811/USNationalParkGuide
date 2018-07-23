@@ -45,7 +45,7 @@ public class AccountModel {
 
         // Force a sync if the account was just created
         if (created) {
-            ParkSyncAdapter.performSync("AL");
+            ParkSyncAdapter.performSync("AL","25");
         }
     }
 

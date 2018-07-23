@@ -3,15 +3,19 @@ package com.sjani.usnationalparkguide.UI.Widget;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.FutureTarget;
+import com.sjani.usnationalparkguide.Data.ParkContract;
 import com.sjani.usnationalparkguide.R;
 import com.sjani.usnationalparkguide.UI.Details.DetailsActivity;
 
@@ -31,21 +35,45 @@ public class ParkWidgetProvider extends AppWidgetProvider {
     private static final String PARKCODE = "parkcode";
     private static final String FROM_FAV = "from_fav";
 
-    public static void updateAppWidgets(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds, Uri uri, String parkId, int position, String latlong, String parkCode, boolean isFromFavNav, String imgUrl, String title){
+
+    private static final String[] PROJECTION = new String[]{
+            ParkContract.ParkEntry._ID,
+            ParkContract.ParkEntry.COLUMN_PARK_ID,
+            ParkContract.ParkEntry.COLUMN_PARK_NAME,
+            ParkContract.ParkEntry.COLUMN_PARK_STATES,
+            ParkContract.ParkEntry.COLUMN_PARK_CODE,
+            ParkContract.ParkEntry.COLUMN_PARK_LATLONG,
+            ParkContract.ParkEntry.COLUMN_PARK_DESCRIPTION,
+            ParkContract.ParkEntry.COLUMN_PARK_DESIGNATION,
+            ParkContract.ParkEntry.COLUMN_PARK_ADDRESS,
+            ParkContract.ParkEntry.COLUMN_PARK_PHONE,
+            ParkContract.ParkEntry.COLUMN_PARK_EMAIL,
+            ParkContract.ParkEntry.COLUMN_PARK_IMAGE
+    };
+
+    public static void updateAppWidgets(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds, Uri uri, String parkId, int position, String latLong, String parkCode, boolean isFromFavNav, String imgUrl, String title){
         for (int appWidgetId : appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId,uri,parkId,position,latlong,parkCode,isFromFavNav,imgUrl,title);
+            updateAppWidget(context, appWidgetManager, appWidgetId,uri,parkId,position,latLong,parkCode,isFromFavNav,imgUrl,title);
         }
     }
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId, Uri uri, String parkId, int position, String latlong, String parkCode, boolean isFromFavNav,String imgUrl,String title) {
-
+                                int appWidgetId, Uri uri, String parkId, int position, String latLong, String parkCode, boolean isFromFavNav,String imgUrl,String title) {
+        Cursor cursor;
         CharSequence widgetText = context.getString(R.string.app_name);
+        cursor = context.getContentResolver().query(ParkContract.ParkEntry.CONTENT_URI_FAVORITES,
+                PROJECTION,
+                null,
+                null,
+                null);
+        if(cursor == null) {
+            Log.e(TAG, "updateAppWidget: HERE: cursor null");
+        }
         Intent intent = new Intent(context, DetailsActivity.class);
         intent.putExtra(PARK_ID, parkId);
         intent.putExtra(POSITION, position);
         intent.putExtra(URI, uri);
-        intent.putExtra(LATLONG, latlong);
+        intent.putExtra(LATLONG, latLong);
         intent.putExtra(PARKCODE, parkCode);
         intent.putExtra(FROM_FAV,true);
         PendingIntent pendingIntent = PendingIntent.getActivity(context,0,intent,0);

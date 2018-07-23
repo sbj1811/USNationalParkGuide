@@ -87,6 +87,8 @@ public class TrailDetailActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        finish();
         super.onBackPressed();
+
     }
 }

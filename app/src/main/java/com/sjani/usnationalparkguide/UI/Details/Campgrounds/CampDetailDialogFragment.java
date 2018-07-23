@@ -36,7 +36,7 @@ public class CampDetailDialogFragment extends DialogFragment implements LoaderMa
     private static final String CAMP_ID = "camp_id";
     private static final String URI = "uri";
     private static final String POSITION = "position";
-    private static final int LOADER_ID = 5;
+    private static final int LOADER_ID = 10;
 
     private Uri uri;
     private String campId;
@@ -121,7 +121,7 @@ public class CampDetailDialogFragment extends DialogFragment implements LoaderMa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        setStyle(DialogFragment.STYLE_NO_TITLE, R.style.RatingDialog2);
+        setStyle(DialogFragment.STYLE_NO_TITLE, R.style.DetailDialog);
         return inflater.inflate(R.layout.fragment_camp_detail_dialog, container, false);
     }
 

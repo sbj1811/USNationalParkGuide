@@ -42,7 +42,7 @@ public class TrailDetailFragment extends Fragment implements LoaderManager.Loade
     private static final String PARK_ID = "park_id";
     private static final String PARKCODE = "parkcode";
     private static final String LATLONG = "latlong";
-    private static final int LOADER_ID = 4;
+    private static final int LOADER_ID = 6;
 
     private Uri uri;
     private String trailId;
@@ -160,6 +160,11 @@ public class TrailDetailFragment extends Fragment implements LoaderManager.Loade
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             // action with ID action_refresh was selected
+            case android.R.id.home:
+                // this takes the user 'back', as if they pressed the left-facing triangle icon on the main android toolbar.
+                // if this doesn't work as desired, another possibility is to call `finish()` here.
+                getActivity().onBackPressed();
+                break;
             case R.id.action_share:
                 Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
@@ -264,6 +269,8 @@ public class TrailDetailFragment extends Fragment implements LoaderManager.Loade
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {

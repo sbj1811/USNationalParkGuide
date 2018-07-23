@@ -12,7 +12,8 @@
         android:id="@+id/park_widget_thumbnail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimary"
+        android:contentDescription="@string/image"
+        android:background="@drawable/empty_widget_state"
         android:scaleType="centerCrop"/>
 
 

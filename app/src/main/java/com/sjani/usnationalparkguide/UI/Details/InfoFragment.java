@@ -36,7 +36,7 @@ public class InfoFragment extends Fragment implements LoaderManager.LoaderCallba
     private static final String PARK_ID = "park_id";
     private static final String POSITION = "position";
     private static final String LATLONG = "latlong";
-    private static final int LOADER_ID = 3;
+    private static final int LOADER_ID = 4;
 
 
     @BindView(R.id.park_title)

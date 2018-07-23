@@ -82,8 +82,8 @@
 
             <ImageButton
                 android:id="@+id/park_latlong"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="@dimen/imagebutton_icon"
+                android:layout_height="@dimen/imagebutton_icon"
                 android:layout_weight="1"
                 android:background="@color/White"
                 android:scaleType="fitCenter"
@@ -92,8 +92,8 @@
 
             <ImageButton
                 android:id="@+id/park_phone"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="@dimen/imagebutton_icon"
+                android:layout_height="@dimen/imagebutton_icon"
                 android:layout_weight="1"
                 android:background="@color/White"
                 android:scaleType="fitCenter"
@@ -102,8 +102,8 @@
 
             <ImageButton
                 android:id="@+id/park_email"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="@dimen/imagebutton_icon"
+                android:layout_height="@dimen/imagebutton_icon"
                 android:layout_weight="1"
                 android:background="@color/White"
                 android:scaleType="fitCenter"

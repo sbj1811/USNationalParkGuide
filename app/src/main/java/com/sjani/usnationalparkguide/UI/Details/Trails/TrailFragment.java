@@ -45,13 +45,14 @@ public class TrailFragment extends Fragment implements android.support.v4.app.Lo
     private static final String PARK_ID = "park_id";
     private static final String PARKCODE = "parkcode";
     private static final int DETAIL_ACTIVITY = 1;
-    private static final int LOADER_ID = 3;
+    private static final int LOADER_ID = 5;
     private String latLong;
     private Uri uri;
     private String parkId;
     private String parkCode;
     private TrailRecyclerViewAdapter adapter;
     private List<TrailDatum> trails;
+    private Context mContext;
 
     @BindView(R.id.rv_trail)
     RecyclerView recyclerView;
@@ -115,6 +116,7 @@ public class TrailFragment extends Fragment implements android.support.v4.app.Lo
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mContext = context;
         if (getArguments() != null) {
             latLong = getArguments().getString(LATLONG);
             parkId = getArguments().getString(PARK_ID);
@@ -147,8 +149,8 @@ public class TrailFragment extends Fragment implements android.support.v4.app.Lo
         protected Void doInBackground(Void... voids) {
             trails = loadTrailData();
             ContentValues[] trailContent = makeContentFromTrailList(trails);
-            ContentResolver contentResolver =  getContext().getContentResolver();
             if (trailContent != null) {
+                ContentResolver contentResolver =  mContext.getContentResolver();
                 contentResolver.delete(TrailContract.TrailEntry.CONTENT_URI_TRAIL, null, null);
                 contentResolver.bulkInsert(TrailContract.TrailEntry.CONTENT_URI_TRAIL, trailContent);
             }
@@ -166,7 +168,7 @@ public class TrailFragment extends Fragment implements android.support.v4.app.Lo
     }
 
     private List<TrailDatum>  loadTrailData() {
-        String apiKey = getContext().getResources().getString(R.string.HPapiKey);
+        String apiKey = mContext.getResources().getString(R.string.HPapiKey);
         StringToGPSCoordinates stringToGPSCoordinates = new StringToGPSCoordinates();
         final String gpsCoodinates[] = stringToGPSCoordinates.convertToGPS(latLong);
         Call<Trail> trailData = HikingprojectApiConnection.getApi().getTrails(gpsCoodinates[0],gpsCoodinates[1],apiKey);

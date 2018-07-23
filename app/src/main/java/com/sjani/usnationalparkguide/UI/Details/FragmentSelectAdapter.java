@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 
 import com.sjani.usnationalparkguide.R;
+import com.sjani.usnationalparkguide.UI.Details.Alerts.AlertFragment;
 import com.sjani.usnationalparkguide.UI.Details.Campgrounds.CampgroundFragment;
 import com.sjani.usnationalparkguide.UI.Details.Trails.TrailFragment;
 
@@ -49,6 +50,9 @@ public class FragmentSelectAdapter extends FragmentStatePagerAdapter {
             case 3:
                 Fragment campgroundFragment = CampgroundFragment.newInstance(uri,parkId,mPosition,latlong,parkCode);
                 return campgroundFragment;
+            case 4:
+                Fragment alertFragment = AlertFragment.newInstance(uri,parkId,mPosition,latlong,parkCode);
+                return alertFragment;
             default:
                 return null;
         }
@@ -61,7 +65,7 @@ public class FragmentSelectAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return 4;
+        return 5;
     }
 
     @Nullable
@@ -76,6 +80,8 @@ public class FragmentSelectAdapter extends FragmentStatePagerAdapter {
                 return mContext.getString(R.string.trails);
             case 3:
                 return mContext.getString(R.string.campgrounds);
+            case 4:
+                return mContext.getString(R.string.alerts);
             default:
                 return null;
         }

@@ -46,13 +46,14 @@ public class CampgroundFragment extends Fragment implements LoaderManager.Loader
     private static final String PARK_ID = "park_id";
     private static final String PARKCODE = "parkcode";
     private static final String LATLONG = "latlong";
-    private static final int LOADER_ID = 5;
+    private static final int LOADER_ID = 8;
     private String parkCode;
     private Uri uri;
     private String parkId;
     private String latLong;
     private CampgroundRecyclerViewAdapter adapter;
     private List<CampDatum> camps;
+    private Context mContext;
 
     @BindView(R.id.rv_camp)
     RecyclerView recyclerView;
@@ -114,6 +115,7 @@ public class CampgroundFragment extends Fragment implements LoaderManager.Loader
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mContext = context;
         if (getArguments() != null) {
             latLong = getArguments().getString(LATLONG);
             parkId = getArguments().getString(PARK_ID);
@@ -166,8 +168,8 @@ public class CampgroundFragment extends Fragment implements LoaderManager.Loader
         protected Void doInBackground(Void... voids) {
             camps = loadCampData();
             ContentValues[] campContent = makeContentFromCampList(camps);
-            ContentResolver contentResolver =  getContext().getContentResolver();
             if (campContent != null) {
+                ContentResolver contentResolver =  mContext.getContentResolver();
                 contentResolver.delete(CampContract.CampEntry.CONTENT_URI_CAMP, null, null);
                 contentResolver.bulkInsert(CampContract.CampEntry.CONTENT_URI_CAMP, campContent);
             }
@@ -178,8 +180,8 @@ public class CampgroundFragment extends Fragment implements LoaderManager.Loader
     }
 
     private List<CampDatum>  loadCampData() {
-        String apiKey = getContext().getResources().getString(R.string.NPSapiKey);
-        String feilds = getContext().getResources().getString(R.string.fields_cg);
+        String apiKey = mContext.getResources().getString(R.string.NPSapiKey);
+        String feilds = mContext.getResources().getString(R.string.fields_cg);
         Call<Campground> campData = NPSApiConnection.getApi().getCampgound(parkCode,apiKey,feilds);
         Response<Campground> response = null;
         try {

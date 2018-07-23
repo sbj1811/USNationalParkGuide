@@ -51,7 +51,7 @@ public class TrailDetailDialogFragment extends DialogFragment implements LoaderM
     private static final String PARK_ID = "park_id";
     private static final String PARKCODE = "parkcode";
     private static final String LATLONG = "latlong";
-    private static final int LOADER_ID = 4;
+    private static final int LOADER_ID = 7;
 
     private Uri uri;
     private String trailId;
@@ -136,7 +136,7 @@ public class TrailDetailDialogFragment extends DialogFragment implements LoaderM
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        setStyle(DialogFragment.STYLE_NO_TITLE, R.style.RatingDialog2);
+        setStyle(DialogFragment.STYLE_NO_TITLE, R.style.DetailDialog);
         return inflater.inflate(R.layout.fragment_trail_detail_dialog, container, false);
     }
 

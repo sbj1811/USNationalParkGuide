@@ -8,6 +8,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.SyncResult;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.sjani.usnationalparkguide.Data.CampContract;
 import com.sjani.usnationalparkguide.Data.ParkContract;
@@ -26,6 +27,7 @@ public class ParkSyncAdapter extends AbstractThreadedSyncAdapter {
 
     private static final String TAG = ParkSyncAdapter.class.getSimpleName();
     private static final String SELECTED_STATE = "selected_state";
+    private static final String MAX_RESULTS = "max_results";
     private String apiKey;
     private String fields;
     private List<Datum> parkList;
@@ -45,9 +47,9 @@ public class ParkSyncAdapter extends AbstractThreadedSyncAdapter {
         apiKey = getContext().getResources().getString(R.string.NPSapiKey);
         fields = getContext().getResources().getString(R.string.fields);
         String selectedState = bundle.getString(SELECTED_STATE);
-
+        String maxResults = bundle.getString(MAX_RESULTS);
         try {
-            parkList = loadParkData(apiKey,fields,selectedState);
+            parkList = loadParkData(apiKey,fields,selectedState,maxResults);
             ContentValues[] parkContent = makeContentFromParkList(parkList);
             contentResolver.delete(ParkContract.ParkEntry.CONTENT_URI_PARKS,null,null);
             contentResolver.bulkInsert(ParkContract.ParkEntry.CONTENT_URI_PARKS,parkContent);
@@ -58,15 +60,16 @@ public class ParkSyncAdapter extends AbstractThreadedSyncAdapter {
 
     }
 
-    private static List<Datum> loadParkData (String apiKey, String fields, String state) throws IOException {
+    private static List<Datum> loadParkData (String apiKey, String fields, String state, String maxResults) throws IOException {
         String selectedState;
         if (state == null){
             selectedState = "AL";
         } else {
             selectedState = state;
         }
-        Call<Parks> parkData = NPSApiConnection.getApi().getParks(selectedState,apiKey,fields);
+        Call<Parks> parkData = NPSApiConnection.getApi().getParks(selectedState,apiKey,fields,maxResults);
         Response<Parks> response = parkData.execute();
+        Log.e(TAG, "loadParkData: HERE: "+response);
         List<Datum> parkList = response.body().getData();
         return parkList;
     }
@@ -133,9 +136,10 @@ public class ParkSyncAdapter extends AbstractThreadedSyncAdapter {
         return result;
     }
 
-    public static void performSync(String mState) {
+    public static void performSync(String mState, String maxResults) {
         Bundle b = new Bundle();
         b.putString(SELECTED_STATE,mState);
+        b.putString(MAX_RESULTS,maxResults);
         b.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
         b.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
         ContentResolver.requestSync(AccountModel.getAccount(),

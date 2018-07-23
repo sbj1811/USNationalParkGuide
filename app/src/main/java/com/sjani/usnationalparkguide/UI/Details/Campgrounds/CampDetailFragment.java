@@ -36,7 +36,7 @@ public class CampDetailFragment extends Fragment implements LoaderManager.Loader
     private static final String CAMP_ID = "camp_id";
     private static final String URI = "uri";
     private static final String POSITION = "position";
-    private static final int LOADER_ID = 5;
+    private static final int LOADER_ID = 9;
 
     private Uri uri;
     private String campId;
@@ -149,6 +149,11 @@ public class CampDetailFragment extends Fragment implements LoaderManager.Loader
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             // action with ID action_refresh was selected
+            case android.R.id.home:
+                // this takes the user 'back', as if they pressed the left-facing triangle icon on the main android toolbar.
+                // if this doesn't work as desired, another possibility is to call `finish()` here.
+                getActivity().onBackPressed();
+                break;
             case R.id.action_share:
                 Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
