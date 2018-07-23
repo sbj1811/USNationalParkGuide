@@ -3,15 +3,12 @@ package com.sjani.usnationalparkguide.UI.Details.Trails;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -24,7 +21,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.sjani.usnationalparkguide.Data.TrailContract;
@@ -33,15 +29,7 @@ import com.sjani.usnationalparkguide.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link TrailDetailDialogFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link TrailDetailDialogFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class TrailDetailDialogFragment extends DialogFragment implements LoaderManager.LoaderCallbacks<Cursor>{
+public class TrailDetailDialogFragment extends DialogFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = TrailDetailFragment.class.getSimpleName();
     private static final String TRAIL_ID = "trail_id";
@@ -52,12 +40,22 @@ public class TrailDetailDialogFragment extends DialogFragment implements LoaderM
     private static final String PARKCODE = "parkcode";
     private static final String LATLONG = "latlong";
     private static final int LOADER_ID = 7;
-
-    private Uri uri;
-    private String trailId;
-    private int position;
-    private Cursor cursor;
-
+    private static final String[] PROJECTION = new String[]{
+            TrailContract.TrailEntry._ID,
+            TrailContract.TrailEntry.COLUMN_TRAIL_ID,
+            TrailContract.TrailEntry.COLUMN_TRAIL_NAME,
+            TrailContract.TrailEntry.COLUMN_TRAIL_SUMMARY,
+            TrailContract.TrailEntry.COLUMN_TRAIL_DIFFICULTY,
+            TrailContract.TrailEntry.COLUMN_TRAIL_IMAGE_SMALL,
+            TrailContract.TrailEntry.COLUMN_TRAIL_IMAGE_MED,
+            TrailContract.TrailEntry.COLUMN_TRAIL_LENGTH,
+            TrailContract.TrailEntry.COLUMN_TRAIL_ASCENT,
+            TrailContract.TrailEntry.COLUMN_TRAIL_LAT,
+            TrailContract.TrailEntry.COLUMN_TRAIL_LONG,
+            TrailContract.TrailEntry.COLUMN_TRAIL_LOCATION,
+            TrailContract.TrailEntry.COLUMN_TRAIL_CONDITION,
+            TrailContract.TrailEntry.COLUMN_TRAIL_MOREINFO
+    };
     @BindView(R.id.trail_detail_title)
     TextView titleTv;
     @BindView(R.id.trail_address)
@@ -78,27 +76,10 @@ public class TrailDetailDialogFragment extends DialogFragment implements LoaderM
     ImageButton shareButton;
     @BindView(R.id.trail_address_linear_layout)
     LinearLayout addressLl;
-
-    private static final String[] PROJECTION = new String[]{
-            TrailContract.TrailEntry._ID,
-            TrailContract.TrailEntry.COLUMN_TRAIL_ID,
-            TrailContract.TrailEntry.COLUMN_TRAIL_NAME,
-            TrailContract.TrailEntry.COLUMN_TRAIL_SUMMARY,
-            TrailContract.TrailEntry.COLUMN_TRAIL_DIFFICULTY,
-            TrailContract.TrailEntry.COLUMN_TRAIL_IMAGE_SMALL,
-            TrailContract.TrailEntry.COLUMN_TRAIL_IMAGE_MED,
-            TrailContract.TrailEntry.COLUMN_TRAIL_LENGTH,
-            TrailContract.TrailEntry.COLUMN_TRAIL_ASCENT,
-            TrailContract.TrailEntry.COLUMN_TRAIL_LAT,
-            TrailContract.TrailEntry.COLUMN_TRAIL_LONG,
-            TrailContract.TrailEntry.COLUMN_TRAIL_LOCATION,
-            TrailContract.TrailEntry.COLUMN_TRAIL_CONDITION,
-            TrailContract.TrailEntry.COLUMN_TRAIL_MOREINFO
-    };
-
-
-    private TrailDetailFragment.OnFragmentInteractionListener mListener;
-
+    private Uri uri;
+    private String trailId;
+    private int position;
+    private Cursor cursor;
     private Uri uriPark;
     private String parkId;
     private String parkCode;
@@ -109,7 +90,7 @@ public class TrailDetailDialogFragment extends DialogFragment implements LoaderM
         // Required empty public constructor
     }
 
-    public static TrailDetailDialogFragment newInstance(Uri uri, String trailId, int position,String parkId, String parkCode, String latLong, Uri parkUri) {
+    public static TrailDetailDialogFragment newInstance(Uri uri, String trailId, int position, String parkId, String parkCode, String latLong, Uri parkUri) {
         TrailDetailDialogFragment fragment = new TrailDetailDialogFragment();
         Bundle args = new Bundle();
         args.putParcelable(URI_TRAIL, uri);
@@ -117,8 +98,8 @@ public class TrailDetailDialogFragment extends DialogFragment implements LoaderM
         args.putInt(POSITION, position);
         args.putParcelable(URI, parkUri);
         args.putString(PARK_ID, parkId);
-        args.putString(LATLONG,latLong);
-        args.putString(PARKCODE,parkCode);
+        args.putString(LATLONG, latLong);
+        args.putString(PARKCODE, parkCode);
         fragment.setArguments(args);
         return fragment;
     }
@@ -128,9 +109,9 @@ public class TrailDetailDialogFragment extends DialogFragment implements LoaderM
         super.onResume();
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int height = (2*displayMetrics.heightPixels)/3;
+        int height = (2 * displayMetrics.heightPixels) / 3;
         int width = displayMetrics.widthPixels;
-        getDialog().getWindow().setLayout(width/2, height);
+        getDialog().getWindow().setLayout(width / 2, height);
     }
 
     @Override
@@ -164,14 +145,9 @@ public class TrailDetailDialogFragment extends DialogFragment implements LoaderM
             parkCode = getArguments().getString(PARKCODE);
             parkId = getArguments().getString(PARK_ID);
         }
-        getLoaderManager().initLoader(LOADER_ID,null,this);
+        getLoaderManager().initLoader(LOADER_ID, null, this);
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
 
     @NonNull
     @Override
@@ -188,9 +164,9 @@ public class TrailDetailDialogFragment extends DialogFragment implements LoaderM
             final String title = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_NAME));
             titleTv.setText(title);
             String distance = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_LENGTH));
-            distanceTv.setText(distance+" miles");
+            distanceTv.setText(distance + " miles");
             String elevation = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_ASCENT));
-            elevationTv.setText(elevation+" ft");
+            elevationTv.setText(elevation + " ft");
             String address = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_LOCATION));
             trailAddressTv.setText(address);
             final String latitude = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_LAT));
@@ -199,14 +175,14 @@ public class TrailDetailDialogFragment extends DialogFragment implements LoaderM
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(Intent.ACTION_VIEW,
-                            Uri.parse("geo:"+latitude+","+longitude+"?z=10"));
+                            Uri.parse("geo:" + latitude + "," + longitude + "?z=10"));
                     startActivity(intent);
                 }
             });
             String summary = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_SUMMARY));
             summaryTv.setText(summary);
             String condition = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_CONDITION));
-            if (!(condition == null)){
+            if (!(condition == null)) {
                 if (!condition.equals("")) {
                     conditionTv.setText(condition);
                 }
@@ -215,7 +191,7 @@ public class TrailDetailDialogFragment extends DialogFragment implements LoaderM
             }
             String difficultyMark = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_DIFFICULTY));
             String difficultyLevel;
-            if (difficultyMark.equals("greenBlue")){
+            if (difficultyMark.equals("greenBlue")) {
                 difficultyLevel = getContext().getResources().getString(R.string.easy);
             } else if (difficultyMark.equals("blue")) {
                 difficultyLevel = getContext().getResources().getString(R.string.moderate);
@@ -226,7 +202,7 @@ public class TrailDetailDialogFragment extends DialogFragment implements LoaderM
             }
             difficultyTv.setText(difficultyLevel);
             String imageUrl = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_IMAGE_MED));
-            if (imageUrl.equals("")){
+            if (imageUrl.equals("")) {
                 Glide.with(trailIv.getContext())
                         .load(R.drawable.empty_detail)
                         .fitCenter()
@@ -244,7 +220,7 @@ public class TrailDetailDialogFragment extends DialogFragment implements LoaderM
                     Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                     sharingIntent.setType("text/plain");
                     sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, title);
-                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, title+"\nOpen in Google Maps https://maps.google.com/?q="+latitude+","+longitude);
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, title + "\nOpen in Google Maps https://maps.google.com/?q=" + latitude + "," + longitude);
                     startActivity(Intent.createChooser(sharingIntent, "Share via"));
                 }
             });
@@ -261,27 +237,12 @@ public class TrailDetailDialogFragment extends DialogFragment implements LoaderM
         cursor = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
-
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(URI,uriPark);
-        outState.putString(PARK_ID,parkId);
-        outState.putString(PARKCODE,parkCode);
-        outState.putString(LATLONG,latLong);
+        outState.putParcelable(URI, uriPark);
+        outState.putString(PARK_ID, parkId);
+        outState.putString(PARKCODE, parkCode);
+        outState.putString(LATLONG, latLong);
     }
 }

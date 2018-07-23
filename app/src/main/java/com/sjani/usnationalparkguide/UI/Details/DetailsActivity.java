@@ -1,8 +1,6 @@
 package com.sjani.usnationalparkguide.UI.Details;
 
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -54,21 +52,21 @@ public class DetailsActivity extends AppCompatActivity {
             parkCode = savedInstanceState.getString(PARKCODE);
             isFromFavNav = savedInstanceState.getBoolean(FROM_FAV);
         }
-        DetailsFragment detailsFragment = DetailsFragment.newInstance(uri,parkId,position,latLong,parkCode,isFromFavNav);
+        DetailsFragment detailsFragment = DetailsFragment.newInstance(uri, parkId, position, latLong, parkCode, isFromFavNav);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.details_container,detailsFragment)
+                .replace(R.id.details_container, detailsFragment)
                 .commit();
 
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(URI,uri);
-        outState.putString(PARK_ID,parkId);
-        outState.putInt(POSITION,position);
-        outState.putString(LATLONG,latLong);
-        outState.putString(PARKCODE,parkCode);
-        outState.putBoolean(FROM_FAV,isFromFavNav);
+        outState.putParcelable(URI, uri);
+        outState.putString(PARK_ID, parkId);
+        outState.putInt(POSITION, position);
+        outState.putString(LATLONG, latLong);
+        outState.putString(PARKCODE, parkCode);
+        outState.putBoolean(FROM_FAV, isFromFavNav);
         super.onSaveInstanceState(outState);
     }
 }

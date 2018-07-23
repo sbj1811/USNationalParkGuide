@@ -3,7 +3,6 @@ package com.sjani.usnationalparkguide.UI.Details;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.net.Uri;
@@ -18,42 +17,27 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
+
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
+
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+
 import android.widget.ImageView;
-import android.widget.Toast;
-import android.widget.ToggleButton;
+
 
 import com.bumptech.glide.Glide;
 import com.sjani.usnationalparkguide.Data.ParkContract;
 import com.sjani.usnationalparkguide.R;
-import com.sjani.usnationalparkguide.UI.Details.FragmentSelectAdapter;
 import com.sjani.usnationalparkguide.UI.Widget.ParkWidgetService;
-import com.facebook.drawee.view.SimpleDraweeView;
+
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class DetailsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
-
-    @BindView(R.id.detail_tab_layout)
-    TabLayout mTabLayout;
-    @BindView(R.id.detail_viewpager)
-    ViewPager mViewPager;
-    @BindView(R.id.detail_photo)
-    ImageView parkImageView;
-    @BindView(R.id.fav_button)
-    FloatingActionButton favButton;
-    @BindView(R.id.detail_collapsing_toolbar)
-    CollapsingToolbarLayout collapsingToolbarLayout;
+public class DetailsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = DetailsFragment.class.getSimpleName();
     private static final String URI = "uri";
@@ -65,17 +49,6 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
     private static final int LOADER_ID = 2;
     private static final int FAV_LOADER_ID = 6;
     private static final int DETAIL_ACTIVITY = 1;
-    private boolean isFromFavNav;
-
-    private Uri uri;
-    private String parkId;
-    private int position;
-    private String latLong;
-    private String parkCode;
-    private Cursor cursor;
-    private ContentValues values;
-    boolean isMarkedFavorite;
-
     private static final String[] PROJECTION = new String[]{
             ParkContract.ParkEntry._ID,
             ParkContract.ParkEntry.COLUMN_PARK_ID,
@@ -90,21 +63,40 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
             ParkContract.ParkEntry.COLUMN_PARK_EMAIL,
             ParkContract.ParkEntry.COLUMN_PARK_IMAGE
     };
+    @BindView(R.id.detail_tab_layout)
+    TabLayout mTabLayout;
+    @BindView(R.id.detail_viewpager)
+    ViewPager mViewPager;
+    @BindView(R.id.detail_photo)
+    ImageView parkImageView;
+    @BindView(R.id.fav_button)
+    FloatingActionButton favButton;
+    @BindView(R.id.detail_collapsing_toolbar)
+    CollapsingToolbarLayout collapsingToolbarLayout;
+    boolean isMarkedFavorite;
+    private boolean isFromFavNav;
+    private Uri uri;
+    private String parkId;
+    private int position;
+    private String latLong;
+    private String parkCode;
+    private Cursor cursor;
+    private ContentValues values;
 
 
     public DetailsFragment() {
         // Required empty public constructor
     }
 
-    public static DetailsFragment newInstance(Uri uri, String parkId, int position, String latlong, String parkCode,boolean isFromFavNav) {
+    public static DetailsFragment newInstance(Uri uri, String parkId, int position, String latlong, String parkCode, boolean isFromFavNav) {
         DetailsFragment fragment = new DetailsFragment();
         Bundle args = new Bundle();
         args.putParcelable(URI, uri);
         args.putString(PARK_ID, parkId);
-        args.putInt(POSITION,position);
-        args.putString(LATLONG,latlong);
-        args.putString(PARKCODE,parkCode);
-        args.putBoolean(FROM_FAV,isFromFavNav);
+        args.putInt(POSITION, position);
+        args.putString(LATLONG, latlong);
+        args.putString(PARKCODE, parkCode);
+        args.putBoolean(FROM_FAV, isFromFavNav);
         fragment.setArguments(args);
         return fragment;
     }
@@ -120,8 +112,8 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
             parkCode = getArguments().getString(PARKCODE);
             isFromFavNav = getArguments().getBoolean(FROM_FAV);
         }
-        getLoaderManager().initLoader(LOADER_ID,null,this);
-        getLoaderManager().initLoader(FAV_LOADER_ID,null,this);
+        getLoaderManager().initLoader(LOADER_ID, null, this);
+        getLoaderManager().initLoader(FAV_LOADER_ID, null, this);
     }
 
     @Override
@@ -150,28 +142,28 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
-        FragmentSelectAdapter selectAdapter = new FragmentSelectAdapter(getFragmentManager(),getContext(),uri,parkId,position,latLong,parkCode);
+        FragmentSelectAdapter selectAdapter = new FragmentSelectAdapter(getFragmentManager(), getContext(), uri, parkId, position, latLong, parkCode);
         mViewPager.setAdapter(selectAdapter);
         if (getContext().getResources().getBoolean(R.bool.dual_pane)) {
             mViewPager.getAdapter().notifyDataSetChanged();
         }
-        if (mViewPager.getCurrentItem() == (selectAdapter.getCount()-1)){
+        if (mViewPager.getCurrentItem() == (selectAdapter.getCount() - 1)) {
             mViewPager.setCurrentItem(selectAdapter.getCount() - 1);
         }
         mTabLayout.setupWithViewPager(mViewPager);
         favButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(isMarkedFavorite){
+                if (isMarkedFavorite) {
                     favButton.setImageResource(R.drawable.ic_favorite_border);
                     isMarkedFavorite = false;
-                    getActivity().getContentResolver().delete(ParkContract.ParkEntry.CONTENT_URI_FAVORITES,null,null);
+                    getActivity().getContentResolver().delete(ParkContract.ParkEntry.CONTENT_URI_FAVORITES, null, null);
                     ParkWidgetService.startActionUpdateWidgets(getContext());
                 } else {
                     favButton.setImageResource(R.drawable.ic_favorite);
                     isMarkedFavorite = true;
-                    getActivity().getContentResolver().delete(ParkContract.ParkEntry.CONTENT_URI_FAVORITES,null,null);
-                    getActivity().getContentResolver().insert(ParkContract.ParkEntry.CONTENT_URI_FAVORITES,values);
+                    getActivity().getContentResolver().delete(ParkContract.ParkEntry.CONTENT_URI_FAVORITES, null, null);
+                    getActivity().getContentResolver().insert(ParkContract.ParkEntry.CONTENT_URI_FAVORITES, values);
                     ParkWidgetService.startActionUpdateWidgets(getContext());
                 }
 //                        isMarkedFavorite = !isMarkedFavorite;
@@ -235,7 +227,7 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
                     if (cursor != null) {
                         DatabaseUtils.cursorRowToContentValues(cursor, values);
                         String imageUrl = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_IMAGE));
-                        if (imageUrl.equals("")){
+                        if (imageUrl.equals("")) {
                             Glide.with(parkImageView.getContext())
                                     .load(R.drawable.empty_detail)
                                     .fitCenter()
@@ -275,12 +267,12 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putParcelable(URI,uri);
-        outState.putString(PARK_ID,parkId);
-        outState.putInt(POSITION,position);
-        outState.putString(LATLONG,latLong);
-        outState.putString(PARKCODE,parkCode);
-        outState.putBoolean(FROM_FAV,isFromFavNav);
+        outState.putParcelable(URI, uri);
+        outState.putString(PARK_ID, parkId);
+        outState.putInt(POSITION, position);
+        outState.putString(LATLONG, latLong);
+        outState.putString(PARKCODE, parkCode);
+        outState.putBoolean(FROM_FAV, isFromFavNav);
         super.onSaveInstanceState(outState);
     }
 }

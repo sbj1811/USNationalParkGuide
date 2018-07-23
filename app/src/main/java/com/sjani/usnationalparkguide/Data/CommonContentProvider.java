@@ -31,7 +31,7 @@ public class CommonContentProvider extends ContentProvider {
     private CampDbHelper campDbHelper;
     private AlertDbHelper alertDbHelper;
 
-    public static UriMatcher buildUriMatcher(){
+    public static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = ParkContract.CONTENT_AUTHORITY;
         final String trailAuthority = TrailContract.CONTENT_AUTHORITY;
@@ -70,7 +70,7 @@ public class CommonContentProvider extends ContentProvider {
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
         Cursor cursor;
         String parkId = uri.getLastPathSegment();
-        switch (sUriMatcher.match(uri)){
+        switch (sUriMatcher.match(uri)) {
             case CODE_PARKS:
                 cursor = mOpenHelper.getReadableDatabase().query(
                         ParkContract.ParkEntry.TABLE_NAME_PARKS,
@@ -178,9 +178,9 @@ public class CommonContentProvider extends ContentProvider {
                         sortOrder);
                 break;
             default:
-                throw new UnsupportedOperationException("Unknown uri in query: "+uri);
+                throw new UnsupportedOperationException("Unknown uri in query: " + uri);
         }
-        cursor.setNotificationUri(getContext().getContentResolver(),uri);
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
         return cursor;
     }
 
@@ -196,20 +196,20 @@ public class CommonContentProvider extends ContentProvider {
         final SQLiteDatabase db_park = mOpenHelper.getWritableDatabase();
         Uri returnUri;
         long ids;
-        switch (sUriMatcher.match(uri)){
+        switch (sUriMatcher.match(uri)) {
             case CODE_FAVORITES:
-                ids = db_park.insert(ParkContract.ParkEntry.TABLE_NAME_FAVORITES,null,contentValues);
-                if(ids > 0) {
+                ids = db_park.insert(ParkContract.ParkEntry.TABLE_NAME_FAVORITES, null, contentValues);
+                if (ids > 0) {
                     returnUri = ContentUris.withAppendedId(uri, ids);
                 } else {
-                    throw new SQLException("Filed to insert row "+uri);
+                    throw new SQLException("Filed to insert row " + uri);
                 }
                 break;
             default:
-                throw new UnsupportedOperationException("Unknown uri in insert: "+uri);
+                throw new UnsupportedOperationException("Unknown uri in insert: " + uri);
         }
 
-        getContext().getContentResolver().notifyChange(uri,null);
+        getContext().getContentResolver().notifyChange(uri, null);
         return returnUri;
     }
 
@@ -223,74 +223,74 @@ public class CommonContentProvider extends ContentProvider {
         switch (sUriMatcher.match(uri)) {
             case CODE_PARKS:
                 db_park.beginTransaction();
-                try{
-                    for (ContentValues value: values) {
-                        long ids = db_park.insert(ParkContract.ParkEntry.TABLE_NAME_PARKS,null,value);
-                        if(ids != -1){
+                try {
+                    for (ContentValues value : values) {
+                        long ids = db_park.insert(ParkContract.ParkEntry.TABLE_NAME_PARKS, null, value);
+                        if (ids != -1) {
                             rowsInserted++;
                         }
                     }
                     db_park.setTransactionSuccessful();
-                }finally {
+                } finally {
                     db_park.endTransaction();
                 }
-                if(rowsInserted > 0){
-                    getContext().getContentResolver().notifyChange(uri,null);
+                if (rowsInserted > 0) {
+                    getContext().getContentResolver().notifyChange(uri, null);
                 }
-                return  rowsInserted;
+                return rowsInserted;
             case CODE_TRAILS:
                 db_trail.beginTransaction();
-                try{
-                    for (ContentValues value: values) {
-                        long ids = db_trail.insert(TrailContract.TrailEntry.TABLE_NAME_TRAIL,null,value);
-                        if(ids != -1){
+                try {
+                    for (ContentValues value : values) {
+                        long ids = db_trail.insert(TrailContract.TrailEntry.TABLE_NAME_TRAIL, null, value);
+                        if (ids != -1) {
                             rowsInserted++;
                         }
                     }
                     db_trail.setTransactionSuccessful();
-                }finally {
+                } finally {
                     db_trail.endTransaction();
                 }
-                if(rowsInserted > 0){
-                    getContext().getContentResolver().notifyChange(uri,null);
+                if (rowsInserted > 0) {
+                    getContext().getContentResolver().notifyChange(uri, null);
                 }
-                return  rowsInserted;
+                return rowsInserted;
             case CODE_CAMPS:
                 db_camp.beginTransaction();
-                try{
-                    for (ContentValues value: values) {
-                        long ids = db_camp.insert(CampContract.CampEntry.TABLE_NAME_CAMP,null,value);
-                        if(ids != -1){
+                try {
+                    for (ContentValues value : values) {
+                        long ids = db_camp.insert(CampContract.CampEntry.TABLE_NAME_CAMP, null, value);
+                        if (ids != -1) {
                             rowsInserted++;
                         }
                     }
                     db_camp.setTransactionSuccessful();
-                }finally {
+                } finally {
                     db_camp.endTransaction();
                 }
-                if(rowsInserted > 0){
-                    getContext().getContentResolver().notifyChange(uri,null);
+                if (rowsInserted > 0) {
+                    getContext().getContentResolver().notifyChange(uri, null);
                 }
-                return  rowsInserted;
+                return rowsInserted;
             case CODE_ALERTS:
                 db_alert.beginTransaction();
-                try{
-                    for (ContentValues value: values) {
-                        long ids = db_alert.insert(AlertContract.AlertEntry.TABLE_NAME_ALERT,null,value);
-                        if(ids != -1){
+                try {
+                    for (ContentValues value : values) {
+                        long ids = db_alert.insert(AlertContract.AlertEntry.TABLE_NAME_ALERT, null, value);
+                        if (ids != -1) {
                             rowsInserted++;
                         }
                     }
                     db_alert.setTransactionSuccessful();
-                }finally {
+                } finally {
                     db_alert.endTransaction();
                 }
-                if(rowsInserted > 0){
-                    getContext().getContentResolver().notifyChange(uri,null);
+                if (rowsInserted > 0) {
+                    getContext().getContentResolver().notifyChange(uri, null);
                 }
                 return rowsInserted;
             default:
-                return super.bulkInsert(uri,values);
+                return super.bulkInsert(uri, values);
 
         }
     }
@@ -305,7 +305,7 @@ public class CommonContentProvider extends ContentProvider {
         String parkId = uri.getLastPathSegment();
         if (null == selection) selection = "1";
 
-        switch (sUriMatcher.match(uri)){
+        switch (sUriMatcher.match(uri)) {
             case CODE_PARKS:
                 numRowsDeleted = db_park.delete(
                         ParkContract.ParkEntry.TABLE_NAME_PARKS,
@@ -313,10 +313,10 @@ public class CommonContentProvider extends ContentProvider {
                         selectionArgs);
                 break;
             case CODE_FAVORITES:
-                numRowsDeleted = db_park.delete(ParkContract.ParkEntry.TABLE_NAME_FAVORITES,selection,selectionArgs);
+                numRowsDeleted = db_park.delete(ParkContract.ParkEntry.TABLE_NAME_FAVORITES, selection, selectionArgs);
                 break;
             case CODE_FAVORITES_WITH_ID:
-                numRowsDeleted = db_park.delete(ParkContract.ParkEntry.TABLE_NAME_FAVORITES,ParkContract.ParkEntry.COLUMN_PARK_ID + " = ?",new String[]{parkId});
+                numRowsDeleted = db_park.delete(ParkContract.ParkEntry.TABLE_NAME_FAVORITES, ParkContract.ParkEntry.COLUMN_PARK_ID + " = ?", new String[]{parkId});
                 break;
             case CODE_TRAILS:
                 numRowsDeleted = db_trail.delete(
@@ -337,9 +337,9 @@ public class CommonContentProvider extends ContentProvider {
                         selectionArgs);
                 break;
             default:
-                throw new UnsupportedOperationException("Unknown uri in delete: "+uri);
+                throw new UnsupportedOperationException("Unknown uri in delete: " + uri);
         }
-        if(numRowsDeleted != 0) {
+        if (numRowsDeleted != 0) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
         return numRowsDeleted;
@@ -350,8 +350,6 @@ public class CommonContentProvider extends ContentProvider {
     public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String s, @Nullable String[] strings) {
         throw new RuntimeException("Not implemented");
     }
-
-
 
 
 }

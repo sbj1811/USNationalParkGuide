@@ -1,16 +1,10 @@
 package com.sjani.usnationalparkguide.UI.Details.Trails;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.widget.Toast;
+
 
 import com.sjani.usnationalparkguide.R;
 
@@ -46,13 +40,13 @@ public class TrailDetailActivity extends AppCompatActivity {
         uri = bundle.getParcelable(URI);
         uriTrail = bundle.getParcelable(URI_TRAIL);
         trailId = bundle.getString(TRAIL_ID);
-        parkId =bundle.getString(PARK_ID);
+        parkId = bundle.getString(PARK_ID);
         parkCode = bundle.getString(PARKCODE);
         latLong = bundle.getString(LATLONG);
         position = bundle.getInt(POSITION);
-        if(getResources().getBoolean(R.bool.dual_pane)){
+        if (getResources().getBoolean(R.bool.dual_pane)) {
             trailDetailDialogFragment = TrailDetailDialogFragment.newInstance(uriTrail, trailId, position, parkCode, parkId, latLong, uri);
-            trailDetailDialogFragment.show(getSupportFragmentManager(),"Trail");
+            trailDetailDialogFragment.show(getSupportFragmentManager(), "Trail");
         } else {
             trailDetailFragment = (TrailDetailFragment) getSupportFragmentManager().findFragmentById(R.id.trail_detail_container);
             if (trailDetailFragment == null) {
@@ -63,27 +57,6 @@ public class TrailDetailActivity extends AppCompatActivity {
             }
         }
     }
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.share_menu, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            // action with ID action_refresh was selected
-//            case R.id.action_share:
-//                Toast.makeText(this, "Share selected", Toast.LENGTH_SHORT)
-//                        .show();
-//                break;
-//            default:
-//                break;
-//        }
-//        return true;
-//    }
 
     @Override
     public void onBackPressed() {

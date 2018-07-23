@@ -21,8 +21,8 @@ import butterknife.ButterKnife;
 public class TrailRecyclerViewAdapter extends RecyclerView.Adapter<TrailRecyclerViewAdapter.ViewHolder> {
 
     private static final String TAG = TrailRecyclerViewAdapter.class.getSimpleName();
-    private Context mContext;
     private final OnListFragmentInteractionListener mListener;
+    private Context mContext;
     private Cursor cursor;
 
     public TrailRecyclerViewAdapter(OnListFragmentInteractionListener listener, Context context) {
@@ -44,7 +44,7 @@ public class TrailRecyclerViewAdapter extends RecyclerView.Adapter<TrailRecycler
             String title = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_NAME));
             String imageUrl = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_IMAGE_MED));
             holder.trailTitleView.setText(title);
-            if (imageUrl.equals("")){
+            if (imageUrl.equals("")) {
                 Glide.with(holder.trailImageView.getContext())
                         .load(R.drawable.empty_detail)
                         .fitCenter()
@@ -64,7 +64,7 @@ public class TrailRecyclerViewAdapter extends RecyclerView.Adapter<TrailRecycler
 
     @Override
     public int getItemCount() {
-        if(cursor == null){
+        if (cursor == null) {
             return 0;
         }
         return cursor.getCount();
@@ -103,7 +103,7 @@ public class TrailRecyclerViewAdapter extends RecyclerView.Adapter<TrailRecycler
             int position = getAdapterPosition();
             cursor.moveToPosition(position);
             String trailId = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_ID));
-            mListener.onListFragmentInteraction(trailId,position);
+            mListener.onListFragmentInteraction(trailId, position);
         }
     }
 }

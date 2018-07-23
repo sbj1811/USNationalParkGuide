@@ -8,6 +8,7 @@ import com.sjani.usnationalparkguide.R;
 public class WeatherUtils {
 
     private static final String TAG = WeatherUtils.class.getSimpleName();
+
     public static String getFormattedWind(Context context, Double windSpeed, Double degrees) {
 
         int windFormat = R.string.format_wind_mph;

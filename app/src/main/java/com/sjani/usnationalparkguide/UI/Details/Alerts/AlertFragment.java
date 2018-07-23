@@ -44,17 +44,6 @@ public class AlertFragment extends Fragment implements LoaderManager.LoaderCallb
     private static final String PARKCODE = "parkcode";
     private static final String LATLONG = "latlong";
     private static final int LOADER_ID = 11;
-    private String parkCode;
-    private Uri uri;
-    private String parkId;
-    private String latLong;
-    private List<AlertDatum> alerts;
-    private AlertRecyclerViewAdapter adapter;
-    private Context mContext;
-
-    @BindView(R.id.rv_alert)
-    RecyclerView recyclerView;
-
     private static final String[] PROJECTION = new String[]{
             AlertContract.AlertEntry._ID,
             AlertContract.AlertEntry.COLUMN_ALERT_ID,
@@ -63,6 +52,15 @@ public class AlertFragment extends Fragment implements LoaderManager.LoaderCallb
             AlertContract.AlertEntry.COLUMN_ALERT_PARKCODE,
             AlertContract.AlertEntry.COLUMN_ALERT_CATEGORY
     };
+    @BindView(R.id.rv_alert)
+    RecyclerView recyclerView;
+    private String parkCode;
+    private Uri uri;
+    private String parkId;
+    private String latLong;
+    private List<AlertDatum> alerts;
+    private AlertRecyclerViewAdapter adapter;
+    private Context mContext;
 
     public AlertFragment() {
     }
@@ -73,82 +71,11 @@ public class AlertFragment extends Fragment implements LoaderManager.LoaderCallb
         AlertFragment fragment = new AlertFragment();
         Bundle args = new Bundle();
         args.putString(PARK_ID, parkId);
-        args.putInt(POSITION,position);
-        args.putString(LATLONG,latlong);
-        args.putString(PARKCODE,parkCode);
+        args.putInt(POSITION, position);
+        args.putString(LATLONG, latlong);
+        args.putString(PARKCODE, parkCode);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getLoaderManager().initLoader(LOADER_ID,null,this);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_alert_list, container, false);
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        ButterKnife.bind(this, view);
-        adapter = new AlertRecyclerViewAdapter(getContext());
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(adapter);
-    }
-
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mContext = context;
-        if (getArguments() != null) {
-            latLong = getArguments().getString(LATLONG);
-            parkId = getArguments().getString(PARK_ID);
-            parkCode = getArguments().getString(PARKCODE);
-            uri = getArguments().getParcelable(URI);
-        }
-        new NetworkCall().execute();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mContext.getContentResolver().delete(AlertContract.AlertEntry.CONTENT_URI_ALERT, null, null);
-    }
-
-    private class NetworkCall extends AsyncTask<Void,Void,Void>{
-        @Override
-        protected Void doInBackground(Void... voids) {
-            alerts = loadAlertData();
-            ContentValues[] alertContent = makeContentFromAlertList(alerts);
-            if (alertContent != null) {
-                ContentResolver contentResolver =  mContext.getContentResolver();
-                contentResolver.delete(AlertContract.AlertEntry.CONTENT_URI_ALERT, null, null);
-                contentResolver.bulkInsert(AlertContract.AlertEntry.CONTENT_URI_ALERT, alertContent);
-            }
-            return null;
-        }
-    }
-
-
-    private List<AlertDatum>  loadAlertData() {
-        String apiKey = mContext.getResources().getString(R.string.NPSapiKey);
-        Call<Alert> alertData = NPSApiConnection.getApi().getAlerts(parkCode,apiKey);
-        Response<Alert> response = null;
-        try {
-            response = alertData.execute();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if (response != null) {
-            return response.body().getData();
-        } else
-            return null;
     }
 
     public static ContentValues[] makeContentFromAlertList(List<AlertDatum> list) {
@@ -170,12 +97,66 @@ public class AlertFragment extends Fragment implements LoaderManager.LoaderCallb
         return result;
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getLoaderManager().initLoader(LOADER_ID, null, this);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_alert_list, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        ButterKnife.bind(this, view);
+        adapter = new AlertRecyclerViewAdapter(getContext());
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
+        if (getArguments() != null) {
+            latLong = getArguments().getString(LATLONG);
+            parkId = getArguments().getString(PARK_ID);
+            parkCode = getArguments().getString(PARKCODE);
+            uri = getArguments().getParcelable(URI);
+        }
+        new NetworkCall().execute();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mContext.getContentResolver().delete(AlertContract.AlertEntry.CONTENT_URI_ALERT, null, null);
+    }
+
+    private List<AlertDatum> loadAlertData() {
+        String apiKey = mContext.getResources().getString(R.string.NPSapiKey);
+        Call<Alert> alertData = NPSApiConnection.getApi().getAlerts(parkCode, apiKey);
+        Response<Alert> response = null;
+        try {
+            response = alertData.execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (response != null) {
+            return response.body().getData();
+        } else
+            return null;
+    }
 
     @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
         uri = AlertContract.AlertEntry.CONTENT_URI_ALERT;
-        return new android.support.v4.content.CursorLoader(getActivity(),uri,PROJECTION,null,null,null);
+        return new android.support.v4.content.CursorLoader(getActivity(), uri, PROJECTION, null, null, null);
     }
 
     @Override
@@ -187,6 +168,20 @@ public class AlertFragment extends Fragment implements LoaderManager.LoaderCallb
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
         if (adapter != null) {
             adapter.swapCursor(null);
+        }
+    }
+
+    private class NetworkCall extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            alerts = loadAlertData();
+            ContentValues[] alertContent = makeContentFromAlertList(alerts);
+            if (alertContent != null) {
+                ContentResolver contentResolver = mContext.getContentResolver();
+                contentResolver.delete(AlertContract.AlertEntry.CONTENT_URI_ALERT, null, null);
+                contentResolver.bulkInsert(AlertContract.AlertEntry.CONTENT_URI_ALERT, alertContent);
+            }
+            return null;
         }
     }
 

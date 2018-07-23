@@ -10,9 +10,9 @@ public class StringToGPSCoordinates {
     public StringToGPSCoordinates() {
     }
 
-    public String[] convertToGPS (String latlong) {
+    public String[] convertToGPS(String latlong) {
         String splitGPS[] = new String[2];
-        if(latlong.equals("")){
+        if (latlong.equals("")) {
             splitGPS[0] = "0";
             splitGPS[1] = "0";
         } else {

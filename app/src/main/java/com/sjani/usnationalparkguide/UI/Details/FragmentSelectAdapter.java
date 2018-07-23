@@ -39,19 +39,19 @@ public class FragmentSelectAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                Fragment infoFragment = InfoFragment.newInstance(uri,parkId,mPosition,latlong);
+                Fragment infoFragment = InfoFragment.newInstance(uri, parkId, mPosition, latlong);
                 return infoFragment;
             case 1:
-                Fragment weatherFragment = WeatherFragment.newInstance(uri,parkId,mPosition,latlong);
+                Fragment weatherFragment = WeatherFragment.newInstance(uri, parkId, mPosition, latlong);
                 return weatherFragment;
             case 2:
-                Fragment trailFragment = TrailFragment.newInstance(uri,parkId,mPosition,latlong,parkCode);
+                Fragment trailFragment = TrailFragment.newInstance(uri, parkId, mPosition, latlong, parkCode);
                 return trailFragment;
             case 3:
-                Fragment campgroundFragment = CampgroundFragment.newInstance(uri,parkId,mPosition,latlong,parkCode);
+                Fragment campgroundFragment = CampgroundFragment.newInstance(uri, parkId, mPosition, latlong, parkCode);
                 return campgroundFragment;
             case 4:
-                Fragment alertFragment = AlertFragment.newInstance(uri,parkId,mPosition,latlong,parkCode);
+                Fragment alertFragment = AlertFragment.newInstance(uri, parkId, mPosition, latlong, parkCode);
                 return alertFragment;
             default:
                 return null;

@@ -31,18 +31,28 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class CampDetailDialogFragment extends DialogFragment implements LoaderManager.LoaderCallbacks<Cursor>{
+public class CampDetailDialogFragment extends DialogFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String CAMP_ID = "camp_id";
     private static final String URI = "uri";
     private static final String POSITION = "position";
     private static final int LOADER_ID = 10;
-
-    private Uri uri;
-    private String campId;
-    private int position;
-    private Cursor cursor;
-
+    private static final String[] PROJECTION = new String[]{
+            CampContract.CampEntry._ID,
+            CampContract.CampEntry.COLUMN_CAMP_ID,
+            CampContract.CampEntry.COLUMN_CAMP_NAME,
+            CampContract.CampEntry.COLUMN_CAMP_DESCRIPTION,
+            CampContract.CampEntry.COLUMN_CAMP_PARKCODE,
+            CampContract.CampEntry.COLUMN_CAMP_ADDRESSS,
+            CampContract.CampEntry.COLUMN_CAMP_LATLONG,
+            CampContract.CampEntry.COLUMN_CAMP_CELLRECEP,
+            CampContract.CampEntry.COLUMN_CAMP_SHOWERS,
+            CampContract.CampEntry.COLUMN_CAMP_INTERNET,
+            CampContract.CampEntry.COLUMN_CAMP_TOILET,
+            CampContract.CampEntry.COLUMN_CAMP_WHEELCHAIR,
+            CampContract.CampEntry.COLUMN_CAMP_RESERVURL,
+            CampContract.CampEntry.COLUMN_CAMP_DIRECTIONURL
+    };
     @BindView(R.id.camp_title)
     TextView titleTv;
     @BindView(R.id.camp_address)
@@ -67,26 +77,11 @@ public class CampDetailDialogFragment extends DialogFragment implements LoaderMa
     ImageButton shareButton;
     @BindView(R.id.camp_address_linear_layout)
     LinearLayout addressLinearLayout;
-
-
+    private Uri uri;
+    private String campId;
+    private int position;
+    private Cursor cursor;
     private OnFragmentInteractionListener mListener;
-
-    private static final String[] PROJECTION = new String[]{
-            CampContract.CampEntry._ID,
-            CampContract.CampEntry.COLUMN_CAMP_ID,
-            CampContract.CampEntry.COLUMN_CAMP_NAME,
-            CampContract.CampEntry.COLUMN_CAMP_DESCRIPTION,
-            CampContract.CampEntry.COLUMN_CAMP_PARKCODE,
-            CampContract.CampEntry.COLUMN_CAMP_ADDRESSS,
-            CampContract.CampEntry.COLUMN_CAMP_LATLONG,
-            CampContract.CampEntry.COLUMN_CAMP_CELLRECEP,
-            CampContract.CampEntry.COLUMN_CAMP_SHOWERS,
-            CampContract.CampEntry.COLUMN_CAMP_INTERNET,
-            CampContract.CampEntry.COLUMN_CAMP_TOILET,
-            CampContract.CampEntry.COLUMN_CAMP_WHEELCHAIR,
-            CampContract.CampEntry.COLUMN_CAMP_RESERVURL,
-            CampContract.CampEntry.COLUMN_CAMP_DIRECTIONURL
-    };
 
     public CampDetailDialogFragment() {
         // Required empty public constructor
@@ -108,9 +103,9 @@ public class CampDetailDialogFragment extends DialogFragment implements LoaderMa
         super.onResume();
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int height = (2*displayMetrics.heightPixels)/3;
+        int height = (2 * displayMetrics.heightPixels) / 3;
         int width = displayMetrics.widthPixels;
-        getDialog().getWindow().setLayout(width/2, height);
+        getDialog().getWindow().setLayout(width / 2, height);
     }
 
     @Override
@@ -145,7 +140,7 @@ public class CampDetailDialogFragment extends DialogFragment implements LoaderMa
             campId = getArguments().getString(CAMP_ID);
             position = getArguments().getInt(POSITION);
         }
-        getLoaderManager().initLoader(LOADER_ID,null,this);
+        getLoaderManager().initLoader(LOADER_ID, null, this);
     }
 
     @Override
@@ -179,30 +174,30 @@ public class CampDetailDialogFragment extends DialogFragment implements LoaderMa
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(Intent.ACTION_VIEW,
-                            Uri.parse("geo:"+gpsCoodinates[0]+","+gpsCoodinates[1]+"?q="+gpsCoodinates[0]+","+gpsCoodinates[1]+"?z=10"));
+                            Uri.parse("geo:" + gpsCoodinates[0] + "," + gpsCoodinates[1] + "?q=" + gpsCoodinates[0] + "," + gpsCoodinates[1] + "?z=10"));
                     startActivity(intent);
                 }
             });
             String cellrecep = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_CELLRECEP));
-            if (cellrecep.equals("Yes - year round")){
+            if (cellrecep.equals("Yes - year round")) {
                 cellrecepIv.setImageResource(R.drawable.ic_check_circle);
             } else {
                 cellrecepIv.setImageResource(R.drawable.ic_cancel);
             }
             String showers = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_SHOWERS));
-            if (showers.equals("None")){
+            if (showers.equals("None")) {
                 showersIv.setImageResource(R.drawable.ic_cancel);
             } else {
                 showersIv.setImageResource(R.drawable.ic_check_circle);
             }
             String toilets = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_TOILET));
-            if (toilets.equals("None")){
+            if (toilets.equals("None")) {
                 toiletsIv.setImageResource(R.drawable.ic_cancel);
             } else {
                 toiletsIv.setImageResource(R.drawable.ic_check_circle);
             }
             String internet = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_INTERNET));
-            if (internet.equals("true")){
+            if (internet.equals("true")) {
                 internetIv.setImageResource(R.drawable.ic_check_circle);
             } else {
                 internetIv.setImageResource(R.drawable.ic_cancel);
@@ -213,8 +208,8 @@ public class CampDetailDialogFragment extends DialogFragment implements LoaderMa
             reservationButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (reservationUrl.equals("")){
-                        Toast.makeText(getContext(),"Reservation Link unavailable for this site",Toast.LENGTH_SHORT).show();
+                    if (reservationUrl.equals("")) {
+                        Toast.makeText(getContext(), "Reservation Link unavailable for this site", Toast.LENGTH_SHORT).show();
                     } else {
                         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(reservationUrl));
                         startActivity(browserIntent);
@@ -225,8 +220,8 @@ public class CampDetailDialogFragment extends DialogFragment implements LoaderMa
             directionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (directionUrl.equals("")){
-                        Toast.makeText(getContext(),"Detailed Directions unavailable for this site",Toast.LENGTH_SHORT).show();
+                    if (directionUrl.equals("")) {
+                        Toast.makeText(getContext(), "Detailed Directions unavailable for this site", Toast.LENGTH_SHORT).show();
                     } else {
                         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(directionUrl));
                         startActivity(browserIntent);
@@ -239,7 +234,7 @@ public class CampDetailDialogFragment extends DialogFragment implements LoaderMa
                     Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                     sharingIntent.setType("text/plain");
                     sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, title);
-                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, title+"\nOpen in Google Maps https://maps.google.com/?q="+gpsCoodinates[0]+","+gpsCoodinates[1]);
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, title + "\nOpen in Google Maps https://maps.google.com/?q=" + gpsCoodinates[0] + "," + gpsCoodinates[1]);
                     startActivity(Intent.createChooser(sharingIntent, "Share via"));
                 }
             });

@@ -18,8 +18,8 @@ import butterknife.ButterKnife;
 public class CampgroundRecyclerViewAdapter extends RecyclerView.Adapter<CampgroundRecyclerViewAdapter.ViewHolder> {
 
     private static final String TAG = CampgroundRecyclerViewAdapter.class.getSimpleName();
-    private Context mContext;
     private final OnListFragmentInteractionListener mListener;
+    private Context mContext;
     private Cursor cursor;
 
     public CampgroundRecyclerViewAdapter(OnListFragmentInteractionListener listener, Context context) {
@@ -48,7 +48,7 @@ public class CampgroundRecyclerViewAdapter extends RecyclerView.Adapter<Campgrou
 
     @Override
     public int getItemCount() {
-        if(cursor == null){
+        if (cursor == null) {
             return 0;
         }
         return cursor.getCount();
@@ -85,7 +85,7 @@ public class CampgroundRecyclerViewAdapter extends RecyclerView.Adapter<Campgrou
             int position = getAdapterPosition();
             cursor.moveToPosition(position);
             String campId = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_ID));
-            mListener.onListFragmentInteraction(campId,position);
+            mListener.onListFragmentInteraction(campId, position);
 
         }
     }

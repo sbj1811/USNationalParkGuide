@@ -6,11 +6,9 @@ import android.provider.BaseColumns;
 public class CampContract {
 
     public static final String CONTENT_AUTHORITY = "com.sjani.usnationalparkguide";
-
-    private static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
-
     // All possible paths for accessing data in this contract
     public static final String PATH_CAMPS = "allcamps";
+    private static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
     public static final class CampEntry implements BaseColumns {
 

@@ -15,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.sjani.usnationalparkguide.Models.Park.Parks;
 import com.sjani.usnationalparkguide.Models.Weather.CurrentWeather;
 import com.sjani.usnationalparkguide.Models.Weather.Main;
 import com.sjani.usnationalparkguide.Models.Weather.Sys;
@@ -27,9 +26,7 @@ import com.sjani.usnationalparkguide.Utils.StringToGPSCoordinates;
 import com.sjani.usnationalparkguide.Utils.WeatherUtils;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -37,7 +34,6 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 
@@ -122,10 +118,6 @@ public class WeatherFragment extends Fragment {
         ButterKnife.bind(this, view);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -139,25 +131,6 @@ public class WeatherFragment extends Fragment {
         }
         new NetworkCall().execute();
     }
-
-
-    private class NetworkCall extends AsyncTask<Void, Void, Void> {
-
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            getCurrentWeather();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            createWeatherview(currentWeather,main,wind,sys);
-        }
-    }
-
-
 
     public void getCurrentWeather(){
 
@@ -221,5 +194,21 @@ public class WeatherFragment extends Fragment {
         outState.putInt(POSITION,position);
         outState.putString(LATLONG,latLong);
         super.onSaveInstanceState(outState);
+    }
+
+    private class NetworkCall extends AsyncTask<Void, Void, Void> {
+
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            getCurrentWeather();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            createWeatherview(currentWeather,main,wind,sys);
+        }
     }
 }

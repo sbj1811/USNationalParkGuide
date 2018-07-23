@@ -52,14 +52,14 @@ public class ParkWidgetProvider extends AppWidgetProvider {
             ParkContract.ParkEntry.COLUMN_PARK_IMAGE
     };
 
-    public static void updateAppWidgets(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds, Uri uri, String parkId, int position, String latLong, String parkCode, boolean isFromFavNav, String imgUrl, String title){
+    public static void updateAppWidgets(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds, Uri uri, String parkId, int position, String latLong, String parkCode, boolean isFromFavNav, String imgUrl, String title) {
         for (int appWidgetId : appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId,uri,parkId,position,latLong,parkCode,isFromFavNav,imgUrl,title);
+            updateAppWidget(context, appWidgetManager, appWidgetId, uri, parkId, position, latLong, parkCode, isFromFavNav, imgUrl, title);
         }
     }
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId, Uri uri, String parkId, int position, String latLong, String parkCode, boolean isFromFavNav,String imgUrl,String title) {
+                                int appWidgetId, Uri uri, String parkId, int position, String latLong, String parkCode, boolean isFromFavNav, String imgUrl, String title) {
         Cursor cursor;
         CharSequence widgetText = context.getString(R.string.app_name);
         cursor = context.getContentResolver().query(ParkContract.ParkEntry.CONTENT_URI_FAVORITES,
@@ -67,7 +67,7 @@ public class ParkWidgetProvider extends AppWidgetProvider {
                 null,
                 null,
                 null);
-        if(cursor == null) {
+        if (cursor == null) {
             Log.e(TAG, "updateAppWidget: HERE: cursor null");
         }
         Intent intent = new Intent(context, MainListActivity.class);
@@ -78,24 +78,24 @@ public class ParkWidgetProvider extends AppWidgetProvider {
 //        intent.putExtra(LATLONG, latLong);
 //        intent.putExtra(PARKCODE, parkCode);
 //        intent.putExtra(FROM_FAV,true);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context,0,intent,0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.park_widget);
-        if (parkCode.equals("")){
+        if (parkCode.equals("")) {
             views.setTextViewText(R.id.park_widget_title, widgetText);
-            views.setImageViewResource(R.id.park_widget_thumbnail,R.drawable.empty_detail);
+            views.setImageViewResource(R.id.park_widget_thumbnail, R.drawable.empty_detail);
         } else {
             views.setTextViewText(R.id.park_widget_title, title);
             BitmapRequestBuilder builder = Glide.with(context.getApplicationContext()).load(imgUrl).asBitmap().centerCrop();
             FutureTarget futureTarget = builder.into(300, 200);
             try {
-                views.setImageViewBitmap(R.id.park_widget_thumbnail,(Bitmap) futureTarget.get());
+                views.setImageViewBitmap(R.id.park_widget_thumbnail, (Bitmap) futureTarget.get());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
         }
-        views.setOnClickPendingIntent(R.id.widget_main,pendingIntent);
+        views.setOnClickPendingIntent(R.id.widget_main, pendingIntent);
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
@@ -112,7 +112,7 @@ public class ParkWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onDisabled(Context context) {
-        context.startService(new Intent(context,ParkWidgetService.class));
+        context.startService(new Intent(context, ParkWidgetService.class));
     }
 }
 

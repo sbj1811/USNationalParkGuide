@@ -10,9 +10,6 @@ import android.widget.TextView;
 
 import com.sjani.usnationalparkguide.Data.AlertContract;
 import com.sjani.usnationalparkguide.R;
-import com.sjani.usnationalparkguide.Utils.Listeners.OnListFragmentInteractionListener;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,7 +48,7 @@ public class AlertRecyclerViewAdapter extends RecyclerView.Adapter<AlertRecycler
 
     @Override
     public int getItemCount() {
-        if(cursor == null){
+        if (cursor == null) {
             return 0;
         }
         return cursor.getCount();
@@ -71,7 +68,7 @@ public class AlertRecyclerViewAdapter extends RecyclerView.Adapter<AlertRecycler
         return temp;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         @BindView(R.id.alert_title)
         TextView alertTitleTv;

@@ -47,18 +47,6 @@ public class CampgroundFragment extends Fragment implements LoaderManager.Loader
     private static final String PARKCODE = "parkcode";
     private static final String LATLONG = "latlong";
     private static final int LOADER_ID = 8;
-    private String parkCode;
-    private Uri uri;
-    private String parkId;
-    private String latLong;
-    private CampgroundRecyclerViewAdapter adapter;
-    private List<CampDatum> camps;
-    private Context mContext;
-
-    @BindView(R.id.rv_camp)
-    RecyclerView recyclerView;
-
-
     private static final String[] PROJECTION = new String[]{
             CampContract.CampEntry._ID,
             CampContract.CampEntry.COLUMN_CAMP_ID,
@@ -75,6 +63,15 @@ public class CampgroundFragment extends Fragment implements LoaderManager.Loader
             CampContract.CampEntry.COLUMN_CAMP_RESERVURL,
             CampContract.CampEntry.COLUMN_CAMP_DIRECTIONURL
     };
+    @BindView(R.id.rv_camp)
+    RecyclerView recyclerView;
+    private String parkCode;
+    private Uri uri;
+    private String parkId;
+    private String latLong;
+    private CampgroundRecyclerViewAdapter adapter;
+    private List<CampDatum> camps;
+    private Context mContext;
 
     public CampgroundFragment() {
     }
@@ -84,17 +81,75 @@ public class CampgroundFragment extends Fragment implements LoaderManager.Loader
         Bundle args = new Bundle();
         args.putParcelable(URI, uri);
         args.putString(PARK_ID, parkId);
-        args.putInt(POSITION,position);
-        args.putString(LATLONG,latlong);
-        args.putString(PARKCODE,parkCode);
+        args.putInt(POSITION, position);
+        args.putString(LATLONG, latlong);
+        args.putString(PARKCODE, parkCode);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public static ContentValues[] makeContentFromCampList(List<CampDatum> list) {
+        if (list == null) {
+            return null;
+        }
+        ContentValues[] result = new ContentValues[list.size()];
+
+        for (int i = 0; i < list.size(); i++) {
+            CampDatum data = list.get(i);
+            ContentValues campValues = new ContentValues();
+            campValues.put(CampContract.CampEntry.COLUMN_CAMP_ID, data.getId());
+            campValues.put(CampContract.CampEntry.COLUMN_CAMP_NAME, data.getName());
+            campValues.put(CampContract.CampEntry.COLUMN_CAMP_DESCRIPTION, data.getDescription());
+            campValues.put(CampContract.CampEntry.COLUMN_CAMP_PARKCODE, data.getParkCode());
+            String address = String.valueOf(R.string.NA);
+            if (data.getAddresses() == null || data.getAddresses().size() == 0) {
+                campValues.put(CampContract.CampEntry.COLUMN_CAMP_ADDRESSS, String.valueOf(R.string.NA));
+            } else {
+                for (Address addresses : data.getAddresses()) {
+                    if (addresses.getType().equals("Physical")) {
+                        address = addresses.getLine1() + ", "
+                                + (addresses.getLine3().equals("") ? "" : addresses.getLine3() + ", ")
+                                + addresses.getCity() + ", "
+                                + addresses.getStateCode() + " "
+                                + addresses.getPostalCode();
+                        break;
+                    } else {
+                        address = addresses.getLine1() + ", "
+                                + (addresses.getLine2().equals("") ? "" : addresses.getLine2() + ", ")
+                                + (addresses.getLine3().equals("") ? "" : addresses.getLine3() + ", ")
+                                + addresses.getCity() + ", "
+                                + addresses.getStateCode() + " "
+                                + addresses.getPostalCode();
+                    }
+                }
+
+                campValues.put(CampContract.CampEntry.COLUMN_CAMP_ADDRESSS, address);
+            }
+            campValues.put(CampContract.CampEntry.COLUMN_CAMP_LATLONG, data.getLatLong());
+            campValues.put(CampContract.CampEntry.COLUMN_CAMP_CELLRECEP, data.getAmenities().getCellPhoneReception());
+            if (data.getAmenities().getShowers().size() != 0) {
+                campValues.put(CampContract.CampEntry.COLUMN_CAMP_SHOWERS, data.getAmenities().getShowers().get(0));
+            } else {
+                campValues.put(CampContract.CampEntry.COLUMN_CAMP_SHOWERS, String.valueOf(R.string.none));
+            }
+            campValues.put(CampContract.CampEntry.COLUMN_CAMP_INTERNET, data.getAmenities().getInternetConnectivity().toString());
+            if (data.getAmenities().getToilets().size() != 0) {
+                campValues.put(CampContract.CampEntry.COLUMN_CAMP_TOILET, data.getAmenities().getToilets().get(0));
+            } else {
+                campValues.put(CampContract.CampEntry.COLUMN_CAMP_TOILET, String.valueOf(R.string.none));
+            }
+            campValues.put(CampContract.CampEntry.COLUMN_CAMP_WHEELCHAIR, data.getAccessibility().getWheelchairAccess());
+            campValues.put(CampContract.CampEntry.COLUMN_CAMP_RESERVURL, data.getReservationsUrl());
+            campValues.put(CampContract.CampEntry.COLUMN_CAMP_DIRECTIONURL, data.getDirectionsUrl());
+            result[i] = campValues;
+        }
+        return result;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getLoaderManager().initLoader(LOADER_ID,null,this);
+        getLoaderManager().initLoader(LOADER_ID, null, this);
     }
 
     @Override
@@ -107,7 +162,7 @@ public class CampgroundFragment extends Fragment implements LoaderManager.Loader
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        adapter = new CampgroundRecyclerViewAdapter(this,getContext());
+        adapter = new CampgroundRecyclerViewAdapter(this, getContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
     }
@@ -129,7 +184,7 @@ public class CampgroundFragment extends Fragment implements LoaderManager.Loader
     @Override
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
         uri = CampContract.CampEntry.CONTENT_URI_CAMP;
-        return new android.support.v4.content.CursorLoader(getActivity(),uri,PROJECTION,null,null,null);
+        return new android.support.v4.content.CursorLoader(getActivity(), uri, PROJECTION, null, null, null);
     }
 
     @Override
@@ -148,14 +203,14 @@ public class CampgroundFragment extends Fragment implements LoaderManager.Loader
     public void onListFragmentInteraction(String id, int position) {
 
         Uri uriCamp = CampContract.CampEntry.CONTENT_URI_CAMP;
-        Intent intent = new Intent(getActivity(),CampDetailActivity.class);
-        intent.putExtra(URI,uri);
-        intent.putExtra(URI_CAMP,uriCamp);
-        intent.putExtra(PARK_ID,parkId);
-        intent.putExtra(PARKCODE,parkCode);
-        intent.putExtra(LATLONG,latLong);
-        intent.putExtra(CAMP_ID,id);
-        intent.putExtra(POSITION,position);
+        Intent intent = new Intent(getActivity(), CampDetailActivity.class);
+        intent.putExtra(URI, uri);
+        intent.putExtra(URI_CAMP, uriCamp);
+        intent.putExtra(PARK_ID, parkId);
+        intent.putExtra(PARKCODE, parkCode);
+        intent.putExtra(LATLONG, latLong);
+        intent.putExtra(CAMP_ID, id);
+        intent.putExtra(POSITION, position);
         startActivity(intent);
 
     }
@@ -166,28 +221,10 @@ public class CampgroundFragment extends Fragment implements LoaderManager.Loader
         mContext.getContentResolver().delete(CampContract.CampEntry.CONTENT_URI_CAMP, null, null);
     }
 
-    private class NetworkCall extends AsyncTask<Void, Void, Void> {
-
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            camps = loadCampData();
-            ContentValues[] campContent = makeContentFromCampList(camps);
-            if (campContent != null) {
-                ContentResolver contentResolver =  mContext.getContentResolver();
-                contentResolver.delete(CampContract.CampEntry.CONTENT_URI_CAMP, null, null);
-                contentResolver.bulkInsert(CampContract.CampEntry.CONTENT_URI_CAMP, campContent);
-            }
-            return null;
-        }
-
-
-    }
-
-    private List<CampDatum>  loadCampData() {
+    private List<CampDatum> loadCampData() {
         String apiKey = mContext.getResources().getString(R.string.NPSapiKey);
         String feilds = mContext.getResources().getString(R.string.fields_cg);
-        Call<Campground> campData = NPSApiConnection.getApi().getCampgound(parkCode,apiKey,feilds);
+        Call<Campground> campData = NPSApiConnection.getApi().getCampgound(parkCode, apiKey, feilds);
         Response<Campground> response = null;
         try {
             response = campData.execute();
@@ -200,61 +237,21 @@ public class CampgroundFragment extends Fragment implements LoaderManager.Loader
             return null;
     }
 
-    public static ContentValues[] makeContentFromCampList(List<CampDatum> list) {
-        if (list == null) {
+    private class NetworkCall extends AsyncTask<Void, Void, Void> {
+
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            camps = loadCampData();
+            ContentValues[] campContent = makeContentFromCampList(camps);
+            if (campContent != null) {
+                ContentResolver contentResolver = mContext.getContentResolver();
+                contentResolver.delete(CampContract.CampEntry.CONTENT_URI_CAMP, null, null);
+                contentResolver.bulkInsert(CampContract.CampEntry.CONTENT_URI_CAMP, campContent);
+            }
             return null;
         }
-        ContentValues[] result = new ContentValues[list.size()];
 
-        for (int i = 0; i < list.size(); i++) {
-            CampDatum data = list.get(i);
-            ContentValues campValues = new ContentValues();
-            campValues.put(CampContract.CampEntry.COLUMN_CAMP_ID, data.getId());
-            campValues.put(CampContract.CampEntry.COLUMN_CAMP_NAME, data.getName());
-            campValues.put(CampContract.CampEntry.COLUMN_CAMP_DESCRIPTION, data.getDescription());
-            campValues.put(CampContract.CampEntry.COLUMN_CAMP_PARKCODE, data.getParkCode());
-            String address = String.valueOf(R.string.NA);
-            if(data.getAddresses() == null || data.getAddresses().size() == 0) {
-                campValues.put(CampContract.CampEntry.COLUMN_CAMP_ADDRESSS, String.valueOf(R.string.NA));
-            } else {
-                for (Address addresses: data.getAddresses()) {
-                    if (addresses.getType().equals("Physical")) {
-                        address = addresses.getLine1()+", "
-                                +(addresses.getLine3().equals("")?"":addresses.getLine3()+", ")
-                                +addresses.getCity()+", "
-                                +addresses.getStateCode()+" "
-                                +addresses.getPostalCode();
-                        break;
-                    } else {
-                        address = addresses.getLine1()+", "
-                                +(addresses.getLine2().equals("")?"":addresses.getLine2()+", ")
-                                +(addresses.getLine3().equals("")?"":addresses.getLine3()+", ")
-                                +addresses.getCity()+", "
-                                +addresses.getStateCode()+" "
-                                +addresses.getPostalCode();
-                    }
-                }
 
-                campValues.put(CampContract.CampEntry.COLUMN_CAMP_ADDRESSS, address);
-            }
-            campValues.put(CampContract.CampEntry.COLUMN_CAMP_LATLONG, data.getLatLong());
-            campValues.put(CampContract.CampEntry.COLUMN_CAMP_CELLRECEP, data.getAmenities().getCellPhoneReception());
-            if(data.getAmenities().getShowers().size() != 0) {
-                campValues.put(CampContract.CampEntry.COLUMN_CAMP_SHOWERS, data.getAmenities().getShowers().get(0));
-            } else {
-                campValues.put(CampContract.CampEntry.COLUMN_CAMP_SHOWERS, String.valueOf(R.string.none));
-            }
-            campValues.put(CampContract.CampEntry.COLUMN_CAMP_INTERNET, data.getAmenities().getInternetConnectivity().toString());
-            if (data.getAmenities().getToilets().size() != 0) {
-                campValues.put(CampContract.CampEntry.COLUMN_CAMP_TOILET, data.getAmenities().getToilets().get(0));
-            } else {
-                campValues.put(CampContract.CampEntry.COLUMN_CAMP_TOILET, String.valueOf(R.string.none));
-            }
-            campValues.put(CampContract.CampEntry.COLUMN_CAMP_WHEELCHAIR, data.getAccessibility().getWheelchairAccess());
-            campValues.put(CampContract.CampEntry.COLUMN_CAMP_RESERVURL, data.getReservationsUrl());
-            campValues.put(CampContract.CampEntry.COLUMN_CAMP_DIRECTIONURL, data.getDirectionsUrl());
-            result[i] = campValues;
-        }
-        return result;
     }
 }

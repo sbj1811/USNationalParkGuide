@@ -12,7 +12,7 @@ public class Address implements Parcelable
 
     @SerializedName("postalCode")
     @Expose
-    private Long postalCode;
+    private String postalCode;
     @SerializedName("city")
     @Expose
     private String city;
@@ -49,7 +49,7 @@ public class Address implements Parcelable
     ;
 
     protected Address(Parcel in) {
-        this.postalCode = ((Long) in.readValue((Long.class.getClassLoader())));
+        this.postalCode = ((String) in.readValue((String.class.getClassLoader())));
         this.city = ((String) in.readValue((String.class.getClassLoader())));
         this.stateCode = ((String) in.readValue((String.class.getClassLoader())));
         this.line1 = ((String) in.readValue((String.class.getClassLoader())));
@@ -61,11 +61,11 @@ public class Address implements Parcelable
     public Address() {
     }
 
-    public Long getPostalCode() {
+    public String getPostalCode() {
         return postalCode;
     }
 
-    public void setPostalCode(Long postalCode) {
+    public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
     }
 

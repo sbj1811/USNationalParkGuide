@@ -3,7 +3,6 @@ package com.sjani.usnationalparkguide.UI.MainList;
 import android.app.Fragment;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,7 +15,6 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -26,48 +24,29 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
-
 import com.sjani.usnationalparkguide.Data.ParkContract;
-import com.sjani.usnationalparkguide.Data.ParkDbHelper;
 import com.sjani.usnationalparkguide.R;
 import com.sjani.usnationalparkguide.UI.Details.DetailsActivity;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.stetho.Stetho;
-import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.sjani.usnationalparkguide.UI.Settings.SettingsActivity;
 import com.sjani.usnationalparkguide.Utils.ParkIdlingResource;
-
-import java.util.Arrays;
-
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemSelectedListener {
 
-    private static final String TAG = MainListActivity.class.getSimpleName();
-    private static final String SELECTED_STATE = "selected_state";
     public static final String ANONYMOUS = "anonymous";
     public static final int RC_SIGN_IN = 1;
+    private static final String TAG = MainListActivity.class.getSimpleName();
+    private static final String SELECTED_STATE = "selected_state";
     private static final String URI = "uri";
     private static final String PARK_ID = "park_id";
     private static final String POSITION = "position";
     private static final String LATLONG = "latlong";
     private static final String PARKCODE = "parkcode";
     private static final String FROM_FAV = "from_fav";
-
-    private Spinner spinner;
-    private String state;
-    private ListFragment listFragment;
-//    private FirebaseAuth mFirebaseAuth;
-//    private FirebaseAuth.AuthStateListener mAuthStateListener;
-//    private String mUsername;
-    private ParkIdlingResource idlingResource;
-
-
     private static final String[] PROJECTION = new String[]{
             ParkContract.ParkEntry._ID,
             ParkContract.ParkEntry.COLUMN_PARK_ID,
@@ -82,6 +61,13 @@ public class MainListActivity extends AppCompatActivity
             ParkContract.ParkEntry.COLUMN_PARK_EMAIL,
             ParkContract.ParkEntry.COLUMN_PARK_IMAGE
     };
+    private Spinner spinner;
+    private String state;
+    private ListFragment listFragment;
+    //    private FirebaseAuth mFirebaseAuth;
+//    private FirebaseAuth.AuthStateListener mAuthStateListener;
+//    private String mUsername;
+    private ParkIdlingResource idlingResource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,10 +86,10 @@ public class MainListActivity extends AppCompatActivity
         toolbar.setTitle(R.string.state_prompt);
         listFragment = (ListFragment) getSupportFragmentManager().findFragmentById(R.id.list_container);
 
-        if(listFragment == null){
-            listFragment = ListFragment.newInstance(this,state);
+        if (listFragment == null) {
+            listFragment = ListFragment.newInstance(this, state);
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.list_container,listFragment)
+                    .add(R.id.list_container, listFragment)
                     .commit();
         }
 
@@ -122,10 +108,10 @@ public class MainListActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         Fragment fragment = getFragmentManager().findFragmentById(R.id.details);
-        if((getResources().getBoolean(R.bool.dual_pane)) && fragment == null){
-                EmptyStateFragment emptyStateFragment = new EmptyStateFragment();
-                this.getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.details, emptyStateFragment).commit();
+        if ((getResources().getBoolean(R.bool.dual_pane)) && fragment == null) {
+            EmptyStateFragment emptyStateFragment = new EmptyStateFragment();
+            this.getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.details, emptyStateFragment).commit();
         }
 
 //        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
@@ -184,7 +170,7 @@ public class MainListActivity extends AppCompatActivity
         spinner = (Spinner) MenuItemCompat.getActionView(item);
         item.setTitle(getResources().getString(R.string.state_prompt));
         spinner.setDropDownWidth(130);
-        spinner.setPopupBackgroundResource(R.color.primaryText );
+        spinner.setPopupBackgroundResource(R.color.primaryText);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.state_arrays, R.layout.spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -194,7 +180,6 @@ public class MainListActivity extends AppCompatActivity
     }
 
 
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -202,7 +187,7 @@ public class MainListActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_fav) {
-            if(doesTableExist("favorite")) {
+            if (doesTableExist("favorite")) {
                 Cursor cursor = getContentResolver().query(ParkContract.ParkEntry.CONTENT_URI_FAVORITES,
                         null,
                         null,
@@ -219,10 +204,10 @@ public class MainListActivity extends AppCompatActivity
                 intent.putExtra(URI, uri);
                 intent.putExtra(LATLONG, latLong);
                 intent.putExtra(PARKCODE, parkCode);
-                intent.putExtra(FROM_FAV,true);
+                intent.putExtra(FROM_FAV, true);
                 startActivity(intent);
             } else {
-                Toast.makeText(this,"No Favorites",Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "No Favorites", Toast.LENGTH_LONG).show();
             }
         } else if (id == R.id.nav_settings) {
             Intent settingsIntent = new Intent(this, SettingsActivity.class);
@@ -256,18 +241,18 @@ public class MainListActivity extends AppCompatActivity
         state = String.valueOf(spinner.getSelectedItem());
         listFragment = ListFragment.newInstance(this, state);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.list_container,listFragment)
+                .replace(R.id.list_container, listFragment)
                 .commit();
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-        Toast.makeText(this,"Please select a state",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Please select a state", Toast.LENGTH_SHORT).show();
     }
 
 
     public boolean doesTableExist(String tableName) {
-        Cursor cursor = getContentResolver().query(ParkContract.ParkEntry.CONTENT_URI_FAVORITES,PROJECTION,null,null,null);
+        Cursor cursor = getContentResolver().query(ParkContract.ParkEntry.CONTENT_URI_FAVORITES, PROJECTION, null, null, null);
         if (cursor != null) {
             if (cursor.getCount() == 1 && cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_ID) != -1) {
                 cursor.close();
@@ -289,7 +274,7 @@ public class MainListActivity extends AppCompatActivity
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putString(SELECTED_STATE,state);
+        outState.putString(SELECTED_STATE, state);
         super.onSaveInstanceState(outState);
     }
 

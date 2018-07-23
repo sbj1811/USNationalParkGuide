@@ -28,10 +28,10 @@ public class ParkSyncAdapter extends AbstractThreadedSyncAdapter {
     private static final String TAG = ParkSyncAdapter.class.getSimpleName();
     private static final String SELECTED_STATE = "selected_state";
     private static final String MAX_RESULTS = "max_results";
+    private final ContentResolver contentResolver;
     private String apiKey;
     private String fields;
     private List<Datum> parkList;
-    private final ContentResolver contentResolver;
     private Context context;
 
 
@@ -39,6 +39,29 @@ public class ParkSyncAdapter extends AbstractThreadedSyncAdapter {
         super(context, autoInitialize);
         this.context = context;
         contentResolver = context.getContentResolver();
+    }
+
+    private static List<Datum> loadParkData(String apiKey, String fields, String state, String maxResults) throws IOException {
+        String selectedState;
+        if (state == null) {
+            selectedState = "AL";
+        } else {
+            selectedState = state;
+        }
+        Call<Parks> parkData = NPSApiConnection.getApi().getParks(selectedState, apiKey, fields, maxResults);
+        Response<Parks> response = parkData.execute();
+        List<Datum> parkList = response.body().getData();
+        return parkList;
+    }
+
+    public static void performSync(String mState, String maxResults) {
+        Bundle b = new Bundle();
+        b.putString(SELECTED_STATE, mState);
+        b.putString(MAX_RESULTS, maxResults);
+        b.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+        b.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+        ContentResolver.requestSync(AccountModel.getAccount(),
+                ParkContract.CONTENT_AUTHORITY, b);
     }
 
     @Override
@@ -49,31 +72,16 @@ public class ParkSyncAdapter extends AbstractThreadedSyncAdapter {
         String selectedState = bundle.getString(SELECTED_STATE);
         String maxResults = bundle.getString(MAX_RESULTS);
         try {
-            parkList = loadParkData(apiKey,fields,selectedState,maxResults);
+            parkList = loadParkData(apiKey, fields, selectedState, maxResults);
             ContentValues[] parkContent = makeContentFromParkList(parkList);
-            contentResolver.delete(ParkContract.ParkEntry.CONTENT_URI_PARKS,null,null);
-            contentResolver.bulkInsert(ParkContract.ParkEntry.CONTENT_URI_PARKS,parkContent);
+            contentResolver.delete(ParkContract.ParkEntry.CONTENT_URI_PARKS, null, null);
+            contentResolver.bulkInsert(ParkContract.ParkEntry.CONTENT_URI_PARKS, parkContent);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
 
     }
-
-    private static List<Datum> loadParkData (String apiKey, String fields, String state, String maxResults) throws IOException {
-        String selectedState;
-        if (state == null){
-            selectedState = "AL";
-        } else {
-            selectedState = state;
-        }
-        Call<Parks> parkData = NPSApiConnection.getApi().getParks(selectedState,apiKey,fields,maxResults);
-        Response<Parks> response = parkData.execute();
-        List<Datum> parkList = response.body().getData();
-        return parkList;
-    }
-
-
 
     public ContentValues[] makeContentFromParkList(List<Datum> list) {
 
@@ -93,38 +101,38 @@ public class ParkSyncAdapter extends AbstractThreadedSyncAdapter {
             parkValues.put(ParkContract.ParkEntry.COLUMN_PARK_DESCRIPTION, data.getDescription());
             parkValues.put(ParkContract.ParkEntry.COLUMN_PARK_DESIGNATION, data.getDesignation());
             String address = "NA";
-            if(data.getAddresses() == null || data.getAddresses().size() == 0) {
+            if (data.getAddresses() == null || data.getAddresses().size() == 0) {
                 parkValues.put(ParkContract.ParkEntry.COLUMN_PARK_ADDRESS, String.valueOf(R.string.NA));
             } else {
-                for (Address addresses: data.getAddresses()) {
+                for (Address addresses : data.getAddresses()) {
                     if (addresses.getType().equals("Physical")) {
-                        address = addresses.getLine1()+", "
-                                +(addresses.getLine3().equals("")?"":addresses.getLine3()+", ")
-                                +addresses.getCity()+", "
-                                +addresses.getStateCode()+" "
-                                +addresses.getPostalCode();
+                        address = addresses.getLine1() + ", "
+                                + (addresses.getLine3().equals("") ? "" : addresses.getLine3() + ", ")
+                                + addresses.getCity() + ", "
+                                + addresses.getStateCode() + " "
+                                + addresses.getPostalCode();
                         break;
                     } else {
-                        address = addresses.getLine1()+", "
-                                +(addresses.getLine2().equals("")?"":addresses.getLine2()+", ")
-                                +(addresses.getLine3().equals("")?"":addresses.getLine3()+", ")
-                                +addresses.getCity()+", "
-                                +addresses.getStateCode()+" "
-                                +addresses.getPostalCode();
+                        address = addresses.getLine1() + ", "
+                                + (addresses.getLine2().equals("") ? "" : addresses.getLine2() + ", ")
+                                + (addresses.getLine3().equals("") ? "" : addresses.getLine3() + ", ")
+                                + addresses.getCity() + ", "
+                                + addresses.getStateCode() + " "
+                                + addresses.getPostalCode();
                     }
                 }
 
                 parkValues.put(ParkContract.ParkEntry.COLUMN_PARK_ADDRESS, address);
             }
 
-            if(data.getContacts() == null) {
+            if (data.getContacts() == null) {
                 parkValues.put(ParkContract.ParkEntry.COLUMN_PARK_PHONE, context.getResources().getString(R.string.na));
                 parkValues.put(ParkContract.ParkEntry.COLUMN_PARK_EMAIL, context.getResources().getString(R.string.na));
             } else {
                 parkValues.put(ParkContract.ParkEntry.COLUMN_PARK_PHONE, data.getContacts().getPhoneNumbers().get(0).getPhoneNumber());
                 parkValues.put(ParkContract.ParkEntry.COLUMN_PARK_EMAIL, data.getContacts().getEmailAddresses().get(0).getEmailAddress());
             }
-            if(data.getImages().size() == 0) {
+            if (data.getImages().size() == 0) {
                 parkValues.put(ParkContract.ParkEntry.COLUMN_PARK_IMAGE, "");
             } else {
                 parkValues.put(ParkContract.ParkEntry.COLUMN_PARK_IMAGE, data.getImages().get(0).getUrl());
@@ -133,16 +141,6 @@ public class ParkSyncAdapter extends AbstractThreadedSyncAdapter {
         }
 
         return result;
-    }
-
-    public static void performSync(String mState, String maxResults) {
-        Bundle b = new Bundle();
-        b.putString(SELECTED_STATE,mState);
-        b.putString(MAX_RESULTS,maxResults);
-        b.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-        b.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-        ContentResolver.requestSync(AccountModel.getAccount(),
-                ParkContract.CONTENT_AUTHORITY, b);
     }
 
 }

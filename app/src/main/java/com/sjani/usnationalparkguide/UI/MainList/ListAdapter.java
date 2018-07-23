@@ -33,7 +33,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListAdapterVie
     @NonNull
     @Override
     public ListAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.list_item_article,parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.list_item_article, parent, false);
         ListAdapterViewHolder holder = new ListAdapterViewHolder(view);
         return holder;
     }
@@ -44,7 +44,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListAdapterVie
         String title = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_NAME));
         String imageUrl = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_IMAGE));
         holder.parkTitle.setText(title);
-        if (imageUrl.equals("")){
+        if (imageUrl.equals("")) {
             Glide.with(holder.parkThumbnail.getContext())
                     .load(R.drawable.empty_detail)
                     .into(holder.parkThumbnail);
@@ -57,7 +57,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListAdapterVie
 
     @Override
     public int getItemCount() {
-        if(cursor == null){
+        if (cursor == null) {
             return 0;
         }
         return cursor.getCount();
@@ -98,10 +98,9 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListAdapterVie
             String parkId = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_ID));
             String parkCode = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_CODE));
             String latlong = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_LATLONG));
-            listener.onItemClick(parkId,latlong,position,parkCode);
+            listener.onItemClick(parkId, latlong, position, parkCode);
         }
     }
-
 
 
 }

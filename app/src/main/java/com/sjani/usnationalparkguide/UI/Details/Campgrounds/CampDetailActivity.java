@@ -24,9 +24,9 @@ public class CampDetailActivity extends AppCompatActivity {
         Uri uri = bundle.getParcelable(URI);
         String campId = bundle.getString(CAMP_ID);
         int position = bundle.getInt(POSITION);
-        if(getResources().getBoolean(R.bool.dual_pane)){
+        if (getResources().getBoolean(R.bool.dual_pane)) {
             campDetailDialogFragment = CampDetailDialogFragment.newInstance(uri, campId, position);
-            campDetailDialogFragment.show(getSupportFragmentManager(),"Camp");
+            campDetailDialogFragment.show(getSupportFragmentManager(), "Camp");
         } else {
             campDetailFragment = (CampDetailFragment) getSupportFragmentManager().findFragmentById(R.id.camp_detail_container);
             if (campDetailFragment == null) {
@@ -38,7 +38,6 @@ public class CampDetailActivity extends AppCompatActivity {
         }
 
     }
-
 
 
     @Override

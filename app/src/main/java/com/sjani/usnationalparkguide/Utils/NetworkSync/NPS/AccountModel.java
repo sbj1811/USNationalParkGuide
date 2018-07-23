@@ -23,7 +23,7 @@ public class AccountModel {
 
         // Get an account and the account manager
         Account account = getAccount();
-        AccountManager manager = (AccountManager)c.getSystemService(Context.ACCOUNT_SERVICE);
+        AccountManager manager = (AccountManager) c.getSystemService(Context.ACCOUNT_SERVICE);
 
         // Attempt to explicitly create the account with no password or extra data
         if (manager.addAccountExplicitly(account, null, null)) {

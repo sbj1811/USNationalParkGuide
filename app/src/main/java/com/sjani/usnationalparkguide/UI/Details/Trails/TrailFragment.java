@@ -46,18 +46,6 @@ public class TrailFragment extends Fragment implements android.support.v4.app.Lo
     private static final String PARKCODE = "parkcode";
     private static final int DETAIL_ACTIVITY = 1;
     private static final int LOADER_ID = 5;
-    private String latLong;
-    private Uri uri;
-    private String parkId;
-    private String parkCode;
-    private TrailRecyclerViewAdapter adapter;
-    private List<TrailDatum> trails;
-    private Context mContext;
-
-    @BindView(R.id.rv_trail)
-    RecyclerView recyclerView;
-
-
     private static final String[] PROJECTION = new String[]{
             TrailContract.TrailEntry._ID,
             TrailContract.TrailEntry.COLUMN_TRAIL_ID,
@@ -74,6 +62,15 @@ public class TrailFragment extends Fragment implements android.support.v4.app.Lo
             TrailContract.TrailEntry.COLUMN_TRAIL_CONDITION,
             TrailContract.TrailEntry.COLUMN_TRAIL_MOREINFO
     };
+    @BindView(R.id.rv_trail)
+    RecyclerView recyclerView;
+    private String latLong;
+    private Uri uri;
+    private String parkId;
+    private String parkCode;
+    private TrailRecyclerViewAdapter adapter;
+    private List<TrailDatum> trails;
+    private Context mContext;
 
 
     public TrailFragment() {
@@ -84,109 +81,11 @@ public class TrailFragment extends Fragment implements android.support.v4.app.Lo
         Bundle args = new Bundle();
         args.putParcelable(URI, uri);
         args.putString(PARK_ID, parkId);
-        args.putInt(POSITION,position);
-        args.putString(LATLONG,latLong);
-        args.putString(PARKCODE,parkCode);
+        args.putInt(POSITION, position);
+        args.putString(LATLONG, latLong);
+        args.putString(PARKCODE, parkCode);
         fragment.setArguments(args);
         return fragment;
-    }
-
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getLoaderManager().initLoader(LOADER_ID,null,this);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_trail_list, container, false);
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        ButterKnife.bind(this, view);
-        adapter = new TrailRecyclerViewAdapter(this,getContext());
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mContext = context;
-        if (getArguments() != null) {
-            latLong = getArguments().getString(LATLONG);
-            parkId = getArguments().getString(PARK_ID);
-            parkCode = getArguments().getString(PARKCODE);
-            uri = getArguments().getParcelable(URI);
-        }
-        new NetworkCall().execute();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mContext.getContentResolver().delete(TrailContract.TrailEntry.CONTENT_URI_TRAIL, null, null);
-    }
-
-    @Override
-    public void onListFragmentInteraction(String id, int position) {
-        Uri uriTrail = TrailContract.TrailEntry.CONTENT_URI_TRAIL;
-        Intent intent = new Intent(getActivity(),TrailDetailActivity.class);
-        intent.putExtra(URI,uri);
-        intent.putExtra(URI_TRAIL,uriTrail);
-        intent.putExtra(PARK_ID,parkId);
-        intent.putExtra(PARKCODE,parkCode);
-        intent.putExtra(LATLONG,latLong);
-        intent.putExtra(TRAIL_ID,id);
-        intent.putExtra(POSITION,position);
-        startActivity(intent);
-
-    }
-
-    private class NetworkCall extends AsyncTask<Void, Void, Void> {
-
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            trails = loadTrailData();
-            ContentValues[] trailContent = makeContentFromTrailList(trails);
-            if (trailContent != null) {
-                ContentResolver contentResolver =  mContext.getContentResolver();
-                contentResolver.delete(TrailContract.TrailEntry.CONTENT_URI_TRAIL, null, null);
-                contentResolver.bulkInsert(TrailContract.TrailEntry.CONTENT_URI_TRAIL, trailContent);
-            }
-            return null;
-        }
-
-
-    }
-
-    @NonNull
-    @Override
-    public android.support.v4.content.Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
-        uri = TrailContract.TrailEntry.CONTENT_URI_TRAIL;
-        return new android.support.v4.content.CursorLoader(getActivity(),uri,PROJECTION,null,null,null);
-    }
-
-    private List<TrailDatum>  loadTrailData() {
-        String apiKey = mContext.getResources().getString(R.string.HPapiKey);
-        StringToGPSCoordinates stringToGPSCoordinates = new StringToGPSCoordinates();
-        final String gpsCoodinates[] = stringToGPSCoordinates.convertToGPS(latLong);
-        Call<Trail> trailData = HikingprojectApiConnection.getApi().getTrails(gpsCoodinates[0],gpsCoodinates[1],apiKey);
-        Response<Trail> response = null;
-        try {
-            response = trailData.execute();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if (response != null) {
-            return response.body().getTrails();
-        } else
-            return null;
     }
 
     public static ContentValues[] makeContentFromTrailList(List<TrailDatum> list) {
@@ -218,6 +117,85 @@ public class TrailFragment extends Fragment implements android.support.v4.app.Lo
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getLoaderManager().initLoader(LOADER_ID, null, this);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_trail_list, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        ButterKnife.bind(this, view);
+        adapter = new TrailRecyclerViewAdapter(this, getContext());
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
+        if (getArguments() != null) {
+            latLong = getArguments().getString(LATLONG);
+            parkId = getArguments().getString(PARK_ID);
+            parkCode = getArguments().getString(PARKCODE);
+            uri = getArguments().getParcelable(URI);
+        }
+        new NetworkCall().execute();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mContext.getContentResolver().delete(TrailContract.TrailEntry.CONTENT_URI_TRAIL, null, null);
+    }
+
+    @Override
+    public void onListFragmentInteraction(String id, int position) {
+        Uri uriTrail = TrailContract.TrailEntry.CONTENT_URI_TRAIL;
+        Intent intent = new Intent(getActivity(), TrailDetailActivity.class);
+        intent.putExtra(URI, uri);
+        intent.putExtra(URI_TRAIL, uriTrail);
+        intent.putExtra(PARK_ID, parkId);
+        intent.putExtra(PARKCODE, parkCode);
+        intent.putExtra(LATLONG, latLong);
+        intent.putExtra(TRAIL_ID, id);
+        intent.putExtra(POSITION, position);
+        startActivity(intent);
+
+    }
+
+    @NonNull
+    @Override
+    public android.support.v4.content.Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
+        uri = TrailContract.TrailEntry.CONTENT_URI_TRAIL;
+        return new android.support.v4.content.CursorLoader(getActivity(), uri, PROJECTION, null, null, null);
+    }
+
+    private List<TrailDatum> loadTrailData() {
+        String apiKey = mContext.getResources().getString(R.string.HPapiKey);
+        StringToGPSCoordinates stringToGPSCoordinates = new StringToGPSCoordinates();
+        final String gpsCoodinates[] = stringToGPSCoordinates.convertToGPS(latLong);
+        Call<Trail> trailData = HikingprojectApiConnection.getApi().getTrails(gpsCoodinates[0], gpsCoodinates[1], apiKey);
+        Response<Trail> response = null;
+        try {
+            response = trailData.execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (response != null) {
+            return response.body().getTrails();
+        } else
+            return null;
+    }
+
+    @Override
     public void onLoadFinished(@NonNull android.support.v4.content.Loader<Cursor> loader, Cursor data) {
         adapter.swapCursor(data);
     }
@@ -232,9 +210,27 @@ public class TrailFragment extends Fragment implements android.support.v4.app.Lo
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(URI,uri);
-        outState.putString(PARK_ID,parkId);
-        outState.putString(PARKCODE,parkCode);
-        outState.putString(LATLONG,latLong);
+        outState.putParcelable(URI, uri);
+        outState.putString(PARK_ID, parkId);
+        outState.putString(PARKCODE, parkCode);
+        outState.putString(LATLONG, latLong);
+    }
+
+    private class NetworkCall extends AsyncTask<Void, Void, Void> {
+
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            trails = loadTrailData();
+            ContentValues[] trailContent = makeContentFromTrailList(trails);
+            if (trailContent != null) {
+                ContentResolver contentResolver = mContext.getContentResolver();
+                contentResolver.delete(TrailContract.TrailEntry.CONTENT_URI_TRAIL, null, null);
+                contentResolver.bulkInsert(TrailContract.TrailEntry.CONTENT_URI_TRAIL, trailContent);
+            }
+            return null;
+        }
+
+
     }
 }

@@ -23,12 +23,9 @@ import com.sjani.usnationalparkguide.R;
 public class ParkWidgetService extends IntentService {
 
 
-    private static final String TAG = ParkWidgetService.class.getSimpleName();
     public static final String UPDATE_WIDGET = "update_widget";
+    private static final String TAG = ParkWidgetService.class.getSimpleName();
     private static final String NOTIFICATION_CHANNEL_ID = "notification_channel";
-
-    private Cursor cursor;
-
     private static final String[] PROJECTION = new String[]{
             ParkContract.ParkEntry._ID,
             ParkContract.ParkEntry.COLUMN_PARK_ID,
@@ -43,7 +40,6 @@ public class ParkWidgetService extends IntentService {
             ParkContract.ParkEntry.COLUMN_PARK_EMAIL,
             ParkContract.ParkEntry.COLUMN_PARK_IMAGE
     };
-
     Uri uri;
     String parkId;
     int position;
@@ -51,11 +47,21 @@ public class ParkWidgetService extends IntentService {
     String parkCode;
     String imgUrl;
     String title;
+    private Cursor cursor;
 
     public ParkWidgetService() {
         super("ParkWidgetService");
     }
 
+    public static void startActionUpdateWidgets(Context context) {
+        Intent intent = new Intent(context, ParkWidgetService.class);
+        intent.setAction(UPDATE_WIDGET);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context.startForegroundService(intent);
+        } else {
+            context.startService(intent);
+        }
+    }
 
     @Override
     public void onCreate() {
@@ -71,20 +77,19 @@ public class ParkWidgetService extends IntentService {
                     NotificationManager.IMPORTANCE_HIGH);
             notificationManager.createNotificationChannel(mChannel);
         }
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this,NOTIFICATION_CHANNEL_ID)
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
                 .setContentTitle("Favorite Updated")
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(largeIcon);
 
         Notification notification = notificationBuilder.build();
-        notificationManager.notify(111,notification);
-        startForeground(1,notification);
+        notificationManager.notify(111, notification);
+        startForeground(1, notification);
     }
-
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        if(intent == null || intent.getAction() == null) return;
+        if (intent == null || intent.getAction() == null) return;
         if (intent.getAction().equals(UPDATE_WIDGET)) {
             Context context = getApplicationContext();
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
@@ -104,7 +109,7 @@ public class ParkWidgetService extends IntentService {
                     parkCode = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_CODE));
                     imgUrl = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_IMAGE));
                     title = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_NAME));
-                    ParkWidgetProvider.updateAppWidgets(context,appWidgetManager,appWidgetIds,uri,parkId,position,latLong,parkCode,true,imgUrl,title);
+                    ParkWidgetProvider.updateAppWidgets(context, appWidgetManager, appWidgetIds, uri, parkId, position, latLong, parkCode, true, imgUrl, title);
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
@@ -115,17 +120,6 @@ public class ParkWidgetService extends IntentService {
             }
         }
     }
-
-    public static void startActionUpdateWidgets(Context context) {
-        Intent intent = new Intent(context, ParkWidgetService.class);
-        intent.setAction(UPDATE_WIDGET);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            context.startForegroundService(intent);
-        } else {
-            context.startService(intent);
-        }
-    }
-
 
 
 }

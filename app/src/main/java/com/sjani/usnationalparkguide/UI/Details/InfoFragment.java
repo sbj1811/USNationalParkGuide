@@ -2,9 +2,7 @@ package com.sjani.usnationalparkguide.UI.Details;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -37,8 +35,20 @@ public class InfoFragment extends Fragment implements LoaderManager.LoaderCallba
     private static final String POSITION = "position";
     private static final String LATLONG = "latlong";
     private static final int LOADER_ID = 4;
-
-
+    private static final String[] PROJECTION = new String[]{
+            ParkContract.ParkEntry._ID,
+            ParkContract.ParkEntry.COLUMN_PARK_ID,
+            ParkContract.ParkEntry.COLUMN_PARK_NAME,
+            ParkContract.ParkEntry.COLUMN_PARK_STATES,
+            ParkContract.ParkEntry.COLUMN_PARK_CODE,
+            ParkContract.ParkEntry.COLUMN_PARK_LATLONG,
+            ParkContract.ParkEntry.COLUMN_PARK_DESCRIPTION,
+            ParkContract.ParkEntry.COLUMN_PARK_DESIGNATION,
+            ParkContract.ParkEntry.COLUMN_PARK_ADDRESS,
+            ParkContract.ParkEntry.COLUMN_PARK_PHONE,
+            ParkContract.ParkEntry.COLUMN_PARK_EMAIL,
+            ParkContract.ParkEntry.COLUMN_PARK_IMAGE
+    };
     @BindView(R.id.park_title)
     TextView titleTextview;
     @BindView(R.id.park_designation)
@@ -55,29 +65,11 @@ public class InfoFragment extends Fragment implements LoaderManager.LoaderCallba
     ImageButton phoneButton;
     @BindView(R.id.park_email)
     ImageButton emailButton;
-
-
     private Uri uri;
     private String parkId;
     private int position;
     private String latLong;
-
     private Cursor cursor;
-
-    private static final String[] PROJECTION = new String[]{
-            ParkContract.ParkEntry._ID,
-            ParkContract.ParkEntry.COLUMN_PARK_ID,
-            ParkContract.ParkEntry.COLUMN_PARK_NAME,
-            ParkContract.ParkEntry.COLUMN_PARK_STATES,
-            ParkContract.ParkEntry.COLUMN_PARK_CODE,
-            ParkContract.ParkEntry.COLUMN_PARK_LATLONG,
-            ParkContract.ParkEntry.COLUMN_PARK_DESCRIPTION,
-            ParkContract.ParkEntry.COLUMN_PARK_DESIGNATION,
-            ParkContract.ParkEntry.COLUMN_PARK_ADDRESS,
-            ParkContract.ParkEntry.COLUMN_PARK_PHONE,
-            ParkContract.ParkEntry.COLUMN_PARK_EMAIL,
-            ParkContract.ParkEntry.COLUMN_PARK_IMAGE
-    };
 
 
     public InfoFragment() {
@@ -90,8 +82,8 @@ public class InfoFragment extends Fragment implements LoaderManager.LoaderCallba
         Bundle args = new Bundle();
         args.putParcelable(URI, uri);
         args.putString(PARK_ID, parkId);
-        args.putInt(POSITION,position);
-        args.putString(LATLONG,latlong);
+        args.putInt(POSITION, position);
+        args.putString(LATLONG, latlong);
         fragment.setArguments(args);
         return fragment;
     }
@@ -105,7 +97,7 @@ public class InfoFragment extends Fragment implements LoaderManager.LoaderCallba
             position = getArguments().getInt(POSITION);
             latLong = getArguments().getString(LATLONG);
         }
-        getLoaderManager().initLoader(LOADER_ID,null,this);
+        getLoaderManager().initLoader(LOADER_ID, null, this);
     }
 
     @Override
@@ -161,7 +153,7 @@ public class InfoFragment extends Fragment implements LoaderManager.LoaderCallba
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(Intent.ACTION_VIEW,
-                            Uri.parse("geo:"+gpsCoodinates[0]+","+gpsCoodinates[1]+"?q="+gpsCoodinates[0]+","+gpsCoodinates[1]+"("+parkName+")?z=10"));
+                            Uri.parse("geo:" + gpsCoodinates[0] + "," + gpsCoodinates[1] + "?q=" + gpsCoodinates[0] + "," + gpsCoodinates[1] + "(" + parkName + ")?z=10"));
                     startActivity(intent);
                 }
             });
@@ -173,8 +165,8 @@ public class InfoFragment extends Fragment implements LoaderManager.LoaderCallba
                 @Override
                 public void onClick(View view) {
                     if (phoneNumber.equals(getActivity().getResources().getString(R.string.na))) {
-                        Toast.makeText(getContext(),"No Phone Available",Toast.LENGTH_SHORT).show();
-                    }  else {
+                        Toast.makeText(getContext(), "No Phone Available", Toast.LENGTH_SHORT).show();
+                    } else {
                         Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber));
                         startActivity(intent);
                     }
@@ -185,7 +177,7 @@ public class InfoFragment extends Fragment implements LoaderManager.LoaderCallba
                 @Override
                 public void onClick(View view) {
                     if (emailId.equals(getActivity().getResources().getString(R.string.na))) {
-                        Toast.makeText(getContext(),"No Email Available",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "No Email Available", Toast.LENGTH_SHORT).show();
                     } else {
                         Intent intent = new Intent(Intent.ACTION_SEND);
                         intent.setType("text/html");
@@ -211,10 +203,10 @@ public class InfoFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putParcelable(URI,uri);
-        outState.putString(PARK_ID,parkId);
-        outState.putInt(POSITION,position);
-        outState.putString(LATLONG,latLong);
+        outState.putParcelable(URI, uri);
+        outState.putString(PARK_ID, parkId);
+        outState.putInt(POSITION, position);
+        outState.putString(LATLONG, latLong);
         super.onSaveInstanceState(outState);
     }
 }
