@@ -14,8 +14,9 @@ The application is aimed at Tourists and Hikers visiting any of the National Par
 ## Features
 
 * Descriptions of each park’s key features and history, with links to additional resources.
-* Photo gallery stocked with high-quality park images
-* Alerts for park-related news, alerts, and events. 
+* Current weather condition.
+* List of Trails and Campground with additional details. 
+* Park-related news, alerts, and events. 
 * Tag your favorite park sights.
 * Supports UI for Mutiple Phone and Tablet sizes
 * Uses Expresso Unit tests for UI and Intents
