@@ -24,6 +24,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.firebase.ui.auth.AuthUI;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.sjani.usnationalparkguide.Data.ParkContract;
 import com.sjani.usnationalparkguide.R;
 import com.sjani.usnationalparkguide.UI.Details.DetailsActivity;
@@ -32,6 +36,9 @@ import com.facebook.stetho.Stetho;
 import com.google.firebase.FirebaseApp;
 import com.sjani.usnationalparkguide.UI.Settings.SettingsActivity;
 import com.sjani.usnationalparkguide.Utils.ParkIdlingResource;
+
+import java.util.Arrays;
+
 import butterknife.ButterKnife;
 
 public class MainListActivity extends AppCompatActivity
@@ -64,9 +71,9 @@ public class MainListActivity extends AppCompatActivity
     private Spinner spinner;
     private String state;
     private ListFragment listFragment;
-    //    private FirebaseAuth mFirebaseAuth;
-//    private FirebaseAuth.AuthStateListener mAuthStateListener;
-//    private String mUsername;
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseAuth.AuthStateListener mAuthStateListener;
+    private String mUsername;
     private ParkIdlingResource idlingResource;
 
     @Override
@@ -79,18 +86,22 @@ public class MainListActivity extends AppCompatActivity
         FirebaseApp.initializeApp(this);
 
         Fresco.initialize(this);
-//        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseAuth = FirebaseAuth.getInstance();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setTitle(R.string.state_prompt);
-        listFragment = (ListFragment) getSupportFragmentManager().findFragmentById(R.id.list_container);
 
-        if (listFragment == null) {
-            listFragment = ListFragment.newInstance(this, state);
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.list_container, listFragment)
-                    .commit();
+        if(savedInstanceState == null) {
+            Log.e(TAG, "onCreate: HERE 1");
+            listFragment = (ListFragment) getSupportFragmentManager().findFragmentById(R.id.list_container);
+            if (listFragment == null) {
+                Log.e(TAG, "onCreate: HERE 1");
+                listFragment = ListFragment.newInstance(this, state);
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.list_container, listFragment)
+                        .commit();
+            }
         }
 
         Stetho.initialize(
@@ -114,43 +125,43 @@ public class MainListActivity extends AppCompatActivity
                     .replace(R.id.details, emptyStateFragment).commit();
         }
 
-//        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
-//            @Override
-//            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-//                FirebaseUser user = firebaseAuth.getCurrentUser();
-//                if (user != null) {
-//
-//                } else {
-//                    // User is signed out
-//                    startActivityForResult(
-//                            AuthUI.getInstance()
-//                                    .createSignInIntentBuilder()
-//                                    .setIsSmartLockEnabled(false)
-//                                    .setAvailableProviders(Arrays.asList(
-//                                            new AuthUI.IdpConfig.GoogleBuilder().build(),
-//                                            new AuthUI.IdpConfig.EmailBuilder().build()))
-//                                    .build(),
-//                            RC_SIGN_IN);
-//                }
-//            }
-//        };
+        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+
+                } else {
+                    // User is signed out
+                    startActivityForResult(
+                            AuthUI.getInstance()
+                                    .createSignInIntentBuilder()
+                                    .setIsSmartLockEnabled(false)
+                                    .setAvailableProviders(Arrays.asList(
+                                            new AuthUI.IdpConfig.GoogleBuilder().build(),
+                                            new AuthUI.IdpConfig.EmailBuilder().build()))
+                                    .build(),
+                            RC_SIGN_IN);
+                }
+            }
+        };
 
     }
 
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == RC_SIGN_IN) {
-//            if (resultCode == RESULT_OK) {
-//                // Sign-in succeeded, set up the UI
-//                Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
-//            } else if (resultCode == RESULT_CANCELED) {
-//                // Sign in was canceled by the user, finish the activity
-//                Toast.makeText(this, "Sign in canceled", Toast.LENGTH_SHORT).show();
-//                finish();
-//            }
-//        }
-//    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN) {
+            if (resultCode == RESULT_OK) {
+                // Sign-in succeeded, set up the UI
+                Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
+            } else if (resultCode == RESULT_CANCELED) {
+                // Sign in was canceled by the user, finish the activity
+                Toast.makeText(this, "Sign in canceled", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
+    }
 
     @Override
     public void onBackPressed() {
@@ -213,28 +224,28 @@ public class MainListActivity extends AppCompatActivity
             Intent settingsIntent = new Intent(this, SettingsActivity.class);
             startActivity(settingsIntent);
         }
-//        else if (id == R.id.nav_logout) {
-//            AuthUI.getInstance().signOut(this);
-//        }
+        else if (id == R.id.nav_logout) {
+            AuthUI.getInstance().signOut(this);
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
-//    }
-//
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        if (mAuthStateListener != null) {
-//            mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
-//        }
-//    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mAuthStateListener != null) {
+            mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
+        }
+    }
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {

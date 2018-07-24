@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "1081323808673",
-    "firebase_url": "https://usnationalparkguide-d4281.firebaseio.com",
-    "project_id": "usnationalparkguide-d4281",
-    "storage_bucket": "usnationalparkguide-d4281.appspot.com"
+    "project_number": "110785084793",
+    "firebase_url": "https://usnationalparkguide-v1.firebaseio.com",
+    "project_id": "usnationalparkguide-v1",
+    "storage_bucket": "usnationalparkguide-v1.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1081323808673:android:d0fa4695f416af13",
+        "mobilesdk_app_id": "1:110785084793:android:d0fa4695f416af13",
         "android_client_info": {
           "package_name": "com.sjani.usnationalparkguide"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1081323808673-e90eolhfupnl6jdq6en2jgeq2r3dr90f.apps.googleusercontent.com",
+          "client_id": "110785084793-m53v0kd3ghlpv9fqc8j3boe760mf8pgn.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.sjani.usnationalparkguide",
@@ -23,13 +23,21 @@
           }
         },
         {
-          "client_id": "1081323808673-6kqqj5dknf8pmjcilibvpc71a9un69vv.apps.googleusercontent.com",
+          "client_id": "110785084793-p6v64l77vov36go98qi9ulucin0tlsg2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sjani.usnationalparkguide",
+            "certificate_hash": "9f6f78e09637f3c308ed5a70a7fa1c1138b2f7d0"
+          }
+        },
+        {
+          "client_id": "110785084793-snq1pi6c57irab9qrqqkn2pe01vju08o.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDryb8HNcaSjJScosZejXO6_cg1ngkyUT8"
+          "current_key": "AIzaSyBAhGuiNVAPa4xt5txri5iaT4NRFiI5mag"
         }
       ],
       "services": {
@@ -40,7 +48,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "1081323808673-6kqqj5dknf8pmjcilibvpc71a9un69vv.apps.googleusercontent.com",
+              "client_id": "110785084793-snq1pi6c57irab9qrqqkn2pe01vju08o.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

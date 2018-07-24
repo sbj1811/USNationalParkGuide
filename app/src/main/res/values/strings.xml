@@ -121,4 +121,6 @@
     <string name="settings_max_articles_key" translatable="false">max_results</string>
     <string name="settings_max_articles_default" translatable="false">25</string>
     <string name="transition_image">transition_image</string>
+    <string name="share">Share</string>
+    <string name="fav">Favorite</string>
 </resources>

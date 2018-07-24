@@ -50,6 +50,7 @@ public class ParkSyncAdapter extends AbstractThreadedSyncAdapter {
         }
         Call<Parks> parkData = NPSApiConnection.getApi().getParks(selectedState, apiKey, fields, maxResults);
         Response<Parks> response = parkData.execute();
+        Log.e(TAG, "loadParkData: "+response);
         List<Datum> parkList = response.body().getData();
         return parkList;
     }

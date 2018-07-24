@@ -158,9 +158,6 @@ public class InfoFragment extends Fragment implements LoaderManager.LoaderCallba
                 }
             });
             final String phoneNumber = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_PHONE));
-            if (phoneNumber.equals(getActivity().getResources().getString(R.string.na))) {
-
-            }
             phoneButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

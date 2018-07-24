@@ -4,9 +4,9 @@ android {
     signingConfigs {
         config {
             keyAlias 'usnationalparkguidekey0'
-            keyPassword 'tornedo999'
-            storeFile file("$rootDir/release.jks")
-            storePassword 'tornedo999'
+            keyPassword 'usnationalparkguide'
+            storePassword 'usnationalparkguide'
+            storeFile file('C:/Users/sjani/Dropbox/Udacity/Android_Projects/USNationalParkGuide/release.jks')
         }
     }
     compileSdkVersion 27

@@ -27,6 +27,8 @@
         android:textSize="24sp"
         android:paddingStart="@dimen/horizontal_margin"
         android:paddingLeft="@dimen/horizontal_margin"
+        android:paddingEnd="@dimen/horizontal_margin"
+        android:paddingRight="@dimen/horizontal_margin"
         android:layout_gravity="center"
         android:text="@string/app_name"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />

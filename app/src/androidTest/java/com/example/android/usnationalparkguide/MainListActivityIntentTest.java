@@ -1,4 +1,4 @@
-package com.example.android.bakingapp;
+package com.example.android.usnationalparkguide;
 
 
 import android.app.Activity;

@@ -1,6 +1,6 @@
 package com.sjani.usnationalparkguide.UI.MainList;
 
-import android.app.ActivityOptions;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,8 +17,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,6 +47,7 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
     private static final String TAG = ListFragment.class.getSimpleName();
     private static final int LOADER_ID = 1;
     private static final String SELECTED_STATE = "selected_state";
+    private static final String LIST_STATE_KEY = "list_state_key";
     private static final String URI = "uri";
     private static final String PARK_ID = "park_id";
     private static final String POSITION = "position";
@@ -76,6 +78,9 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
     private String state;
     private boolean mDualPane;
     private AdView mAdView;
+    private GridLayoutManager layoutManager;
+
+    static int currentVisiblePosition = 0;
 
     public ListFragment() {
     }
@@ -100,13 +105,17 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String max_article = sharedPreferences.getString(getString(R.string.settings_max_articles_key), getString(R.string.settings_max_articles_default));
         ParkSyncAdapter.performSync(state, max_article);
-        MobileAds.initialize(getActivity(), "ca-app-pub-1510923228147176~1193226000");
+        MobileAds.initialize(getActivity(), "ca-app-pub-1510923228147176~5607247189");
+        Log.e(TAG, "onAttach: HERE");
     }
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            currentVisiblePosition = savedInstanceState.getInt(LIST_STATE_KEY);
+        }
         getLoaderManager().initLoader(LOADER_ID, null, this);
 
     }
@@ -116,7 +125,7 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.list_fragment, container, false);
         mAdView = new AdView(getActivity());
-        mAdView.setAdUnitId("ca-app-pub-1510923228147176/3436245963");
+        mAdView.setAdUnitId("ca-app-pub-1510923228147176/1177047580");
         mAdView.setAdSize(AdSize.BANNER);
         LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.admob_ll);
         linearLayout.addView(mAdView);
@@ -136,10 +145,15 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
         progressBar.setVisibility(View.VISIBLE);
         recyclerView.setAdapter(adapter);
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+            layoutManager = new GridLayoutManager(getActivity(), 2);
+            recyclerView.setLayoutManager(layoutManager);
         } else {
-            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL));
+            layoutManager = new GridLayoutManager(getActivity(), 4);
+            recyclerView.setLayoutManager(layoutManager);
         }
+        Log.e(TAG, "onViewCreated: POSITION: "+currentVisiblePosition);
+        recyclerView.getLayoutManager().scrollToPosition(currentVisiblePosition);
+        currentVisiblePosition = 0;
 
         View detailsView = getActivity().findViewById(R.id.details);
         mDualPane = detailsView != null && detailsView.getVisibility() == View.VISIBLE;
@@ -165,6 +179,20 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
             intent.putExtra(FROM_FAV, false);
             startActivity(intent);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        currentVisiblePosition = ((GridLayoutManager)recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+        Log.e(TAG, "onSaveInstanceState: POSITION: "+currentVisiblePosition);
+        outState.putInt(LIST_STATE_KEY, currentVisiblePosition);
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.e(TAG, "onDestroy: HERE");
+        super.onDestroy();
     }
 
     @NonNull

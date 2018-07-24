@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.sjani.usnationalparkguide.Models.Weather.CurrentWeather;
 import com.sjani.usnationalparkguide.Models.Weather.Main;
 import com.sjani.usnationalparkguide.Models.Weather.Sys;
@@ -95,6 +96,7 @@ public class WeatherFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (savedInstanceState != null) {
             uri = savedInstanceState.getParcelable(URI);
             parkId = savedInstanceState.getString(PARK_ID);
@@ -116,6 +118,7 @@ public class WeatherFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+        createWeatherview(currentWeather,main,wind,sys);
     }
 
 
@@ -157,7 +160,7 @@ public class WeatherFragment extends Fragment {
         if (main != null && weather != null && wind != null && sys != null) {
             Double windspeed = wind.getSpeed();
             Double windDegree = wind.getDeg();
-            String windInfo = WeatherUtils.getFormattedWind(getContext(),windspeed,windDegree);
+            String windInfo = WeatherUtils.getFormattedWind(mContext,windspeed,windDegree);
             int weatherIconId = WeatherUtils.getResourceIdForWeatherCondition(weather.get(0).getId());
 
             Long sunriseTimeVal = sys.getSunrise();
@@ -172,19 +175,23 @@ public class WeatherFragment extends Fragment {
 
             sunriseTimeTextview.setText(sunriseTime);
             sunsetTimeTextview.setText(sunsetTime);
-
-            Glide.with(weatherConditionImageView.getContext())
-                    .load(weatherIconId)
-                    .fitCenter()
-                    .into(weatherConditionImageView);
+            loadImage(Glide.with(mContext), weatherIconId, weatherConditionImageView);
+//            Glide.with(getActivity())
+//                    .load(weatherIconId)
+//                    .fitCenter()
+//                    .into(weatherConditionImageView);
             windTextview.setText(windInfo);
-            String humidityInfo = String.format("%d",main.getHumidity())+"\u0025";
+            String humidityInfo = String.format(Locale.US,"%d",main.getHumidity())+"\u0025";
             humidityTextview.setText(humidityInfo);
-            currentTempTextview.setText(String.format("%d\u00b0F",(Long) Math.round(main.getTemp())));
+            currentTempTextview.setText(String.format(Locale.US,"%d\u00b0F",(Long) Math.round(main.getTemp())));
             weatherConditionTextview.setText(weather.get(0).getMain());
-            minTempTextview.setText(String.format("%d\u00b0F",(Long) Math.round(main.getTempMin())));
-            maxTempTextview.setText(String.format("%d\u00b0F",(Long) Math.round(main.getTempMax())));
+            minTempTextview.setText(String.format(Locale.US,"%d\u00b0F",(Long) Math.round(main.getTempMin())));
+            maxTempTextview.setText(String.format(Locale.US,"%d\u00b0F",(Long) Math.round(main.getTempMax())));
         }
+    }
+
+    static void loadImage(RequestManager glide, int weatherIconId, ImageView view) {
+        glide.load(weatherIconId).fitCenter().into(view);
     }
 
     @Override
@@ -208,7 +215,6 @@ public class WeatherFragment extends Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            createWeatherview(currentWeather,main,wind,sys);
         }
     }
 }

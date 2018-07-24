@@ -8,6 +8,6 @@
         android:visible="true"
         app:showAsAction="always"
         android:icon="@drawable/ic_favorite_border"
-        android:title="Favorite"/>
+        android:title="@string/fav"/>
 
 </menu>
