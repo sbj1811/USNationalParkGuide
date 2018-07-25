@@ -42,15 +42,8 @@ public class ParkSyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     private static List<Datum> loadParkData(String apiKey, String fields, String state, String maxResults) throws IOException {
-        String selectedState;
-        if (state == null) {
-            selectedState = "AL";
-        } else {
-            selectedState = state;
-        }
-        Call<Parks> parkData = NPSApiConnection.getApi().getParks(selectedState, apiKey, fields, maxResults);
+        Call<Parks> parkData = NPSApiConnection.getApi().getParks(state, apiKey, fields, maxResults);
         Response<Parks> response = parkData.execute();
-        Log.e(TAG, "loadParkData: "+response);
         List<Datum> parkList = response.body().getData();
         return parkList;
     }
@@ -133,14 +126,17 @@ public class ParkSyncAdapter extends AbstractThreadedSyncAdapter {
                 parkValues.put(ParkContract.ParkEntry.COLUMN_PARK_PHONE, data.getContacts().getPhoneNumbers().get(0).getPhoneNumber());
                 parkValues.put(ParkContract.ParkEntry.COLUMN_PARK_EMAIL, data.getContacts().getEmailAddresses().get(0).getEmailAddress());
             }
-            if (data.getImages().size() == 0) {
-                parkValues.put(ParkContract.ParkEntry.COLUMN_PARK_IMAGE, "");
+            if (data.getImages() != null) {
+                if (data.getImages().size() == 0) {
+                    parkValues.put(ParkContract.ParkEntry.COLUMN_PARK_IMAGE, "");
+                } else {
+                    parkValues.put(ParkContract.ParkEntry.COLUMN_PARK_IMAGE, data.getImages().get(0).getUrl());
+                }
             } else {
-                parkValues.put(ParkContract.ParkEntry.COLUMN_PARK_IMAGE, data.getImages().get(0).getUrl());
+                parkValues.put(ParkContract.ParkEntry.COLUMN_PARK_IMAGE, "");
             }
             result[i] = parkValues;
         }
-
         return result;
     }
 

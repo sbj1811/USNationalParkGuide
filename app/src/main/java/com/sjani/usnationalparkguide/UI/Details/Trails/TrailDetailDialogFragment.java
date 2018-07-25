@@ -164,9 +164,9 @@ public class TrailDetailDialogFragment extends DialogFragment implements LoaderM
             final String title = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_NAME));
             titleTv.setText(title);
             String distance = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_LENGTH));
-            distanceTv.setText(distance + " miles");
+            distanceTv.setText(distance + getContext().getResources().getString(R.string.miles));
             String elevation = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_ASCENT));
-            elevationTv.setText(elevation + " ft");
+            elevationTv.setText(elevation + getContext().getResources().getString(R.string.ft));
             String address = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_LOCATION));
             trailAddressTv.setText(address);
             final String latitude = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_LAT));

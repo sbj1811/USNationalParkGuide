@@ -109,6 +109,59 @@
         <item>WY</item>
     </string-array>
 
+    <string-array name="state_name_array">
+        <item>Alabama</item>
+        <item>Alaska</item>
+        <item>Arizona</item>
+        <item>Arkansas</item>
+        <item>California</item>
+        <item>Colorado</item>
+        <item>Connecticut</item>
+        <item>Delaware</item>
+        <item>Florida</item>
+        <item>Georgia</item>
+        <item>Hawaii</item>
+        <item>Idaho</item>
+        <item>Illinois</item>
+        <item>Indiana</item>
+        <item>Iowa</item>
+        <item>Kansas</item>
+        <item>Kentucky</item>
+        <item>Louisiana</item>
+        <item>Maine</item>
+        <item>Maryland</item>
+        <item>Massachusetts</item>
+        <item>Michigan</item>
+        <item>Minnesota</item>
+        <item>Mississippi</item>
+        <item>Missouri</item>
+        <item>Montana</item>
+        <item>Nebraska</item>
+        <item>Nevada</item>
+        <item>New Hampshire</item>
+        <item>New Jersey</item>
+        <item>New Mexico</item>
+        <item>New York</item>
+        <item>North Carolina</item>
+        <item> North Dakota</item>
+        <item>Ohio</item>
+        <item>Oklahoma</item>
+        <item>Oregon</item>
+        <item>Pennsylvania</item>
+        <item>Rhode Island</item>
+        <item>South Carolina</item>
+        <item>South Dakota</item>
+        <item>Tennessee</item>
+        <item>Texas</item>
+        <item>Utah</item>
+        <item>Vermont</item>
+        <item>Virginia</item>
+        <item>Washington</item>
+        <item>West Virginia</item>
+        <item>Wisconsin</item>
+        <item>Wyoming</item>
+    </string-array>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Weather fragment</string>
     <string name="info_fragment">Info fragment</string>
@@ -120,7 +173,14 @@
     <string name="settings_max_articles_label">Max Results</string>
     <string name="settings_max_articles_key" translatable="false">max_results</string>
     <string name="settings_max_articles_default" translatable="false">25</string>
+    <string name="settings_states_label">State Selected</string>
+    <string name="settings_state_key" translatable="false">select_state</string>
+    <string name="settings_states_default" translatable="false">CA</string>
     <string name="transition_image">transition_image</string>
     <string name="share">Share</string>
     <string name="fav">Favorite</string>
+    <string name="distance">Distance:</string>
+    <string name="miles"> miles</string>
+    <string name="ft"> ft</string>
+    <string name="toolbar_title_prompt">Select a State: </string>
 </resources>

@@ -12,13 +12,13 @@ public interface NPSApiEndpointInterface {
 
     String API_ENDPOINT = "https://developer.nps.gov";
 
-    @GET("/api/v1/PARKS")
+    @GET("/api/v1/parks")
     Call<Parks> getParks(@Query("stateCode") String state, @Query("api_key") String apiKey, @Query("fields") String fields, @Query("limit") String maxResults);
 
-    @GET("/api/v1/CAMPGROUNDS")
+    @GET("/api/v1/campgrounds")
     Call<Campground> getCampgound(@Query("parkCode") String parkCode, @Query("api_key") String apiKey, @Query("fields") String fields_cg);
 
-    @GET("/api/v1/ALERTS")
+    @GET("/api/v1/alerts")
     Call<Alert> getAlerts(@Query("parkCode") String parkCode, @Query("api_key") String apiKey);
 
 }

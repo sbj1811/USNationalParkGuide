@@ -1,5 +1,6 @@
 package com.sjani.usnationalparkguide.UI.Widget;
 
+import android.Manifest;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -8,17 +9,41 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.sjani.usnationalparkguide.Data.ParkContract;
+import com.sjani.usnationalparkguide.Models.Weather.CurrentWeather;
+import com.sjani.usnationalparkguide.Models.Weather.Main;
+import com.sjani.usnationalparkguide.Models.Weather.Sys;
+import com.sjani.usnationalparkguide.Models.Weather.Weather;
+import com.sjani.usnationalparkguide.Models.Weather.Wind;
 import com.sjani.usnationalparkguide.R;
+import com.sjani.usnationalparkguide.Utils.NetworkSync.Weather.OpenWeatherMapApiConnection;
+import com.sjani.usnationalparkguide.Utils.StringToGPSCoordinates;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.Executor;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class ParkWidgetService extends IntentService {
 
@@ -48,6 +73,8 @@ public class ParkWidgetService extends IntentService {
     String imgUrl;
     String title;
     private Cursor cursor;
+    private FusedLocationProviderClient locationClient;
+    Integer distance;
 
     public ParkWidgetService() {
         super("ParkWidgetService");
@@ -66,6 +93,7 @@ public class ParkWidgetService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
+        locationClient = LocationServices.getFusedLocationProviderClient(this);
         Bitmap largeIcon = BitmapFactory.decodeResource(this.getResources(), R.mipmap.ic_launcher);
         NotificationManager notificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -109,7 +137,11 @@ public class ParkWidgetService extends IntentService {
                     parkCode = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_CODE));
                     imgUrl = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_IMAGE));
                     title = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_NAME));
-                    ParkWidgetProvider.updateAppWidgets(context, appWidgetManager, appWidgetIds, uri, parkId, position, latLong, parkCode, true, imgUrl, title);
+                    StringToGPSCoordinates stringToGPSCoordinates = new StringToGPSCoordinates();
+                    final String gpsCoodinates[] = stringToGPSCoordinates.convertToGPS(latLong);
+                    getLastLocation(gpsCoodinates);
+                    String weatherDetails[] = getCurrentWeather(context, gpsCoodinates);
+                    ParkWidgetProvider.updateAppWidgets(context, appWidgetManager, appWidgetIds, uri, parkId, position, latLong, parkCode, true, imgUrl, title, weatherDetails, distance.toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
@@ -119,6 +151,67 @@ public class ParkWidgetService extends IntentService {
                 return;
             }
         }
+    }
+
+    public void getLastLocation(String gpsCoodinates[]) {
+
+
+        final Double latitude = Double.parseDouble(gpsCoodinates[0]);
+        final Double longitude = Double.parseDouble(gpsCoodinates[1]);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Log.e("MapDemoActivity", "****************LOCATION PERMISSIONS DENIED****************Error trying to get last GPS location");
+            return;
+        }
+        locationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                // GPS location can be null if GPS is switched off
+                if (location != null) {
+                    Location targetLocation = new Location("");
+                    targetLocation.setLatitude(latitude);
+                    targetLocation.setLongitude(longitude);
+                    distance = (int) Math.round((targetLocation.distanceTo(location) / 1000) * 0.621371);
+                }
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("MapDemoActivity", "********************************Error trying to get last GPS location");
+                        e.printStackTrace();
+                    }
+                });
+    }
+
+    public String[] getCurrentWeather(Context mContext, String gpsCoodinates[]){
+
+        List<Weather> currentWeather;
+        Main main;
+        Wind wind;
+        Sys sys;
+        String weatherDetails[] = new String[2];
+        String apiKey = mContext.getResources().getString(R.string.OWMapiKey);
+        String metric = mContext.getResources().getString(R.string.units);
+
+        Call<CurrentWeather> weatherData = OpenWeatherMapApiConnection.getApi().getWeather(gpsCoodinates[0],gpsCoodinates[1],apiKey,metric);
+        Response<CurrentWeather> response = null;
+        try {
+            response = weatherData.execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (response != null) {
+             currentWeather = response.body().getWeather();
+             main = response.body().getMain();
+             wind = response.body().getWind();
+             sys = response.body().getSys();
+            if (main != null && currentWeather != null && wind != null && sys != null) {
+                weatherDetails[0] = String.format(Locale.US,"%d\u00b0F",(Long) Math.round(main.getTemp()));
+                weatherDetails[1] = currentWeather.get(0).getMain();
+            }
+        }
+        return weatherDetails;
+
     }
 
 

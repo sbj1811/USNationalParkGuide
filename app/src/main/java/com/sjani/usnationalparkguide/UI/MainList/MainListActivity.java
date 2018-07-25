@@ -1,15 +1,20 @@
 package com.sjani.usnationalparkguide.UI.MainList;
 
+import android.Manifest;
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.NavigationView;
 import android.support.test.espresso.IdlingResource;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -37,12 +42,14 @@ import com.google.firebase.FirebaseApp;
 import com.sjani.usnationalparkguide.UI.Settings.SettingsActivity;
 import com.sjani.usnationalparkguide.Utils.ParkIdlingResource;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import butterknife.ButterKnife;
 
 public class MainListActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final String ANONYMOUS = "anonymous";
     public static final int RC_SIGN_IN = 1;
@@ -80,6 +87,10 @@ public class MainListActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupWindowAnimations();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+        }
         ButterKnife.bind(this);
         setContentView(R.layout.activity_main_list);
 
@@ -90,16 +101,36 @@ public class MainListActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        toolbar.setTitle(R.string.state_prompt);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        state = sharedPreferences.getString(getString(R.string.settings_state_key), getString(R.string.settings_states_default));
+        String[] allStates = getResources().getStringArray(R.array.state_name_array);
+        String[] allStatesAbr = getResources().getStringArray(R.array.state_arrays);
+        String state2 = "";
+        List<String> stateListAbr = Arrays.asList(allStatesAbr);
+        List<String> stateList = Arrays.asList(allStates);
+        for (int i=0; i < stateListAbr.size(); i++){
+            if (stateListAbr.get(i).equals(state)){
+                state2 = stateList.get(i);
+                break;
+            }
+        }
+        String title = this.getResources().getString(R.string.toolbar_title_prompt)+" "+state2;
+        toolbar.setTitle(title);
+        toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent settingsIntent = new Intent(view.getContext(), SettingsActivity.class);
+                startActivity(settingsIntent);
+            }
+        });
 
-        if(savedInstanceState == null) {
-            Log.e(TAG, "onCreate: HERE 1");
+
+        if (savedInstanceState == null) {
             listFragment = (ListFragment) getSupportFragmentManager().findFragmentById(R.id.list_container);
             if (listFragment == null) {
-                Log.e(TAG, "onCreate: HERE 1");
-                listFragment = ListFragment.newInstance(this, state);
+                listFragment = ListFragment.newInstance(this);
                 getSupportFragmentManager().beginTransaction()
-                        .add(R.id.list_container, listFragment)
+                        .replace(R.id.list_container, listFragment)
                         .commit();
             }
         }
@@ -149,6 +180,11 @@ public class MainListActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
@@ -173,22 +209,22 @@ public class MainListActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main_list, menu);
-        MenuItem item = menu.findItem(R.id.spinner);
-        spinner = (Spinner) MenuItemCompat.getActionView(item);
-        item.setTitle(getResources().getString(R.string.state_prompt));
-        spinner.setDropDownWidth(130);
-        spinner.setPopupBackgroundResource(R.color.primaryText);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.state_arrays, R.layout.spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.main_list, menu);
+//        MenuItem item = menu.findItem(R.id.spinner);
+//        spinner = (Spinner) MenuItemCompat.getActionView(item);
+//        item.setTitle(getResources().getString(R.string.state_prompt));
+//        spinner.setDropDownWidth(130);
+//        spinner.setPopupBackgroundResource(R.color.primaryText);
+//        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+//                R.array.state_arrays, R.layout.spinner_item);
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        spinner.setAdapter(adapter);
+//        spinner.setOnItemSelectedListener(this);
+//        return true;
+//    }
 
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -223,8 +259,7 @@ public class MainListActivity extends AppCompatActivity
         } else if (id == R.id.nav_settings) {
             Intent settingsIntent = new Intent(this, SettingsActivity.class);
             startActivity(settingsIntent);
-        }
-        else if (id == R.id.nav_logout) {
+        } else if (id == R.id.nav_logout) {
             AuthUI.getInstance().signOut(this);
         }
 
@@ -246,21 +281,6 @@ public class MainListActivity extends AppCompatActivity
             mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
         }
     }
-
-    @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
-        state = String.valueOf(spinner.getSelectedItem());
-        listFragment = ListFragment.newInstance(this, state);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.list_container, listFragment)
-                .commit();
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-        Toast.makeText(this, "Please select a state", Toast.LENGTH_SHORT).show();
-    }
-
 
     public boolean doesTableExist(String tableName) {
         Cursor cursor = getContentResolver().query(ParkContract.ParkEntry.CONTENT_URI_FAVORITES, PROJECTION, null, null, null);

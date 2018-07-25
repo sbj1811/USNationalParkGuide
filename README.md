@@ -18,14 +18,23 @@ The application is aimed at Tourists and Hikers visiting any of the National Par
 * List of Trails and Campground with additional details. 
 * Park-related news, alerts, and events. 
 * Tag your favorite park sights.
-* Supports UI for Mutiple Phone and Tablet sizes
-* Uses Expresso Unit tests for UI and Intents
+* Supports UI for Mutiple Phone and Tablet sizes.
+* Uses Expresso Unit tests for UI and Intents.
+* Google and Email signin.
+* Share Trail and Campgound location with friends.
+* The free app variant displays banner ads.
+* Homescreen Widget with Favorite Park deatils.
+* Accessibility support.
 * Offline mode.
 * Libraries:
-    * [Facebook Stetho](http://facebook.github.io/stetho/)
-    * [Picasso](http://square.github.io/picasso/)
     * [Retrofit](http://square.github.io/retrofit/)
     * [Butter Knife](jakewharton.github.io/butterknife/)
+    * [Firebase Authentication](https://firebase.google.com/)
+    * [Admob](https://www.google.com/admob/)
+    * [Facebook Stetho](http://facebook.github.io/stetho/)
+    * [Picasso](http://square.github.io/picasso/)
+    * [Glide](https://github.com/bumptech/glide)
+    * [Facebook Fresco](http://frescolib.org/)
 
 
 ## License:

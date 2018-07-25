@@ -68,6 +68,7 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
             ParkContract.ParkEntry.COLUMN_PARK_EMAIL,
             ParkContract.ParkEntry.COLUMN_PARK_IMAGE
     };
+    static int currentVisiblePosition = 0;
     @BindView(R.id.rv_main)
     RecyclerView recyclerView;
     @BindView(R.id.pb_loading_indicator)
@@ -80,15 +81,13 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
     private AdView mAdView;
     private GridLayoutManager layoutManager;
 
-    static int currentVisiblePosition = 0;
 
     public ListFragment() {
     }
 
-    public static ListFragment newInstance(Context context, String state) {
+    public static ListFragment newInstance(Context context) {
         Bundle arguments = new Bundle();
         ListFragment fragment = new ListFragment();
-        arguments.putString(SELECTED_STATE, state);
         fragment.setArguments(arguments);
         return fragment;
     }
@@ -101,12 +100,11 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
         if (idlingResource != null) {
             idlingResource.setIdleState(true);
         }
-        state = getArguments().getString(SELECTED_STATE);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String max_article = sharedPreferences.getString(getString(R.string.settings_max_articles_key), getString(R.string.settings_max_articles_default));
+        state = sharedPreferences.getString(getString(R.string.settings_state_key), getString(R.string.settings_states_default));
         ParkSyncAdapter.performSync(state, max_article);
         MobileAds.initialize(getActivity(), "ca-app-pub-1510923228147176~5607247189");
-        Log.e(TAG, "onAttach: HERE");
     }
 
 
@@ -151,7 +149,6 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
             layoutManager = new GridLayoutManager(getActivity(), 4);
             recyclerView.setLayoutManager(layoutManager);
         }
-        Log.e(TAG, "onViewCreated: POSITION: "+currentVisiblePosition);
         recyclerView.getLayoutManager().scrollToPosition(currentVisiblePosition);
         currentVisiblePosition = 0;
 
@@ -184,14 +181,12 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        currentVisiblePosition = ((GridLayoutManager)recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
-        Log.e(TAG, "onSaveInstanceState: POSITION: "+currentVisiblePosition);
+        currentVisiblePosition = ((GridLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
         outState.putInt(LIST_STATE_KEY, currentVisiblePosition);
     }
 
     @Override
     public void onDestroy() {
-        Log.e(TAG, "onDestroy: HERE");
         super.onDestroy();
     }
 

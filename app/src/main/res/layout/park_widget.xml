@@ -1,7 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:id="@+id/widget_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,26 +11,97 @@
         android:id="@+id/park_widget_thumbnail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:contentDescription="@string/image"
         android:background="@drawable/empty_widget_state"
-        android:scaleType="centerCrop"/>
+        android:contentDescription="@string/image"
+        android:scaleType="centerCrop" />
 
-
-    <TextView
-        android:id="@+id/park_widget_title"
-        style="@style/TextAppearance.AppCompat.Subhead"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:background="#7000"
-        android:layout_alignBottom="@id/park_widget_thumbnail"
-        android:paddingLeft="16dp"
-        android:paddingTop="16dp"
-        android:paddingRight="16dp"
-        android:paddingBottom="16dp"
-        android:textColor="@color/White"
-        android:ellipsize="none"
-        android:scrollHorizontally="false"
-        tools:text="Park Title"
-        android:maxLines="100" />
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/park_widget_title"
+            style="@style/TextAppearance.AppCompat.Subhead"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="none"
+            android:maxLines="100"
+            android:paddingBottom="8dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="16dp"
+            android:scrollHorizontally="false"
+            android:textColor="@color/White"
+            tools:text="Park Title" />
+
+        <LinearLayout
+            android:id="@+id/widget_weather_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="8dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="8dp">
+
+            <TextView
+                android:id="@+id/park_widget_weather_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:text="@string/curr_condition"
+                android:textColor="@color/White" />
+
+            <TextView
+                android:id="@+id/park_widget_temp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:textColor="@color/White" />
+
+            <TextView
+                android:id="@+id/park_widget_condition"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/White" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/widget_distance_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="16dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="8dp">
+
+            <TextView
+                android:id="@+id/park_widget_distance_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:text="@string/distance"
+                android:textColor="@color/White" />
+
+            <TextView
+                android:id="@+id/park_widget_distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:textColor="@color/White" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
 
 </RelativeLayout>

@@ -26,7 +26,10 @@ public class SettingsActivity extends AppCompatActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.settings_layout);
             Preference max_article = findPreference(getString(R.string.settings_max_articles_key));
+            Preference state = findPreference(getString(R.string.settings_state_key));
             bindPreferenceSummaryToValue(max_article);
+            bindPreferenceSummaryToValue(state);
+
         }
 
         @Override

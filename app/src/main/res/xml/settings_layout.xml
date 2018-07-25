@@ -10,4 +10,14 @@
         android:selectAllOnFocus="true"
         android:title="@string/settings_max_articles_label" />
 
+
+    <ListPreference
+        android:key="@string/settings_state_key"
+        android:title="@string/settings_states_label"
+        android:defaultValue="@string/settings_states_default"
+        android:entries="@array/state_name_array"
+        android:entryValues="@array/state_arrays"
+        android:summary="@string/state_prompt"
+        />
+
 </PreferenceScreen>

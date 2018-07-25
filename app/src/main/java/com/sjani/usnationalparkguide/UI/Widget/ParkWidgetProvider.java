@@ -52,14 +52,14 @@ public class ParkWidgetProvider extends AppWidgetProvider {
             ParkContract.ParkEntry.COLUMN_PARK_IMAGE
     };
 
-    public static void updateAppWidgets(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds, Uri uri, String parkId, int position, String latLong, String parkCode, boolean isFromFavNav, String imgUrl, String title) {
+    public static void updateAppWidgets(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds, Uri uri, String parkId, int position, String latLong, String parkCode, boolean isFromFavNav, String imgUrl, String title, String weatherDetails[], String distance) {
         for (int appWidgetId : appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId, uri, parkId, position, latLong, parkCode, isFromFavNav, imgUrl, title);
+            updateAppWidget(context, appWidgetManager, appWidgetId, uri, parkId, position, latLong, parkCode, isFromFavNav, imgUrl, title, weatherDetails, distance);
         }
     }
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId, Uri uri, String parkId, int position, String latLong, String parkCode, boolean isFromFavNav, String imgUrl, String title) {
+                                int appWidgetId, Uri uri, String parkId, int position, String latLong, String parkCode, boolean isFromFavNav, String imgUrl, String title, String weatherDetails[], String distance) {
         Cursor cursor;
         CharSequence widgetText = context.getString(R.string.app_name);
         cursor = context.getContentResolver().query(ParkContract.ParkEntry.CONTENT_URI_FAVORITES,
@@ -83,8 +83,14 @@ public class ParkWidgetProvider extends AppWidgetProvider {
         if (parkCode.equals("")) {
             views.setTextViewText(R.id.park_widget_title, widgetText);
             views.setImageViewResource(R.id.park_widget_thumbnail, R.drawable.empty_detail);
+            views.setTextViewText(R.id.park_widget_temp, String.valueOf(R.string.NA));
+            views.setTextViewText(R.id.park_widget_condition, String.valueOf(R.string.NA));
+            views.setTextViewText(R.id.park_widget_distance, String.valueOf(R.string.NA));
         } else {
             views.setTextViewText(R.id.park_widget_title, title);
+            views.setTextViewText(R.id.park_widget_temp, weatherDetails[0]);
+            views.setTextViewText(R.id.park_widget_condition, weatherDetails[1]);
+            views.setTextViewText(R.id.park_widget_distance, distance + context.getResources().getString(R.string.miles));
             BitmapRequestBuilder builder = Glide.with(context.getApplicationContext()).load(imgUrl).asBitmap().centerCrop();
             FutureTarget futureTarget = builder.into(300, 200);
             try {
