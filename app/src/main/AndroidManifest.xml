@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
@@ -98,7 +98,8 @@
             android:exported="false"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 
-        <activity android:name=".UI.Settings.SettingsActivity"
+        <activity
+            android:name=".UI.Settings.SettingsActivity"
             android:parentActivityName=".UI.MainList.MainListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

@@ -162,7 +162,7 @@ public class InfoFragment extends Fragment implements LoaderManager.LoaderCallba
                 @Override
                 public void onClick(View view) {
                     if (phoneNumber.equals(getActivity().getResources().getString(R.string.na))) {
-                        Toast.makeText(getContext(), "No Phone Available", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getContext().getResources().getString(R.string.phone_message), Toast.LENGTH_SHORT).show();
                     } else {
                         Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber));
                         startActivity(intent);
@@ -174,7 +174,7 @@ public class InfoFragment extends Fragment implements LoaderManager.LoaderCallba
                 @Override
                 public void onClick(View view) {
                     if (emailId.equals(getActivity().getResources().getString(R.string.na))) {
-                        Toast.makeText(getContext(), "No Email Available", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getContext().getResources().getString(R.string.email_message), Toast.LENGTH_SHORT).show();
                     } else {
                         Intent intent = new Intent(Intent.ACTION_SEND);
                         intent.setType("text/html");

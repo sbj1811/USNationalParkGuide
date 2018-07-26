@@ -27,9 +27,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -40,7 +43,9 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.stetho.Stetho;
 import com.google.firebase.FirebaseApp;
 import com.sjani.usnationalparkguide.UI.Settings.SettingsActivity;
+import com.sjani.usnationalparkguide.Utils.CircleTransform;
 import com.sjani.usnationalparkguide.Utils.ParkIdlingResource;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -81,7 +86,10 @@ public class MainListActivity extends AppCompatActivity
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
     private String mUsername;
+    private String mEmail;
+    private Uri mUserImage;
     private ParkIdlingResource idlingResource;
+    private View navHeader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,6 +156,12 @@ public class MainListActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navHeader = navigationView.getHeaderView(0);
+        final TextView usernameTv = navHeader.findViewById(R.id.profile_name);
+
+        final TextView emailTv = navHeader.findViewById(R.id.profile_email);
+        final ImageView profileImageView = navHeader.findViewById(R.id.profile_imageView);
+
         navigationView.setNavigationItemSelectedListener(this);
         Fragment fragment = getFragmentManager().findFragmentById(R.id.details);
         if ((getResources().getBoolean(R.bool.dual_pane)) && fragment == null) {
@@ -161,7 +175,22 @@ public class MainListActivity extends AppCompatActivity
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-
+                    mUsername =  user.getDisplayName();
+                    mEmail = user.getEmail();
+                    mUserImage = user.getPhotoUrl();
+                    Log.e(TAG, "onCreate: HERE 1 "+mUserImage+" "+mEmail+" "+mUserImage);
+                    usernameTv.setText(mUsername);
+                    emailTv.setText(mEmail);
+                    if (mUserImage != null) {
+                        Glide.with(getApplicationContext())
+                                .load(mUserImage)
+                                .bitmapTransform(new CircleTransform(getApplicationContext()))
+                                .into(profileImageView);
+                    } else {
+                        Glide.with(getApplicationContext())
+                                .load(R.drawable.ic_person)
+                                .into(profileImageView);
+                    }
                 } else {
                     // User is signed out
                     startActivityForResult(
@@ -173,9 +202,12 @@ public class MainListActivity extends AppCompatActivity
                                             new AuthUI.IdpConfig.EmailBuilder().build()))
                                     .build(),
                             RC_SIGN_IN);
+
                 }
             }
         };
+        Log.e(TAG, "onCreate: HERE 2 "+mUserImage+" "+mEmail+" "+mUserImage);
+
 
     }
 
@@ -190,10 +222,10 @@ public class MainListActivity extends AppCompatActivity
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) {
                 // Sign-in succeeded, set up the UI
-                Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.sign_in), Toast.LENGTH_SHORT).show();
             } else if (resultCode == RESULT_CANCELED) {
                 // Sign in was canceled by the user, finish the activity
-                Toast.makeText(this, "Sign in canceled", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.sign_in_cancel), Toast.LENGTH_SHORT).show();
                 finish();
             }
         }
@@ -253,8 +285,9 @@ public class MainListActivity extends AppCompatActivity
                 intent.putExtra(PARKCODE, parkCode);
                 intent.putExtra(FROM_FAV, true);
                 startActivity(intent);
+                cursor.close();
             } else {
-                Toast.makeText(this, "No Favorites", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getResources().getString(R.string.phone_message), Toast.LENGTH_LONG).show();
             }
         } else if (id == R.id.nav_settings) {
             Intent settingsIntent = new Intent(this, SettingsActivity.class);
@@ -262,7 +295,7 @@ public class MainListActivity extends AppCompatActivity
         } else if (id == R.id.nav_logout) {
             AuthUI.getInstance().signOut(this);
         }
-
+        Log.e(TAG, "onNavigationItemSelected: "+mUserImage+" "+mEmail+" "+mUserImage);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

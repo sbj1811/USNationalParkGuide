@@ -223,7 +223,7 @@ public class CampDetailFragment extends Fragment implements LoaderManager.Loader
             @Override
             public void onClick(View view) {
                 if (reservationUrl.equals("")) {
-                    Toast.makeText(getContext(), "Reservation Link unavailable for this site", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getContext().getResources().getString(R.string.reservatiton_message), Toast.LENGTH_SHORT).show();
                 } else {
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(reservationUrl));
                     startActivity(browserIntent);
@@ -235,7 +235,7 @@ public class CampDetailFragment extends Fragment implements LoaderManager.Loader
             @Override
             public void onClick(View view) {
                 if (directionUrl.equals("")) {
-                    Toast.makeText(getContext(), "Detailed Directions unavailable for this site", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getContext().getResources().getString(R.string.direction_message), Toast.LENGTH_SHORT).show();
                 } else {
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(directionUrl));
                     startActivity(browserIntent);

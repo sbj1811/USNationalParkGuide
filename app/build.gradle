@@ -6,7 +6,7 @@ android {
             keyAlias 'usnationalparkguidekey0'
             keyPassword 'usnationalparkguide'
             storePassword 'usnationalparkguide'
-            storeFile file('C:/Users/sjani/Dropbox/Udacity/Android_Projects/USNationalParkGuide/release.jks')
+            storeFile file("$rootDir/release.jks")
         }
     }
     compileSdkVersion 27

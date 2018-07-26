@@ -18,6 +18,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 
 import android.view.MenuItem;
@@ -46,6 +47,7 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
     private static final String LATLONG = "latlong";
     private static final String PARKCODE = "parkcode";
     private static final String FROM_FAV = "from_fav";
+    private static final String CURRENT_TAB = "current_tab";
     private static final int LOADER_ID = 2;
     private static final int FAV_LOADER_ID = 6;
     private static final int DETAIL_ACTIVITY = 1;
@@ -82,6 +84,7 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
     private String parkCode;
     private Cursor cursor;
     private ContentValues values;
+    private int currentTabPosition = 0;
 
 
     public DetailsFragment() {
@@ -126,6 +129,7 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
             latLong = savedInstanceState.getString(LATLONG);
             parkCode = savedInstanceState.getString(PARKCODE);
             isFromFavNav = savedInstanceState.getBoolean(FROM_FAV);
+            currentTabPosition = savedInstanceState.getInt(CURRENT_TAB);
         }
     }
 
@@ -144,12 +148,7 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
         collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
         FragmentSelectAdapter selectAdapter = new FragmentSelectAdapter(getFragmentManager(), getContext(), uri, parkId, position, latLong, parkCode);
         mViewPager.setAdapter(selectAdapter);
-        if (getContext().getResources().getBoolean(R.bool.dual_pane)) {
-            mViewPager.getAdapter().notifyDataSetChanged();
-        }
-        if (mViewPager.getCurrentItem() == (selectAdapter.getCount() - 1)) {
-            mViewPager.setCurrentItem(selectAdapter.getCount() - 1);
-        }
+        mViewPager.setCurrentItem(currentTabPosition);
         mTabLayout.setupWithViewPager(mViewPager);
         favButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -267,6 +266,8 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
+        currentTabPosition = mViewPager.getCurrentItem();
+        outState.putInt(CURRENT_TAB, currentTabPosition);
         outState.putParcelable(URI, uri);
         outState.putString(PARK_ID, parkId);
         outState.putInt(POSITION, position);

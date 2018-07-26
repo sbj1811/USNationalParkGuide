@@ -28,6 +28,7 @@ public class DetailsActivity extends AppCompatActivity {
     private int position;
     private String latLong;
     private String parkCode;
+    private DetailsFragment detailsFragment;
 
 
     @Override
@@ -52,10 +53,15 @@ public class DetailsActivity extends AppCompatActivity {
             parkCode = savedInstanceState.getString(PARKCODE);
             isFromFavNav = savedInstanceState.getBoolean(FROM_FAV);
         }
-        DetailsFragment detailsFragment = DetailsFragment.newInstance(uri, parkId, position, latLong, parkCode, isFromFavNav);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.details_container, detailsFragment)
-                .commit();
+        if (savedInstanceState == null) {
+            detailsFragment = (DetailsFragment) getSupportFragmentManager().findFragmentById(R.id.list_container);
+            if (detailsFragment == null) {
+                detailsFragment = DetailsFragment.newInstance(uri, parkId, position, latLong, parkCode, isFromFavNav);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.details_container, detailsFragment)
+                        .commit();
+            }
+        }
 
     }
 

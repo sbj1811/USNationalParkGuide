@@ -52,24 +52,15 @@ public class ParkWidgetProvider extends AppWidgetProvider {
             ParkContract.ParkEntry.COLUMN_PARK_IMAGE
     };
 
-    public static void updateAppWidgets(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds, Uri uri, String parkId, int position, String latLong, String parkCode, boolean isFromFavNav, String imgUrl, String title, String weatherDetails[], String distance) {
+    public static void updateAppWidgets(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds, Uri uri, String parkId, int position, String latLong, String parkCode, boolean isFromFavNav, String imgUrl, String title, String weatherDetails[], Integer distance) {
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId, uri, parkId, position, latLong, parkCode, isFromFavNav, imgUrl, title, weatherDetails, distance);
         }
     }
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId, Uri uri, String parkId, int position, String latLong, String parkCode, boolean isFromFavNav, String imgUrl, String title, String weatherDetails[], String distance) {
-        Cursor cursor;
+                                int appWidgetId, Uri uri, String parkId, int position, String latLong, String parkCode, boolean isFromFavNav, String imgUrl, String title, String weatherDetails[], Integer distance) {
         CharSequence widgetText = context.getString(R.string.app_name);
-        cursor = context.getContentResolver().query(ParkContract.ParkEntry.CONTENT_URI_FAVORITES,
-                PROJECTION,
-                null,
-                null,
-                null);
-        if (cursor == null) {
-            Log.e(TAG, "updateAppWidget: HERE: cursor null");
-        }
         Intent intent = new Intent(context, MainListActivity.class);
 //        Intent intent = new Intent(context, DetailsActivity.class);
 //        intent.putExtra(PARK_ID, parkId);

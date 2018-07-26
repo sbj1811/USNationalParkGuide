@@ -183,4 +183,14 @@
     <string name="miles"> miles</string>
     <string name="ft"> ft</string>
     <string name="toolbar_title_prompt">Select a State: </string>
+    <string name="account">Account</string>
+    <string name="reservatiton_message">Reservation Link unavailable for this site</string>
+    <string name="direction_message">Detailed Directions unavailable for this site</string>
+    <string name="phone_message">No Phone number available</string>
+    <string name="email_message">No Email Available</string>
+    <string name="sign_in">Signed in!</string>
+    <string name="sign_in_cancel">Sign in canceled</string>
+    <string name="no_fav">No Favorites</string>
+    <string name="title_activity_main2">MainActivity2</string>
+
 </resources>
