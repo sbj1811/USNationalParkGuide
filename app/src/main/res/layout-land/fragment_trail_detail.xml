@@ -1,263 +1,285 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/White"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    android:fitsSystemWindows="true">
 
-    <ScrollView
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/trail_detail_app_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:fitsSystemWindows="true"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-     <android.support.constraint.ConstraintLayout
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/trail_detail_collapsing_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="256dp"
+            app:contentScrim="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+            app:titleEnabled="false">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/trail_detail_photo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="0dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginStart="0dp"
+                android:contentDescription="@string/image"
+                android:fitsSystemWindows="true"
+                android:scaleType="centerCrop"
+                app:actualImageScaleType="focusCrop"
+                app:layout_collapseMode="parallax"
+                app:layout_constraintEnd_toStartOf="@+id/guideline_trail"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:placeholderImageScaleType="centerInside"
+                app:viewAspectRatio="1.33"
+                fresco:placeholderImage="@drawable/empty_detail" />
+
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <com.sjani.usnationalparkguide.Custom.MyNestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-         <android.support.constraint.Guideline
-             android:id="@+id/guideline_trail"
-             android:layout_width="8dp"
-             android:layout_height="match_parent"
-             android:orientation="vertical"
-             app:layout_constraintGuide_percent="0.5" />
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-         <com.facebook.drawee.view.SimpleDraweeView
-             android:id="@+id/trail_detail_photo"
-             android:layout_width="294dp"
-             android:layout_height="200dp"
-             android:layout_marginLeft="0dp"
-             android:layout_marginStart="0dp"
-             android:layout_marginEnd="0dp"
-             android:layout_marginRight="0dp"
-             android:contentDescription="@string/image"
-             android:fitsSystemWindows="true"
-             android:scaleType="centerCrop"
-             app:actualImageScaleType="focusCrop"
-             app:layout_collapseMode="parallax"
-             app:layout_constraintEnd_toStartOf="@+id/guideline_trail"
-             app:layout_constraintStart_toStartOf="parent"
-             app:layout_constraintTop_toTopOf="parent"
-             app:placeholderImageScaleType="centerInside"
-             app:viewAspectRatio="1.33"
-             fresco:placeholderImage="@drawable/empty_detail" />
+            <android.support.constraint.Guideline
+                android:id="@+id/guideline_trail"
+                android:layout_width="8dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5" />
 
 
-         <TextView
-             android:id="@+id/trail_detail_title"
-             style="@style/TextAppearance.AppCompat.Headline"
-             android:layout_width="0dp"
-             android:layout_height="wrap_content"
-             android:layout_marginEnd="@dimen/horizontal_margin"
-             android:layout_marginLeft="@dimen/horizontal_margin"
-             android:layout_marginRight="@dimen/horizontal_margin"
-             android:layout_marginStart="@dimen/horizontal_margin"
-             android:layout_marginTop="@dimen/horizontal_margin"
-             android:layout_weight="1"
-             android:ellipsize="none"
-             android:maxLines="100"
-             android:scrollHorizontally="false"
-             android:textColor="@color/primaryText"
-             android:textStyle="bold"
-             app:layout_constraintEnd_toEndOf="parent"
-             app:layout_constraintHorizontal_bias="0.0"
-             app:layout_constraintStart_toStartOf="@+id/guideline_trail"
-             app:layout_constraintTop_toTopOf="parent"
-             tools:text="Trail Name" />
+            <TextView
+                android:id="@+id/trail_detail_title"
+                style="@style/TextAppearance.AppCompat.Headline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/horizontal_margin"
+                android:layout_marginLeft="@dimen/horizontal_margin"
+                android:layout_marginRight="@dimen/horizontal_margin"
+                android:layout_marginStart="@dimen/horizontal_margin"
+                android:layout_marginTop="16dp"
+                android:layout_weight="1"
+                android:ellipsize="none"
+                android:maxLines="100"
+                android:scrollHorizontally="false"
+                android:textColor="@color/primaryText"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Trail Name" />
 
 
-         <LinearLayout
-             android:id="@+id/icon_linearLayout"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_marginEnd="@dimen/horizontal_margin"
-             android:layout_marginLeft="@dimen/horizontal_margin"
-             android:layout_marginRight="@dimen/horizontal_margin"
-             android:layout_marginStart="@dimen/horizontal_margin"
-             android:layout_marginTop="24dp"
-             android:baselineAligned="false"
-             android:orientation="horizontal"
-             app:layout_constraintEnd_toEndOf="parent"
-             app:layout_constraintHorizontal_bias="0.0"
-             app:layout_constraintStart_toStartOf="parent"
-             app:layout_constraintTop_toBottomOf="@+id/trail_detail_photo">
+            <LinearLayout
+                android:id="@+id/icon_linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/horizontal_margin"
+                android:layout_marginLeft="@dimen/horizontal_margin"
+                android:layout_marginRight="@dimen/horizontal_margin"
+                android:layout_marginStart="@dimen/horizontal_margin"
+                android:layout_marginTop="24dp"
+                android:baselineAligned="false"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/condition_linear_layout">
 
-             <LinearLayout
-                 android:layout_width="0dp"
-                 android:layout_height="wrap_content"
-                 android:layout_weight="1"
-                 android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                 <ImageButton
-                     android:id="@+id/difficulty_iv"
-                     android:layout_width="40dp"
-                     android:layout_height="40dp"
-                     android:layout_gravity="center"
-                     android:background="@color/White"
-                     android:contentDescription="@string/image"
-                     android:scaleType="fitCenter"
-                     android:src="@drawable/ic_icons8_trekking_filled_500" />
+                    <ImageButton
+                        android:id="@+id/difficulty_iv"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:background="@color/White"
+                        android:contentDescription="@string/image"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_icons8_trekking_filled_500" />
 
-                 <TextView
-                     android:id="@+id/difficulty_tv"
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:layout_gravity="center"
-                     tools:text="Difficulty" />
+                    <TextView
+                        android:id="@+id/difficulty_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        tools:text="Difficulty" />
 
-             </LinearLayout>
-
-
-             <LinearLayout
-                 android:layout_width="0dp"
-                 android:layout_height="wrap_content"
-                 android:layout_weight="1"
-                 android:orientation="vertical">
-
-                 <ImageButton
-                     android:id="@+id/distance_iv"
-                     android:layout_width="40dp"
-                     android:layout_height="40dp"
-                     android:layout_gravity="center"
-                     android:background="@color/White"
-                     android:contentDescription="@string/image"
-                     android:scaleType="fitCenter"
-                     android:src="@drawable/ic_icons8_length_96" />
-
-                 <TextView
-                     android:id="@+id/distance_tv"
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:layout_gravity="center"
-                     tools:text="Distance" />
-
-             </LinearLayout>
-
-             <LinearLayout
-                 android:layout_width="0dp"
-                 android:layout_height="wrap_content"
-                 android:layout_weight="1"
-                 android:orientation="vertical">
-
-                 <ImageButton
-                     android:id="@+id/elevation_iv"
-                     android:layout_width="40dp"
-                     android:layout_height="40dp"
-                     android:layout_gravity="center"
-                     android:background="@color/White"
-                     android:contentDescription="@string/image"
-                     android:scaleType="fitCenter"
-                     android:src="@drawable/ic_icons8_mountain_filled_100" />
-
-                 <TextView
-                     android:id="@+id/elevation_tv"
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:layout_gravity="center"
-                     tools:text="Elevation" />
-
-             </LinearLayout>
-
-         </LinearLayout>
-
-         <LinearLayout
-             android:id="@+id/trail_address_linear_layout"
-             android:layout_width="284dp"
-             android:layout_height="wrap_content"
-             android:layout_marginEnd="@dimen/horizontal_margin"
-             android:layout_marginLeft="@dimen/horizontal_margin"
-             android:layout_marginRight="@dimen/horizontal_margin"
-             android:layout_marginStart="@dimen/horizontal_margin"
-             android:layout_marginTop="24dp"
-             android:clickable="true"
-             android:focusable="true"
-             android:orientation="horizontal"
-             app:layout_constraintEnd_toEndOf="parent"
-             app:layout_constraintHorizontal_bias="0.243"
-             app:layout_constraintStart_toStartOf="@+id/guideline_trail"
-             app:layout_constraintTop_toBottomOf="@+id/trail_detail_title">
+                </LinearLayout>
 
 
-             <ImageView
-                 android:id="@+id/trail_address_marker"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:contentDescription="@string/image"
-                 android:src="@drawable/ic_location_on" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-             <TextView
-                 android:id="@+id/trail_address"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:layout_marginLeft="8dp"
-                 android:layout_marginStart="8dp"
-                 android:textIsSelectable="true"
-                 tools:text="address, CA 95134" />
+                    <ImageButton
+                        android:id="@+id/distance_iv"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:background="@color/White"
+                        android:contentDescription="@string/image"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_icons8_length_96" />
 
-         </LinearLayout>
+                    <TextView
+                        android:id="@+id/distance_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        tools:text="Distance" />
 
+                </LinearLayout>
 
-         <LinearLayout
-             android:id="@+id/condition_linear_layout"
-             android:layout_width="280dp"
-             android:layout_height="wrap_content"
-             android:layout_marginBottom="8dp"
-             android:layout_marginEnd="@dimen/horizontal_margin"
-             android:layout_marginLeft="@dimen/horizontal_margin"
-             android:layout_marginRight="@dimen/horizontal_margin"
-             android:layout_marginStart="@dimen/horizontal_margin"
-             android:layout_marginTop="20dp"
-             android:orientation="vertical"
-             app:layout_constraintBottom_toTopOf="@+id/icon_linearLayout"
-             app:layout_constraintEnd_toEndOf="parent"
-             app:layout_constraintHorizontal_bias="0.222"
-             app:layout_constraintStart_toStartOf="@+id/guideline_trail"
-             app:layout_constraintTop_toBottomOf="@+id/trail_address_linear_layout"
-             app:layout_constraintVertical_bias="0.0">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
+                    <ImageButton
+                        android:id="@+id/elevation_iv"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:background="@color/White"
+                        android:contentDescription="@string/image"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_icons8_mountain_filled_100" />
 
-             <TextView
-                 android:id="@+id/condition_header"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:text="@string/curr_condition"
-                 android:textIsSelectable="true"
-                 android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/elevation_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        tools:text="Elevation" />
 
-             <TextView
-                 android:id="@+id/condition_tv"
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:textIsSelectable="true"
-                 tools:text="address, CA 95134" />
+                </LinearLayout>
 
-         </LinearLayout>
+            </LinearLayout>
 
-         <TextView
-             android:id="@+id/summary_tv"
-             style="@style/TextAppearance.AppCompat.Subhead"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:paddingBottom="@dimen/horizontal_margin"
-             android:layout_marginBottom="@dimen/horizontal_margin"
-             android:layout_marginEnd="@dimen/horizontal_margin"
-             android:layout_marginLeft="@dimen/horizontal_margin"
-             android:layout_marginRight="@dimen/horizontal_margin"
-             android:layout_marginStart="@dimen/horizontal_margin"
-             android:layout_marginTop="28dp"
-             android:autoLink="web"
-             android:linksClickable="true"
-             android:textColor="@color/secondaryText"
-             app:layout_constraintEnd_toEndOf="parent"
-             app:layout_constraintHorizontal_bias="0.0"
-             app:layout_constraintStart_toStartOf="parent"
-             app:layout_constraintTop_toBottomOf="@+id/icon_linearLayout"
-             tools:text="@string/lorem_ipsum" />
+            <LinearLayout
+                android:id="@+id/trail_address_linear_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="@dimen/horizontal_margin"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="@dimen/horizontal_margin"
+                android:layout_marginTop="32dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toStartOf="@+id/guideline_trail"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/trail_detail_title">
 
 
-    </android.support.constraint.ConstraintLayout>
+                <ImageView
+                    android:id="@+id/trail_address_marker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/image"
+                    android:src="@drawable/ic_location_on" />
 
-    </ScrollView>
+                <TextView
+                    android:id="@+id/trail_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:textIsSelectable="true"
+                    tools:text="address, CA 95134" />
 
-</FrameLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/condition_linear_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="32dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toTopOf="@+id/icon_linearLayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.121"
+                app:layout_constraintStart_toStartOf="@+id/guideline_trail"
+                app:layout_constraintTop_toBottomOf="@id/trail_detail_title">
+
+
+                <TextView
+                    android:id="@+id/condition_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/curr_condition"
+                    android:textIsSelectable="true"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/condition_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textIsSelectable="true"
+                    tools:text="address, CA 95134" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/summary_tv"
+                style="@style/TextAppearance.AppCompat.Subhead"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/horizontal_margin"
+                android:layout_marginEnd="@dimen/horizontal_margin"
+                android:layout_marginLeft="@dimen/horizontal_margin"
+                android:layout_marginRight="@dimen/horizontal_margin"
+                android:layout_marginStart="@dimen/horizontal_margin"
+                android:layout_marginTop="28dp"
+                android:autoLink="web"
+                android:linksClickable="true"
+                android:paddingBottom="@dimen/horizontal_margin"
+                android:textColor="@color/secondaryText"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/icon_linearLayout"
+                tools:text="@string/lorem_ipsum" />
+
+
+        </android.support.constraint.ConstraintLayout>
+
+    </com.sjani.usnationalparkguide.Custom.MyNestedScrollView>
+
+</android.support.design.widget.CoordinatorLayout>

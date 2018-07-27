@@ -45,6 +45,7 @@ import com.google.firebase.FirebaseApp;
 import com.sjani.usnationalparkguide.UI.Settings.SettingsActivity;
 import com.sjani.usnationalparkguide.Utils.CircleTransform;
 import com.sjani.usnationalparkguide.Utils.ParkIdlingResource;
+import com.squareup.leakcanary.RefWatcher;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -143,11 +144,11 @@ public class MainListActivity extends AppCompatActivity
             }
         }
 
-        Stetho.initialize(
-                Stetho.newInitializerBuilder(this)
-                        .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
-                        .build()
-        );
+//        Stetho.initialize(
+//                Stetho.newInitializerBuilder(this)
+//                        .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
+//                        .build()
+//        );
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -178,7 +179,6 @@ public class MainListActivity extends AppCompatActivity
                     mUsername =  user.getDisplayName();
                     mEmail = user.getEmail();
                     mUserImage = user.getPhotoUrl();
-                    Log.e(TAG, "onCreate: HERE 1 "+mUserImage+" "+mEmail+" "+mUserImage);
                     usernameTv.setText(mUsername);
                     emailTv.setText(mEmail);
                     if (mUserImage != null) {
@@ -206,14 +206,13 @@ public class MainListActivity extends AppCompatActivity
                 }
             }
         };
-        Log.e(TAG, "onCreate: HERE 2 "+mUserImage+" "+mEmail+" "+mUserImage);
-
-
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+//        RefWatcher refWatcher = ParkApplication.getRefWatcher(this);
+//        refWatcher.watch(this);
     }
 
     @Override
@@ -295,7 +294,6 @@ public class MainListActivity extends AppCompatActivity
         } else if (id == R.id.nav_logout) {
             AuthUI.getInstance().signOut(this);
         }
-        Log.e(TAG, "onNavigationItemSelected: "+mUserImage+" "+mEmail+" "+mUserImage);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -314,6 +312,8 @@ public class MainListActivity extends AppCompatActivity
             mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
         }
     }
+
+
 
     public boolean doesTableExist(String tableName) {
         Cursor cursor = getContentResolver().query(ParkContract.ParkEntry.CONTENT_URI_FAVORITES, PROJECTION, null, null, null);

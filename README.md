@@ -31,6 +31,7 @@ The application is aimed at Tourists and Hikers visiting any of the National Par
     * [Butter Knife](jakewharton.github.io/butterknife/)
     * [Firebase Authentication](https://firebase.google.com/)
     * [Admob](https://www.google.com/admob/)
+    * [LeakCanary](https://github.com/square/leakcanary)
     * [Facebook Stetho](http://facebook.github.io/stetho/)
     * [Picasso](http://square.github.io/picasso/)
     * [Glide](https://github.com/bumptech/glide)

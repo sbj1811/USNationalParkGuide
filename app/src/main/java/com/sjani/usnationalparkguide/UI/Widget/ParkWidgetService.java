@@ -141,7 +141,6 @@ public class ParkWidgetService extends IntentService {
                     final String gpsCoodinates[] = stringToGPSCoordinates.convertToGPS(latLong);
                     getLastLocation(gpsCoodinates);
                     String weatherDetails[] = getCurrentWeather(context, gpsCoodinates);
-                    Log.e(TAG, "onHandleIntent: HERE:\n"+uri+"\n"+parkId+"\n"+position+"\n"+latLong+"\n"+parkCode+"\n"+imgUrl+"\n"+title+"\n"+weatherDetails+"\n"+distance);
                     ParkWidgetProvider.updateAppWidgets(context, appWidgetManager, appWidgetIds, uri, parkId, position, latLong, parkCode, true, imgUrl, title, weatherDetails, distance);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -159,31 +158,27 @@ public class ParkWidgetService extends IntentService {
 
         final Double latitude = Double.parseDouble(gpsCoodinates[0]);
         final Double longitude = Double.parseDouble(gpsCoodinates[1]);
-        Log.e(TAG, "getLastLocation: HERE:"+latitude+"  "+longitude);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.e("MapDemoActivity", "****************LOCATION PERMISSIONS DENIED****************Error trying to get last GPS location");
+            Log.e("MapDemoActivity", "****************LOCATION PERMISSIONS DENIED*****************Error trying to get last GPS location");
             return;
         }
         locationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
                 // GPS location can be null if GPS is switched off
-                Log.e(TAG, "onSuccess: HERE 1");
                 if (location != null) {
                     Location targetLocation = new Location("");
                     targetLocation.setLatitude(latitude);
                     targetLocation.setLongitude(longitude);
                     distance = (int) Math.round((targetLocation.distanceTo(location) / 1000) * 0.621371);
-                    Log.e(TAG, "onSuccess: HERE 2: "+distance);
                 } else {
-                    Log.e(TAG, "onSuccess: HERE 3  LOCATION NULL");
                 }
             }
         })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.e("MapDemoActivity", "********************************Error trying to get last GPS location");
+                        Log.e("MapDemoActivity", "***************LOCATION FAILURE****************Error trying to get last GPS location");
                         e.printStackTrace();
                     }
                 });

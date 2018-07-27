@@ -88,17 +88,6 @@ public class InfoFragment extends Fragment implements LoaderManager.LoaderCallba
         return fragment;
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (getArguments() != null) {
-            uri = getArguments().getParcelable(URI);
-            parkId = getArguments().getString(PARK_ID);
-            position = getArguments().getInt(POSITION);
-            latLong = getArguments().getString(LATLONG);
-        }
-        getLoaderManager().initLoader(LOADER_ID, null, this);
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -108,7 +97,16 @@ public class InfoFragment extends Fragment implements LoaderManager.LoaderCallba
             parkId = savedInstanceState.getString(PARK_ID);
             position = savedInstanceState.getInt(POSITION);
             latLong = savedInstanceState.getString(LATLONG);
+
+        } else {
+            if (getArguments() != null) {
+                uri = getArguments().getParcelable(URI);
+                parkId = getArguments().getString(PARK_ID);
+                position = getArguments().getInt(POSITION);
+                latLong = getArguments().getString(LATLONG);
+            }
         }
+        getLoaderManager().initLoader(LOADER_ID, null, this);
     }
 
     @Override
@@ -139,55 +137,50 @@ public class InfoFragment extends Fragment implements LoaderManager.LoaderCallba
         if (cursor == null) {
             return;
         }
-        try {
-            cursor.moveToPosition(position);
-            final String parkName = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_NAME));
-            titleTextview.setText(parkName);
-            designationTextview.setText(cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_DESIGNATION)));
-            stateextview.setText(cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_STATES)));
-            addressTextview.setText(cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_ADDRESS)));
-            descriptionTextview.setText(cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_DESCRIPTION)));
-            StringToGPSCoordinates stringToGPSCoordinates = new StringToGPSCoordinates();
-            final String gpsCoodinates[] = stringToGPSCoordinates.convertToGPS(latLong);
-            mapButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW,
-                            Uri.parse("geo:" + gpsCoodinates[0] + "," + gpsCoodinates[1] + "?q=" + gpsCoodinates[0] + "," + gpsCoodinates[1] + "(" + parkName + ")?z=10"));
+
+        cursor.moveToPosition(position);
+        final String parkName = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_NAME));
+        titleTextview.setText(parkName);
+        designationTextview.setText(cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_DESIGNATION)));
+        stateextview.setText(cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_STATES)));
+        addressTextview.setText(cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_ADDRESS)));
+        descriptionTextview.setText(cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_DESCRIPTION)));
+        StringToGPSCoordinates stringToGPSCoordinates = new StringToGPSCoordinates();
+        final String gpsCoodinates[] = stringToGPSCoordinates.convertToGPS(latLong);
+        mapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("geo:" + gpsCoodinates[0] + "," + gpsCoodinates[1] + "?q=" + gpsCoodinates[0] + "," + gpsCoodinates[1] + "(" + parkName + ")?z=10"));
+                startActivity(intent);
+            }
+        });
+        final String phoneNumber = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_PHONE));
+        phoneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (phoneNumber.equals(getActivity().getResources().getString(R.string.na))) {
+                    Toast.makeText(getContext(), getContext().getResources().getString(R.string.phone_message), Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber));
                     startActivity(intent);
                 }
-            });
-            final String phoneNumber = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_PHONE));
-            phoneButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (phoneNumber.equals(getActivity().getResources().getString(R.string.na))) {
-                        Toast.makeText(getContext(), getContext().getResources().getString(R.string.phone_message), Toast.LENGTH_SHORT).show();
-                    } else {
-                        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber));
-                        startActivity(intent);
-                    }
+            }
+        });
+        final String emailId = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_EMAIL));
+        emailButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (emailId.equals(getActivity().getResources().getString(R.string.na))) {
+                    Toast.makeText(getContext(), getContext().getResources().getString(R.string.email_message), Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent intent = new Intent(Intent.ACTION_SEND);
+                    intent.setType("text/html");
+                    intent.putExtra(Intent.EXTRA_EMAIL, emailId);
+                    startActivity(intent);
                 }
-            });
-            final String emailId = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_EMAIL));
-            emailButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (emailId.equals(getActivity().getResources().getString(R.string.na))) {
-                        Toast.makeText(getContext(), getContext().getResources().getString(R.string.email_message), Toast.LENGTH_SHORT).show();
-                    } else {
-                        Intent intent = new Intent(Intent.ACTION_SEND);
-                        intent.setType("text/html");
-                        intent.putExtra(Intent.EXTRA_EMAIL, emailId);
-                        startActivity(intent);
-                    }
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            cursor.close();
-        }
+            }
+        });
 
 
     }

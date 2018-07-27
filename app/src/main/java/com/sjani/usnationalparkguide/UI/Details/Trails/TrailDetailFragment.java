@@ -3,14 +3,18 @@ package com.sjani.usnationalparkguide.UI.Details.Trails;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.graphics.Palette;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,6 +28,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sjani.usnationalparkguide.Data.TrailContract;
 import com.sjani.usnationalparkguide.R;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -73,6 +79,8 @@ public class TrailDetailFragment extends Fragment implements LoaderManager.Loade
     ImageView trailIv;
     @BindView(R.id.trail_address_linear_layout)
     LinearLayout addressLl;
+    @BindView(R.id.trail_detail_collapsing_toolbar)
+    CollapsingToolbarLayout collapsingToolbarLayout;
     private Uri uri;
     private String trailId;
     private int position;
@@ -105,6 +113,11 @@ public class TrailDetailFragment extends Fragment implements LoaderManager.Loade
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         this.setHasOptionsMenu(true);
@@ -115,6 +128,7 @@ public class TrailDetailFragment extends Fragment implements LoaderManager.Loade
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+        collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
     }
 
     @Override
@@ -170,64 +184,88 @@ public class TrailDetailFragment extends Fragment implements LoaderManager.Loade
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         cursor = data;
         if (cursor == null) return;
-        try {
-            cursor.moveToPosition(position);
-            title = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_NAME));
-            titleTv.setText(title);
-            String distance = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_LENGTH));
-            distanceTv.setText(distance +" "+ getContext().getResources().getString(R.string.miles));
-            String elevation = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_ASCENT));
-            elevationTv.setText(elevation +" "+ getContext().getResources().getString(R.string.ft));
-            String address = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_LOCATION));
-            trailAddressTv.setText(address);
-            latitude = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_LAT));
-            longitude = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_LONG));
-            addressLl.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW,
-                            Uri.parse("geo:" + latitude + "," + longitude + "?z=10"));
-                    startActivity(intent);
-                }
-            });
-            String summary = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_SUMMARY));
-            summaryTv.setText(summary);
-            String condition = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_CONDITION));
-            if (!(condition == null)) {
-                if (!condition.equals("")) {
-                    conditionTv.setText(condition);
-                }
-            } else {
-                conditionTv.setText(getActivity().getResources().getString(R.string.na));
+        cursor.moveToPosition(position);
+        title = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_NAME));
+        titleTv.setText(title);
+        String distance = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_LENGTH));
+        distanceTv.setText(distance + " " + getContext().getResources().getString(R.string.miles));
+        String elevation = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_ASCENT));
+        elevationTv.setText(elevation + " " + getContext().getResources().getString(R.string.ft));
+        String address = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_LOCATION));
+        trailAddressTv.setText(address);
+        latitude = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_LAT));
+        longitude = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_LONG));
+        addressLl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("geo:" + latitude + "," + longitude + "?z=10"));
+                startActivity(intent);
             }
-            String difficultyMark = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_DIFFICULTY));
-            String difficultyLevel;
-            if (difficultyMark.equals("greenBlue")) {
-                difficultyLevel = getContext().getResources().getString(R.string.easy);
-            } else if (difficultyMark.equals("blue")) {
-                difficultyLevel = getContext().getResources().getString(R.string.moderate);
-            } else if (difficultyMark.equals("blueBlack")) {
-                difficultyLevel = getContext().getResources().getString(R.string.strenuous);
-            } else {
-                difficultyLevel = getContext().getResources().getString(R.string.unknown);
+        });
+        String summary = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_SUMMARY));
+        summaryTv.setText(summary);
+        String condition = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_CONDITION));
+        if (!(condition == null)) {
+            if (!condition.equals("")) {
+                conditionTv.setText(condition);
             }
-            difficultyTv.setText(difficultyLevel);
-            String imageUrl = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_IMAGE_MED));
-            if (imageUrl.equals("")) {
-                Glide.with(trailIv.getContext())
-                        .load(R.drawable.empty_detail)
-                        .fitCenter()
-                        .into(trailIv);
-            } else {
-                Glide.with(trailIv.getContext())
-                        .load(imageUrl)
-                        .fitCenter()
-                        .into(trailIv);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            cursor.close();
+        } else {
+            conditionTv.setText(getActivity().getResources().getString(R.string.na));
+        }
+        String difficultyMark = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_DIFFICULTY));
+        String difficultyLevel;
+        if (difficultyMark.equals("greenBlue")) {
+            difficultyLevel = getContext().getResources().getString(R.string.easy);
+        } else if (difficultyMark.equals("blue")) {
+            difficultyLevel = getContext().getResources().getString(R.string.moderate);
+        } else if (difficultyMark.equals("blueBlack")) {
+            difficultyLevel = getContext().getResources().getString(R.string.strenuous);
+        } else {
+            difficultyLevel = getContext().getResources().getString(R.string.unknown);
+        }
+        difficultyTv.setText(difficultyLevel);
+        String imageUrl = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_IMAGE_MED));
+        if (imageUrl.equals("")) {
+            Glide.with(trailIv.getContext())
+                    .load(R.drawable.empty_detail)
+                    .fitCenter()
+                    .into(trailIv);
+        } else {
+            Glide.with(trailIv.getContext())
+                    .load(imageUrl)
+                    .fitCenter()
+                    .into(trailIv);
+
+            Picasso.with(trailIv.getContext())
+                    .load(imageUrl)
+                    .into(new Target() {
+                        @Override
+                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                            Palette.from(bitmap).maximumColorCount(24).generate(new Palette.PaletteAsyncListener() {
+                                @Override public void onGenerated(Palette palette) {
+
+                                    int defaultColor = 0x000000;
+                                    int lightMutedColor = palette.getLightMutedColor(defaultColor);
+                                    int darkMutedColor = palette.getDarkMutedColor(defaultColor);
+                                    if (collapsingToolbarLayout != null) {
+                                        collapsingToolbarLayout.setContentScrimColor(lightMutedColor);
+                                        collapsingToolbarLayout.setStatusBarScrimColor(darkMutedColor);
+                                    }
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onBitmapFailed(Drawable errorDrawable) {
+
+                        }
+
+                        @Override
+                        public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                        }
+                    });
         }
 
     }
@@ -235,15 +273,5 @@ public class TrailDetailFragment extends Fragment implements LoaderManager.Loade
     @Override
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
         cursor = null;
-    }
-
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelable(URI, uriPark);
-        outState.putString(PARK_ID, parkId);
-        outState.putString(PARKCODE, parkCode);
-        outState.putString(LATLONG, latLong);
     }
 }

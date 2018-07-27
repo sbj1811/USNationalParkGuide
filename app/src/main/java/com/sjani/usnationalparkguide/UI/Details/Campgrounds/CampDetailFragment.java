@@ -79,7 +79,6 @@ public class CampDetailFragment extends Fragment implements LoaderManager.Loader
     private String campId;
     private int position;
     private Cursor cursor;
-    private OnFragmentInteractionListener mListener;
     private String title;
     private String latitude;
     private String longitude;
@@ -128,11 +127,6 @@ public class CampDetailFragment extends Fragment implements LoaderManager.Loader
         getLoaderManager().initLoader(LOADER_ID, null, this);
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -250,18 +244,4 @@ public class CampDetailFragment extends Fragment implements LoaderManager.Loader
         cursor = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
 }

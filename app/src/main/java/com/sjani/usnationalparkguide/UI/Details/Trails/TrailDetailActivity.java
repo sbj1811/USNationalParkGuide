@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 
 import com.sjani.usnationalparkguide.R;
@@ -44,16 +45,18 @@ public class TrailDetailActivity extends AppCompatActivity {
         parkCode = bundle.getString(PARKCODE);
         latLong = bundle.getString(LATLONG);
         position = bundle.getInt(POSITION);
-        if (getResources().getBoolean(R.bool.dual_pane)) {
-            trailDetailDialogFragment = TrailDetailDialogFragment.newInstance(uriTrail, trailId, position, parkCode, parkId, latLong, uri);
-            trailDetailDialogFragment.show(getSupportFragmentManager(), "Trail");
-        } else {
-            trailDetailFragment = (TrailDetailFragment) getSupportFragmentManager().findFragmentById(R.id.trail_detail_container);
-            if (trailDetailFragment == null) {
-                trailDetailFragment = TrailDetailFragment.newInstance(uriTrail, trailId, position, parkCode, parkId, latLong, uri);
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.trail_detail_container, trailDetailFragment)
-                        .commit();
+        if (savedInstanceState == null) {
+            if (getResources().getBoolean(R.bool.dual_pane)) {
+                trailDetailDialogFragment = TrailDetailDialogFragment.newInstance(uriTrail, trailId, position, parkCode, parkId, latLong, uri);
+                trailDetailDialogFragment.show(getSupportFragmentManager().beginTransaction(), "Trail");
+            } else {
+                trailDetailFragment = (TrailDetailFragment) getSupportFragmentManager().findFragmentById(R.id.trail_detail_container);
+                if (trailDetailFragment == null) {
+                    trailDetailFragment = TrailDetailFragment.newInstance(uriTrail, trailId, position, parkCode, parkId, latLong, uri);
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.trail_detail_container, trailDetailFragment)
+                            .commit();
+                }
             }
         }
     }

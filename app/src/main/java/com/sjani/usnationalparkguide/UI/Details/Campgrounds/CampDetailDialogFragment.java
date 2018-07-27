@@ -75,13 +75,14 @@ public class CampDetailDialogFragment extends DialogFragment implements LoaderMa
     Button directionButton;
     @BindView(R.id.camp_share_button)
     ImageButton shareButton;
+    @BindView(R.id.camp_back_button)
+    ImageButton backButton;
     @BindView(R.id.camp_address_linear_layout)
     LinearLayout addressLinearLayout;
     private Uri uri;
     private String campId;
     private int position;
     private Cursor cursor;
-    private OnFragmentInteractionListener mListener;
 
     public CampDetailDialogFragment() {
         // Required empty public constructor
@@ -120,11 +121,6 @@ public class CampDetailDialogFragment extends DialogFragment implements LoaderMa
         return inflater.inflate(R.layout.fragment_camp_detail_dialog, container, false);
     }
 
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        super.onDismiss(dialog);
-        getActivity().finish();
-    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -143,12 +139,6 @@ public class CampDetailDialogFragment extends DialogFragment implements LoaderMa
         getLoaderManager().initLoader(LOADER_ID, null, this);
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
     @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
@@ -159,90 +149,91 @@ public class CampDetailDialogFragment extends DialogFragment implements LoaderMa
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         cursor = data;
         if (cursor == null) return;
-        try {
-            cursor.moveToPosition(position);
-            final String title = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_NAME));
-            titleTv.setText(title);
-            String summary = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_DESCRIPTION));
-            summaryTv.setText(summary);
-            String address = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_ADDRESSS));
-            addressTv.setText(address);
-            String latLong = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_LATLONG));
-            StringToGPSCoordinates stringToGPSCoordinates = new StringToGPSCoordinates();
-            final String gpsCoodinates[] = stringToGPSCoordinates.convertToGPS(latLong);
-            addressLinearLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW,
-                            Uri.parse("geo:" + gpsCoodinates[0] + "," + gpsCoodinates[1] + "?q=" + gpsCoodinates[0] + "," + gpsCoodinates[1] + "?z=10"));
-                    startActivity(intent);
-                }
-            });
-            String cellrecep = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_CELLRECEP));
-            if (cellrecep.equals("Yes - year round")) {
-                cellrecepIv.setImageResource(R.drawable.ic_check_circle);
-            } else {
-                cellrecepIv.setImageResource(R.drawable.ic_cancel);
+        cursor.moveToPosition(position);
+        final String title = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_NAME));
+        titleTv.setText(title);
+        String summary = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_DESCRIPTION));
+        summaryTv.setText(summary);
+        String address = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_ADDRESSS));
+        addressTv.setText(address);
+        String latLong = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_LATLONG));
+        StringToGPSCoordinates stringToGPSCoordinates = new StringToGPSCoordinates();
+        final String gpsCoodinates[] = stringToGPSCoordinates.convertToGPS(latLong);
+        addressLinearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("geo:" + gpsCoodinates[0] + "," + gpsCoodinates[1] + "?q=" + gpsCoodinates[0] + "," + gpsCoodinates[1] + "?z=10"));
+                startActivity(intent);
             }
-            String showers = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_SHOWERS));
-            if (showers.equals("None")) {
-                showersIv.setImageResource(R.drawable.ic_cancel);
-            } else {
-                showersIv.setImageResource(R.drawable.ic_check_circle);
-            }
-            String toilets = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_TOILET));
-            if (toilets.equals("None")) {
-                toiletsIv.setImageResource(R.drawable.ic_cancel);
-            } else {
-                toiletsIv.setImageResource(R.drawable.ic_check_circle);
-            }
-            String internet = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_INTERNET));
-            if (internet.equals("true")) {
-                internetIv.setImageResource(R.drawable.ic_check_circle);
-            } else {
-                internetIv.setImageResource(R.drawable.ic_cancel);
-            }
-            String wheelchair = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_WHEELCHAIR));
-            wheelchairTv.setText(wheelchair);
-            final String reservationUrl = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_RESERVURL));
-            reservationButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (reservationUrl.equals("")) {
-                        Toast.makeText(getContext(), getContext().getResources().getString(R.string.reservatiton_message), Toast.LENGTH_SHORT).show();
-                    } else {
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(reservationUrl));
-                        startActivity(browserIntent);
-                    }
-                }
-            });
-            final String directionUrl = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_DIRECTIONURL));
-            directionButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (directionUrl.equals("")) {
-                        Toast.makeText(getContext(), getContext().getResources().getString(R.string.direction_message), Toast.LENGTH_SHORT).show();
-                    } else {
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(directionUrl));
-                        startActivity(browserIntent);
-                    }
-                }
-            });
-            shareButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-                    sharingIntent.setType("text/plain");
-                    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, title);
-                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, title + "\nOpen in Google Maps https://maps.google.com/?q=" + gpsCoodinates[0] + "," + gpsCoodinates[1]);
-                    startActivity(Intent.createChooser(sharingIntent, "Share via"));
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            cursor.close();
+        });
+        String cellrecep = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_CELLRECEP));
+        if (cellrecep.equals("Yes - year round")) {
+            cellrecepIv.setImageResource(R.drawable.ic_check_circle);
+        } else {
+            cellrecepIv.setImageResource(R.drawable.ic_cancel);
         }
+        String showers = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_SHOWERS));
+        if (showers.equals("None")) {
+            showersIv.setImageResource(R.drawable.ic_cancel);
+        } else {
+            showersIv.setImageResource(R.drawable.ic_check_circle);
+        }
+        String toilets = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_TOILET));
+        if (toilets.equals("None")) {
+            toiletsIv.setImageResource(R.drawable.ic_cancel);
+        } else {
+            toiletsIv.setImageResource(R.drawable.ic_check_circle);
+        }
+        String internet = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_INTERNET));
+        if (internet.equals("true")) {
+            internetIv.setImageResource(R.drawable.ic_check_circle);
+        } else {
+            internetIv.setImageResource(R.drawable.ic_cancel);
+        }
+        String wheelchair = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_WHEELCHAIR));
+        wheelchairTv.setText(wheelchair);
+        final String reservationUrl = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_RESERVURL));
+        reservationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (reservationUrl.equals("")) {
+                    Toast.makeText(getContext(), getContext().getResources().getString(R.string.reservatiton_message), Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(reservationUrl));
+                    startActivity(browserIntent);
+                }
+            }
+        });
+        final String directionUrl = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_DIRECTIONURL));
+        directionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (directionUrl.equals("")) {
+                    Toast.makeText(getContext(), getContext().getResources().getString(R.string.direction_message), Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(directionUrl));
+                    startActivity(browserIntent);
+                }
+            }
+        });
+        shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, title);
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, title + "\nOpen in Google Maps https://maps.google.com/?q=" + gpsCoodinates[0] + "," + gpsCoodinates[1]);
+                startActivity(Intent.createChooser(sharingIntent, "Share via"));
+            }
+        });
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+                getActivity().onBackPressed();
+            }
+        });
 
     }
 
@@ -251,18 +242,4 @@ public class CampDetailDialogFragment extends DialogFragment implements LoaderMa
         cursor = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
 }

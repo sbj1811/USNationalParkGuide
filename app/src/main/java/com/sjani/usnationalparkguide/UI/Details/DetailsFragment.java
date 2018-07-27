@@ -217,44 +217,38 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         cursor = data;
         if (cursor == null) return;
-        try {
-            cursor.moveToPosition(position);
-            int id = loader.getId();
-            switch (id) {
-                case LOADER_ID:
-                    values = new ContentValues();
-                    if (cursor != null) {
-                        DatabaseUtils.cursorRowToContentValues(cursor, values);
-                        String imageUrl = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_IMAGE));
-                        if (imageUrl.equals("")) {
-                            Glide.with(parkImageView.getContext())
-                                    .load(R.drawable.empty_detail)
-                                    .fitCenter()
-                                    .into(parkImageView);
-                        } else {
-                            Glide.with(parkImageView.getContext())
-                                    .load(imageUrl)
-                                    .fitCenter()
-                                    .into(parkImageView);
-                        }
-                    }
-                    break;
-                case FAV_LOADER_ID:
-                    if (data.getCount() > 0) {
-                        favButton.setImageResource(R.drawable.ic_favorite);
-                        isMarkedFavorite = true;
+        cursor.moveToPosition(position);
+        int id = loader.getId();
+        switch (id) {
+            case LOADER_ID:
+                values = new ContentValues();
+                if (cursor != null) {
+                    DatabaseUtils.cursorRowToContentValues(cursor, values);
+                    String imageUrl = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_IMAGE));
+                    if (imageUrl.equals("")) {
+                        Glide.with(parkImageView.getContext())
+                                .load(R.drawable.empty_detail)
+                                .fitCenter()
+                                .into(parkImageView);
                     } else {
-                        favButton.setImageResource(R.drawable.ic_favorite_border);
-                        isMarkedFavorite = false;
+                        Glide.with(parkImageView.getContext())
+                                .load(imageUrl)
+                                .fitCenter()
+                                .into(parkImageView);
                     }
-                    break;
-                default:
-                    throw new RuntimeException("Loader not implemented: " + id);
-            }
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-        } finally {
-            cursor.close();
+                }
+                break;
+            case FAV_LOADER_ID:
+                if (data.getCount() > 0) {
+                    favButton.setImageResource(R.drawable.ic_favorite);
+                    isMarkedFavorite = true;
+                } else {
+                    favButton.setImageResource(R.drawable.ic_favorite_border);
+                    isMarkedFavorite = false;
+                }
+                break;
+            default:
+                throw new RuntimeException("Loader not implemented: " + id);
         }
     }
 

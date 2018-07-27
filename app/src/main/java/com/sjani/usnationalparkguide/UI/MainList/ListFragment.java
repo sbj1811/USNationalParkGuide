@@ -111,9 +111,7 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-            currentVisiblePosition = savedInstanceState.getInt(LIST_STATE_KEY);
-        }
+        uri = ParkContract.ParkEntry.CONTENT_URI_PARKS;
         getLoaderManager().initLoader(LOADER_ID, null, this);
 
     }
@@ -188,12 +186,12 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onDestroy() {
         super.onDestroy();
+//        ParkApplication.getRefWatcher(getActivity()).watch(this);
     }
 
     @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
-        uri = ParkContract.ParkEntry.CONTENT_URI_PARKS;
         return new CursorLoader(getActivity(), uri, PROJECTION, null, null, null);
     }
 

@@ -70,7 +70,8 @@
         </activity>
         <activity
             android:name=".UI.Details.Trails.TrailDetailActivity"
-            android:parentActivityName=".UI.Details.DetailsActivity">
+            android:parentActivityName=".UI.Details.DetailsActivity"
+            android:theme="@style/DetailTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".UI.Details.DetailsActivity" />

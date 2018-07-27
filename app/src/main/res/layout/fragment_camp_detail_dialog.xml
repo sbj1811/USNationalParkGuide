@@ -20,6 +20,22 @@
             app:layout_constraintGuide_percent="0.5" />
 
         <ImageButton
+            android:id="@+id/camp_back_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:background="#0000"
+            android:src="@drawable/ic_arrow_back_primary"
+            android:contentDescription="@string/image"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
             android:id="@+id/camp_share_button"
             android:layout_width="48dp"
             android:layout_height="48dp"
@@ -29,7 +45,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:background="#0000"
-            android:src="@drawable/ic_share_color"
+            android:src="@drawable/ic_share_primary"
             android:contentDescription="@string/image"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
@@ -46,17 +62,17 @@
             android:layout_marginLeft="@dimen/horizontal_margin"
             android:layout_marginRight="8dp"
             android:layout_marginStart="@dimen/horizontal_margin"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:ellipsize="end"
             android:maxLines="2"
             android:scrollHorizontally="false"
             android:textColor="@color/primaryText"
             android:textStyle="bold"
             android:visibility="visible"
-            app:layout_constraintEnd_toStartOf="@+id/camp_share_button"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/camp_back_button"
             tools:text="Campground Name" />
 
 
