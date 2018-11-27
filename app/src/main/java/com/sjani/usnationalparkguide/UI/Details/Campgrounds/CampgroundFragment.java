@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 
 import com.sjani.usnationalparkguide.Data.CampContract;
 import com.sjani.usnationalparkguide.Models.Campgrounds.Address;
@@ -33,6 +33,9 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -177,7 +180,19 @@ public class CampgroundFragment extends Fragment implements LoaderManager.Loader
             parkCode = getArguments().getString(PARKCODE);
             uri = getArguments().getParcelable(URI);
         }
-        new NetworkCall().execute();
+        Observable.fromCallable(() -> {
+            camps = loadCampData();
+            ContentValues[] campContent = makeContentFromCampList(camps);
+            if (campContent != null) {
+                ContentResolver contentResolver = mContext.getContentResolver();
+                contentResolver.delete(CampContract.CampEntry.CONTENT_URI_CAMP, null, null);
+                contentResolver.bulkInsert(CampContract.CampEntry.CONTENT_URI_CAMP, campContent);
+            }
+            return false;
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
     }
 
     @NonNull
@@ -237,21 +252,4 @@ public class CampgroundFragment extends Fragment implements LoaderManager.Loader
             return null;
     }
 
-    private class NetworkCall extends AsyncTask<Void, Void, Void> {
-
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            camps = loadCampData();
-            ContentValues[] campContent = makeContentFromCampList(camps);
-            if (campContent != null) {
-                ContentResolver contentResolver = mContext.getContentResolver();
-                contentResolver.delete(CampContract.CampEntry.CONTENT_URI_CAMP, null, null);
-                contentResolver.bulkInsert(CampContract.CampEntry.CONTENT_URI_CAMP, campContent);
-            }
-            return null;
-        }
-
-
-    }
 }

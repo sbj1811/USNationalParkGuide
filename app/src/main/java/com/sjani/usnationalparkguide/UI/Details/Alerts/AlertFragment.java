@@ -5,7 +5,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -30,6 +29,9 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -128,7 +130,19 @@ public class AlertFragment extends Fragment implements LoaderManager.LoaderCallb
             parkCode = getArguments().getString(PARKCODE);
             uri = getArguments().getParcelable(URI);
         }
-        new NetworkCall().execute();
+        Observable.fromCallable(() -> {
+            alerts = loadAlertData();
+            ContentValues[] alertContent = makeContentFromAlertList(alerts);
+            if (alertContent != null) {
+                ContentResolver contentResolver = mContext.getContentResolver();
+                contentResolver.delete(AlertContract.AlertEntry.CONTENT_URI_ALERT, null, null);
+                contentResolver.bulkInsert(AlertContract.AlertEntry.CONTENT_URI_ALERT, alertContent);
+            }
+            return false;
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
     }
 
     @Override
@@ -171,18 +185,5 @@ public class AlertFragment extends Fragment implements LoaderManager.LoaderCallb
         }
     }
 
-    private class NetworkCall extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected Void doInBackground(Void... voids) {
-            alerts = loadAlertData();
-            ContentValues[] alertContent = makeContentFromAlertList(alerts);
-            if (alertContent != null) {
-                ContentResolver contentResolver = mContext.getContentResolver();
-                contentResolver.delete(AlertContract.AlertEntry.CONTENT_URI_ALERT, null, null);
-                contentResolver.bulkInsert(AlertContract.AlertEntry.CONTENT_URI_ALERT, alertContent);
-            }
-            return null;
-        }
-    }
 
 }

@@ -1,15 +1,12 @@
 package com.sjani.usnationalparkguide.UI.Details;
 
-import android.app.LoaderManager;
+
 import android.content.Context;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.AsyncTaskLoader;
-import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +15,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestManager;
+
 import com.sjani.usnationalparkguide.Models.Weather.CurrentWeather;
 import com.sjani.usnationalparkguide.Models.Weather.Main;
 import com.sjani.usnationalparkguide.Models.Weather.Sys;
@@ -39,6 +35,9 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -138,7 +137,15 @@ public class WeatherFragment extends Fragment {
             position = getArguments().getInt(POSITION);
             latLong = getArguments().getString(LATLONG);
         }
-        new NetworkCall().execute();
+        Observable.fromCallable(() -> {
+            getCurrentWeather();
+            return false;
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe((result) -> {
+                    createWeatherview(currentWeather, main, wind, sys);
+                });
     }
 
     @Override
@@ -215,19 +222,4 @@ public class WeatherFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
-    private class NetworkCall extends AsyncTask<Void, Void, Void> {
-
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            getCurrentWeather();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            createWeatherview(currentWeather, main, wind, sys);
-        }
-    }
 }

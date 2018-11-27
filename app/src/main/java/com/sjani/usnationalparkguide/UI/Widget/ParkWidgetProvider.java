@@ -62,13 +62,6 @@ public class ParkWidgetProvider extends AppWidgetProvider {
                                 int appWidgetId, Uri uri, String parkId, int position, String latLong, String parkCode, boolean isFromFavNav, String imgUrl, String title, String weatherDetails[], Integer distance) {
         CharSequence widgetText = context.getString(R.string.app_name);
         Intent intent = new Intent(context, MainListActivity.class);
-//        Intent intent = new Intent(context, DetailsActivity.class);
-//        intent.putExtra(PARK_ID, parkId);
-//        intent.putExtra(POSITION, position);
-//        intent.putExtra(URI, uri);
-//        intent.putExtra(LATLONG, latLong);
-//        intent.putExtra(PARKCODE, parkCode);
-//        intent.putExtra(FROM_FAV,true);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.park_widget);
         if (parkCode.equals("")) {

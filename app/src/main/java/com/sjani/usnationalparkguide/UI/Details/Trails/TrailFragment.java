@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.sjani.usnationalparkguide.Data.AlertContract;
 import com.sjani.usnationalparkguide.Data.TrailContract;
 import com.sjani.usnationalparkguide.Models.Trails.Trail;
 import com.sjani.usnationalparkguide.Models.Trails.TrailDatum;
@@ -31,6 +32,9 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -147,7 +151,19 @@ public class TrailFragment extends Fragment implements android.support.v4.app.Lo
             parkCode = getArguments().getString(PARKCODE);
             uri = getArguments().getParcelable(URI);
         }
-        new NetworkCall().execute();
+        Observable.fromCallable(() -> {
+            trails = loadTrailData();
+            ContentValues[] trailContent = makeContentFromTrailList(trails);
+            if (trailContent != null) {
+                ContentResolver contentResolver = mContext.getContentResolver();
+                contentResolver.delete(TrailContract.TrailEntry.CONTENT_URI_TRAIL, null, null);
+                contentResolver.bulkInsert(TrailContract.TrailEntry.CONTENT_URI_TRAIL, trailContent);
+            }
+            return false;
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
     }
 
     @Override
@@ -216,21 +232,4 @@ public class TrailFragment extends Fragment implements android.support.v4.app.Lo
         outState.putString(LATLONG, latLong);
     }
 
-    private class NetworkCall extends AsyncTask<Void, Void, Void> {
-
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            trails = loadTrailData();
-            ContentValues[] trailContent = makeContentFromTrailList(trails);
-            if (trailContent != null) {
-                ContentResolver contentResolver = mContext.getContentResolver();
-                contentResolver.delete(TrailContract.TrailEntry.CONTENT_URI_TRAIL, null, null);
-                contentResolver.bulkInsert(TrailContract.TrailEntry.CONTENT_URI_TRAIL, trailContent);
-            }
-            return null;
-        }
-
-
-    }
 }
