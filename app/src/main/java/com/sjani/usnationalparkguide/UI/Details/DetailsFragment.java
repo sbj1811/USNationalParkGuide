@@ -216,7 +216,7 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         cursor = data;
-        if (cursor == null) return;
+        if (cursor == null || cursor.getCount() <= 0) return;
         cursor.moveToPosition(position);
         int id = loader.getId();
         switch (id) {

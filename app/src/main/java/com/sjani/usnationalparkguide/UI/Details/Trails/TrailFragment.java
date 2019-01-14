@@ -172,6 +172,25 @@ public class TrailFragment extends Fragment implements android.support.v4.app.Lo
         mContext.getContentResolver().delete(TrailContract.TrailEntry.CONTENT_URI_TRAIL, null, null);
     }
 
+    @NonNull
+    @Override
+    public android.support.v4.content.Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
+        uri = TrailContract.TrailEntry.CONTENT_URI_TRAIL;
+        return new android.support.v4.content.CursorLoader(getActivity(), uri, PROJECTION, null, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull android.support.v4.content.Loader<Cursor> loader, Cursor data) {
+        adapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull android.support.v4.content.Loader<Cursor> loader) {
+        if (adapter != null) {
+            adapter.swapCursor(null);
+        }
+    }
+
     @Override
     public void onListFragmentInteraction(String id, int position) {
         Uri uriTrail = TrailContract.TrailEntry.CONTENT_URI_TRAIL;
@@ -185,13 +204,6 @@ public class TrailFragment extends Fragment implements android.support.v4.app.Lo
         intent.putExtra(POSITION, position);
         startActivity(intent);
 
-    }
-
-    @NonNull
-    @Override
-    public android.support.v4.content.Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
-        uri = TrailContract.TrailEntry.CONTENT_URI_TRAIL;
-        return new android.support.v4.content.CursorLoader(getActivity(), uri, PROJECTION, null, null, null);
     }
 
     private List<TrailDatum> loadTrailData() {
@@ -209,18 +221,6 @@ public class TrailFragment extends Fragment implements android.support.v4.app.Lo
             return response.body().getTrails();
         } else
             return null;
-    }
-
-    @Override
-    public void onLoadFinished(@NonNull android.support.v4.content.Loader<Cursor> loader, Cursor data) {
-        adapter.swapCursor(data);
-    }
-
-    @Override
-    public void onLoaderReset(@NonNull android.support.v4.content.Loader<Cursor> loader) {
-        if (adapter != null) {
-            adapter.swapCursor(null);
-        }
     }
 
     @Override

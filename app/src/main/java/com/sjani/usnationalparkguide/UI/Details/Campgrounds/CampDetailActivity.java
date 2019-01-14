@@ -11,9 +11,21 @@ public class CampDetailActivity extends AppCompatActivity {
 
     private static final String CAMP_ID = "camp_id";
     private static final String URI = "uri";
+    private static final String URI_CAMP = "uri_camp";
     private static final String POSITION = "position";
+    private static final String PARK_ID = "park_id";
+    private static final String PARKCODE = "parkcode";
+    private static final String LATLONG = "latlong";
     private CampDetailFragment campDetailFragment;
     private CampDetailDialogFragment campDetailDialogFragment;
+
+    private Uri uri;
+    private Uri uriCamp;
+    private String parkId;
+    private String parkCode;
+    private String latLong;
+    private String campId;
+    private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,17 +34,22 @@ public class CampDetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        Uri uri = bundle.getParcelable(URI);
-        String campId = bundle.getString(CAMP_ID);
-        int position = bundle.getInt(POSITION);
+        uri = bundle.getParcelable(URI);
+        uriCamp = bundle.getParcelable(URI_CAMP);
+        campId = bundle.getString(CAMP_ID);
+        position = bundle.getInt(POSITION);
+        parkId = bundle.getString(PARK_ID);
+        parkCode = bundle.getString(PARKCODE);
+        latLong = bundle.getString(LATLONG);
+        position = bundle.getInt(POSITION);
         if (savedInstanceState == null) {
             if (getResources().getBoolean(R.bool.dual_pane)) {
-                campDetailDialogFragment = CampDetailDialogFragment.newInstance(uri, campId, position);
+                campDetailDialogFragment = CampDetailDialogFragment.newInstance(uriCamp, campId, position, parkCode, parkId, latLong, uri);
                 campDetailDialogFragment.show(getSupportFragmentManager(), "Camp");
             } else {
                 campDetailFragment = (CampDetailFragment) getSupportFragmentManager().findFragmentById(R.id.camp_detail_container);
                 if (campDetailFragment == null) {
-                    campDetailFragment = CampDetailFragment.newInstance(uri, campId, position);
+                    campDetailFragment = CampDetailFragment.newInstance(uriCamp, campId, position, parkCode, parkId, latLong, uri);
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.camp_detail_container, campDetailFragment)
                             .commit();

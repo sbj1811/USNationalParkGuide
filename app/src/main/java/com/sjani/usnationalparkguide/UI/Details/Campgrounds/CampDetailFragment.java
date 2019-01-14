@@ -35,7 +35,11 @@ public class CampDetailFragment extends Fragment implements LoaderManager.Loader
 
     private static final String CAMP_ID = "camp_id";
     private static final String URI = "uri";
+    private static final String URI_CAMP = "uri_camp";
     private static final String POSITION = "position";
+    private static final String PARK_ID = "park_id";
+    private static final String PARKCODE = "parkcode";
+    private static final String LATLONG = "latlong";
     private static final int LOADER_ID = 9;
     private static final String[] PROJECTION = new String[]{
             CampContract.CampEntry._ID,
@@ -79,6 +83,10 @@ public class CampDetailFragment extends Fragment implements LoaderManager.Loader
     private String campId;
     private int position;
     private Cursor cursor;
+    private Uri uriPark;
+    private String parkId;
+    private String parkCode;
+    private String latLong;
     private String title;
     private String latitude;
     private String longitude;
@@ -88,12 +96,16 @@ public class CampDetailFragment extends Fragment implements LoaderManager.Loader
     }
 
 
-    public static CampDetailFragment newInstance(Uri uri, String campId, int position) {
+    public static CampDetailFragment newInstance(Uri uri, String campId, int position, String parkId, String parkCode, String latLong, Uri parkUri) {
         CampDetailFragment fragment = new CampDetailFragment();
         Bundle args = new Bundle();
-        args.putParcelable(URI, uri);
+        args.putParcelable(URI_CAMP, uri);
         args.putString(CAMP_ID, campId);
         args.putInt(POSITION, position);
+        args.putParcelable(URI, parkUri);
+        args.putString(PARK_ID, parkId);
+        args.putString(LATLONG, latLong);
+        args.putString(PARKCODE, parkCode);
         fragment.setArguments(args);
         return fragment;
     }
@@ -120,9 +132,13 @@ public class CampDetailFragment extends Fragment implements LoaderManager.Loader
     public void onAttach(Context context) {
         super.onAttach(context);
         if (getArguments() != null) {
-            uri = getArguments().getParcelable(URI);
+            uri = getArguments().getParcelable(URI_CAMP);
             campId = getArguments().getString(CAMP_ID);
             position = getArguments().getInt(POSITION);
+            uriPark = getArguments().getParcelable(URI);
+            latLong = getArguments().getString(LATLONG);
+            parkCode = getArguments().getString(PARKCODE);
+            parkId = getArguments().getString(PARK_ID);
         }
         getLoaderManager().initLoader(LOADER_ID, null, this);
     }
@@ -165,7 +181,7 @@ public class CampDetailFragment extends Fragment implements LoaderManager.Loader
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         cursor = data;
-        if (cursor == null) return;
+        if (cursor == null || cursor.getCount() <= 0) return;
         cursor.moveToPosition(position);
         title = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_NAME));
         titleTv.setText(title);

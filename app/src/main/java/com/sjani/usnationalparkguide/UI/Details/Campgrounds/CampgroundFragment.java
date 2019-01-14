@@ -166,8 +166,8 @@ public class CampgroundFragment extends Fragment implements LoaderManager.Loader
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         adapter = new CampgroundRecyclerViewAdapter(this, getContext());
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
     @Override
@@ -193,6 +193,12 @@ public class CampgroundFragment extends Fragment implements LoaderManager.Loader
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mContext.getContentResolver().delete(CampContract.CampEntry.CONTENT_URI_CAMP, null, null);
     }
 
     @NonNull
@@ -230,12 +236,6 @@ public class CampgroundFragment extends Fragment implements LoaderManager.Loader
 
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mContext.getContentResolver().delete(CampContract.CampEntry.CONTENT_URI_CAMP, null, null);
-    }
-
     private List<CampDatum> loadCampData() {
         String apiKey = mContext.getResources().getString(R.string.NPSapiKey);
         String feilds = mContext.getResources().getString(R.string.fields_cg);
@@ -250,6 +250,15 @@ public class CampgroundFragment extends Fragment implements LoaderManager.Loader
             return response.body().getData();
         } else
             return null;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(URI, uri);
+        outState.putString(PARK_ID, parkId);
+        outState.putString(PARKCODE, parkCode);
+        outState.putString(LATLONG, latLong);
     }
 
 }

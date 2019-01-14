@@ -35,7 +35,11 @@ public class CampDetailDialogFragment extends DialogFragment implements LoaderMa
 
     private static final String CAMP_ID = "camp_id";
     private static final String URI = "uri";
+    private static final String URI_CAMP = "uri_camp";
     private static final String POSITION = "position";
+    private static final String PARK_ID = "park_id";
+    private static final String PARKCODE = "parkcode";
+    private static final String LATLONG = "latlong";
     private static final int LOADER_ID = 10;
     private static final String[] PROJECTION = new String[]{
             CampContract.CampEntry._ID,
@@ -82,6 +86,10 @@ public class CampDetailDialogFragment extends DialogFragment implements LoaderMa
     private Uri uri;
     private String campId;
     private int position;
+    private Uri uriPark;
+    private String parkId;
+    private String parkCode;
+    private String latLong;
     private Cursor cursor;
 
     public CampDetailDialogFragment() {
@@ -89,12 +97,16 @@ public class CampDetailDialogFragment extends DialogFragment implements LoaderMa
     }
 
 
-    public static CampDetailDialogFragment newInstance(Uri uri, String campId, int position) {
+    public static CampDetailDialogFragment newInstance(Uri uri, String campId, int position, String parkId, String parkCode, String latLong, Uri parkUri) {
         CampDetailDialogFragment fragment = new CampDetailDialogFragment();
         Bundle args = new Bundle();
-        args.putParcelable(URI, uri);
+        args.putParcelable(URI_CAMP, uri);
         args.putString(CAMP_ID, campId);
         args.putInt(POSITION, position);
+        args.putParcelable(URI, parkUri);
+        args.putString(PARK_ID, parkId);
+        args.putString(LATLONG, latLong);
+        args.putString(PARKCODE, parkCode);
         fragment.setArguments(args);
         return fragment;
     }
@@ -132,9 +144,13 @@ public class CampDetailDialogFragment extends DialogFragment implements LoaderMa
     public void onAttach(Context context) {
         super.onAttach(context);
         if (getArguments() != null) {
-            uri = getArguments().getParcelable(URI);
+            uri = getArguments().getParcelable(URI_CAMP);
             campId = getArguments().getString(CAMP_ID);
             position = getArguments().getInt(POSITION);
+            uriPark = getArguments().getParcelable(URI);
+            latLong = getArguments().getString(LATLONG);
+            parkCode = getArguments().getString(PARKCODE);
+            parkId = getArguments().getString(PARK_ID);
         }
         getLoaderManager().initLoader(LOADER_ID, null, this);
     }
@@ -148,7 +164,7 @@ public class CampDetailDialogFragment extends DialogFragment implements LoaderMa
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         cursor = data;
-        if (cursor == null) return;
+        if (cursor == null || cursor.getCount() <= 0) return;
         cursor.moveToPosition(position);
         final String title = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_NAME));
         titleTv.setText(title);

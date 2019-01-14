@@ -42,7 +42,7 @@ import com.sjani.usnationalparkguide.Utils.ParkIdlingResource;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, GridItemClickListener {
+public class ListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, GridItemClickListener,ListContract.ListFragmentView {
 
     private static final String TAG = ListFragment.class.getSimpleName();
     private static final int LOADER_ID = 1;
@@ -80,6 +80,7 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
     private boolean mDualPane;
     private AdView mAdView;
     private GridLayoutManager layoutManager;
+    private ListFragmentPresenterImpl presenter;
 
 
     public ListFragment() {
@@ -103,7 +104,9 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String max_article = sharedPreferences.getString(getString(R.string.settings_max_articles_key), getString(R.string.settings_max_articles_default));
         state = sharedPreferences.getString(getString(R.string.settings_state_key), getString(R.string.settings_states_default));
-        ParkSyncAdapter.performSync(state, max_article);
+        uri = ParkContract.ParkEntry.CONTENT_URI_PARKS;
+        presenter = new ListFragmentPresenterImpl(this, uri, PROJECTION,state,max_article,getContext());
+        presenter.getDataFromServer();
         MobileAds.initialize(getActivity(), "ca-app-pub-1510923228147176~5607247189");
     }
 
@@ -111,9 +114,7 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        uri = ParkContract.ParkEntry.CONTENT_URI_PARKS;
         getLoaderManager().initLoader(LOADER_ID, null, this);
-
     }
 
     @Nullable
@@ -134,25 +135,7 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        adapter = new ListAdapter(this, getContext());
-        if (idlingResource != null) {
-            idlingResource.setIdleState(true);
-        }
-        progressBar.setVisibility(View.VISIBLE);
-        recyclerView.setAdapter(adapter);
-        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            layoutManager = new GridLayoutManager(getActivity(), 2);
-            recyclerView.setLayoutManager(layoutManager);
-        } else {
-            layoutManager = new GridLayoutManager(getActivity(), 4);
-            recyclerView.setLayoutManager(layoutManager);
-        }
-        recyclerView.getLayoutManager().scrollToPosition(currentVisiblePosition);
-        currentVisiblePosition = 0;
-
-        View detailsView = getActivity().findViewById(R.id.details);
-        mDualPane = detailsView != null && detailsView.getVisibility() == View.VISIBLE;
-
+        presenter.createUI();
     }
 
     @Override
@@ -186,20 +169,18 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onDestroy() {
         super.onDestroy();
-//        ParkApplication.getRefWatcher(getActivity()).watch(this);
     }
 
     @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
-        return new CursorLoader(getActivity(), uri, PROJECTION, null, null, null);
+        return presenter.getDatafromDatabase();
     }
 
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         adapter.swapCursor(data);
-        recyclerView.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.INVISIBLE);
+        presenter.updateUI();
     }
 
     @Override
@@ -207,5 +188,33 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
         if (adapter != null) {
             adapter.swapCursor(null);
         }
+    }
+
+    @Override
+    public void createView() {
+        adapter = new ListAdapter(this, getContext());
+        if (idlingResource != null) {
+            idlingResource.setIdleState(true);
+        }
+        progressBar.setVisibility(View.VISIBLE);
+        recyclerView.setAdapter(adapter);
+        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            layoutManager = new GridLayoutManager(getActivity(), 2);
+            recyclerView.setLayoutManager(layoutManager);
+        } else {
+            layoutManager = new GridLayoutManager(getActivity(), 4);
+            recyclerView.setLayoutManager(layoutManager);
+        }
+        recyclerView.getLayoutManager().scrollToPosition(currentVisiblePosition);
+        currentVisiblePosition = 0;
+
+        View detailsView = getActivity().findViewById(R.id.details);
+        mDualPane = detailsView != null && detailsView.getVisibility() == View.VISIBLE;
+    }
+
+    @Override
+    public void updateView() {
+        recyclerView.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
     }
 }

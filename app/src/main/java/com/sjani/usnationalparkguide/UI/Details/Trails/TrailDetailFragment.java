@@ -183,7 +183,7 @@ public class TrailDetailFragment extends Fragment implements LoaderManager.Loade
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         cursor = data;
-        if (cursor == null) return;
+        if (cursor == null || cursor.getCount() <= 0) return;
         cursor.moveToPosition(position);
         title = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_NAME));
         titleTv.setText(title);
