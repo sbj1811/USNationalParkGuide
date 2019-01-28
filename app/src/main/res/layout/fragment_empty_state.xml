@@ -9,26 +9,26 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:orientation="vertical">
 
         <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@mipmap/ic_launcher_round"
-            android:scaleType="centerCrop"
             android:layout_gravity="center"
-            android:contentDescription="@string/image" />
+            android:contentDescription="@string/image"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/ic_launcher_round" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimary"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/horizontal_margin"
-            android:textSize="24sp"
             android:elevation="4dp"
-            android:text="@string/empty_state_text"/>
+            android:text="@string/empty_state_text"
+            android:textColor="@color/colorPrimary"
+            android:textSize="24sp" />
 
     </LinearLayout>
 

@@ -1,16 +1,30 @@
-
 package com.sjani.usnationalparkguide.Models.Campgrounds;
 
-import java.util.List;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class CampDatum implements Parcelable
-{
+import java.util.List;
 
+public class CampDatum implements Parcelable {
+
+    public final static Parcelable.Creator<CampDatum> CREATOR = new Creator<CampDatum>() {
+
+
+        @SuppressWarnings({
+                "unchecked"
+        })
+        public CampDatum createFromParcel(Parcel in) {
+            return new CampDatum(in);
+        }
+
+        public CampDatum[] newArray(int size) {
+            return (new CampDatum[size]);
+        }
+
+    };
     @SerializedName("regulationsUrl")
     @Expose
     private String regulationsUrl;
@@ -71,22 +85,6 @@ public class CampDatum implements Parcelable
     @SerializedName("reservationsDescription")
     @Expose
     private String reservationsDescription;
-    public final static Parcelable.Creator<CampDatum> CREATOR = new Creator<CampDatum>() {
-
-
-        @SuppressWarnings({
-            "unchecked"
-        })
-        public CampDatum createFromParcel(Parcel in) {
-            return new CampDatum(in);
-        }
-
-        public CampDatum[] newArray(int size) {
-            return (new CampDatum[size]);
-        }
-
-    }
-    ;
 
     protected CampDatum(Parcel in) {
         this.regulationsUrl = ((String) in.readValue((String.class.getClassLoader())));
@@ -298,7 +296,7 @@ public class CampDatum implements Parcelable
     }
 
     public int describeContents() {
-        return  0;
+        return 0;
     }
 
 }

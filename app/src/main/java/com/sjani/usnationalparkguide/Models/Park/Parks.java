@@ -1,17 +1,31 @@
-
 package com.sjani.usnationalparkguide.Models.Park;
 
-import java.util.ArrayList;
-import java.util.List;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Parks implements Parcelable
-{
+import java.util.ArrayList;
+import java.util.List;
 
+public class Parks implements Parcelable {
+
+    public final static Parcelable.Creator<Parks> CREATOR = new Creator<Parks>() {
+
+
+        @SuppressWarnings({
+                "unchecked"
+        })
+        public Parks createFromParcel(Parcel in) {
+            return new Parks(in);
+        }
+
+        public Parks[] newArray(int size) {
+            return (new Parks[size]);
+        }
+
+    };
     @SerializedName("total")
     @Expose
     private Integer total;
@@ -24,22 +38,6 @@ public class Parks implements Parcelable
     @SerializedName("start")
     @Expose
     private Double start;
-    public final static Parcelable.Creator<Parks> CREATOR = new Creator<Parks>() {
-
-
-        @SuppressWarnings({
-            "unchecked"
-        })
-        public Parks createFromParcel(Parcel in) {
-            return new Parks(in);
-        }
-
-        public Parks[] newArray(int size) {
-            return (new Parks[size]);
-        }
-
-    }
-    ;
 
     protected Parks(Parcel in) {
         this.total = in.readByte() == 0x00 ? null : ((Integer) in.readValue((Integer.class.getClassLoader())));
@@ -116,7 +114,7 @@ public class Parks implements Parcelable
     }
 
     public int describeContents() {
-        return  0;
+        return 0;
     }
 
 }

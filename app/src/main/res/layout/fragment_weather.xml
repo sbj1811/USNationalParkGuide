@@ -7,11 +7,11 @@
     android:background="@color/White"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.constraint.Guideline
+        <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline"
             android:layout_width="8dp"
             android:layout_height="match_parent"
@@ -22,26 +22,26 @@
             android:id="@+id/current_temp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            tools:text="TextView"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             android:textSize="40sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="TextView" />
 
         <ImageView
             android:id="@+id/weather_condition_image"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             android:contentDescription="@string/image"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
@@ -52,23 +52,23 @@
             android:id="@+id/weather_condition_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
             android:layout_marginTop="24dp"
-            tools:text="TextView"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/weather_condition_image" />
+            app:layout_constraintTop_toBottomOf="@+id/weather_condition_image"
+            tools:text="TextView" />
 
         <LinearLayout
             android:id="@+id/linearLayout1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="48dp"
             android:layout_marginStart="48dp"
+            android:layout_marginLeft="48dp"
             android:layout_marginTop="16dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
@@ -85,9 +85,9 @@
                 android:id="@+id/sunrise_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="5:00am"
                 android:textColor="@color/Black"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                tools:text="5:00am" />
         </LinearLayout>
 
 
@@ -95,8 +95,8 @@
             android:id="@+id/linearLayout2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
             android:layout_marginTop="16dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
@@ -115,17 +115,17 @@
                 android:id="@+id/sunset_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="6:00pm"
                 android:textColor="@color/Black"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                tools:text="6:00pm" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/linearLayout3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="48dp"
             android:layout_marginStart="48dp"
+            android:layout_marginLeft="48dp"
             android:layout_marginTop="16dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout5"
@@ -143,9 +143,9 @@
                 android:id="@+id/humidity_percent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="83%"
                 android:textColor="@color/Black"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                tools:text="83%" />
         </LinearLayout>
 
 
@@ -153,8 +153,8 @@
             android:id="@+id/linearLayout4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
             android:layout_marginTop="16dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout6"
@@ -173,17 +173,17 @@
                 android:id="@+id/wind_speed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="5.1mph"
                 android:textColor="@color/Black"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                tools:text="5.1mph" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/linearLayout5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="48dp"
             android:layout_marginStart="48dp"
+            android:layout_marginLeft="48dp"
             android:layout_marginTop="16dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -201,9 +201,9 @@
                 android:id="@+id/min_temp_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="72"
                 android:textColor="@color/Black"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                tools:text="72" />
         </LinearLayout>
 
 
@@ -229,13 +229,13 @@
                 android:id="@+id/max_temp_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="80"
                 android:textColor="@color/Black"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                tools:text="80" />
         </LinearLayout>
 
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ProgressBar
         android:id="@+id/weather_loading_indicator"

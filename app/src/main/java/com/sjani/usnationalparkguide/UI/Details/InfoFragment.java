@@ -1,17 +1,8 @@
 package com.sjani.usnationalparkguide.UI.Details;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,42 +10,32 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sjani.usnationalparkguide.Data.ParkContract;
+import com.sjani.usnationalparkguide.Data.ParkEntity;
 import com.sjani.usnationalparkguide.R;
+import com.sjani.usnationalparkguide.Utils.FactoryUtils;
 import com.sjani.usnationalparkguide.Utils.StringToGPSCoordinates;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class InfoFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class InfoFragment extends Fragment {
 
     private static final String TAG = InfoFragment.class.getSimpleName();
-    private static final String URI = "uri";
-    private static final String PARK_ID = "park_id";
-    private static final String POSITION = "position";
+    private static final String PARK_CODE = "park_code";
     private static final String LATLONG = "latlong";
-    private static final int LOADER_ID = 4;
-    private static final String[] PROJECTION = new String[]{
-            ParkContract.ParkEntry._ID,
-            ParkContract.ParkEntry.COLUMN_PARK_ID,
-            ParkContract.ParkEntry.COLUMN_PARK_NAME,
-            ParkContract.ParkEntry.COLUMN_PARK_STATES,
-            ParkContract.ParkEntry.COLUMN_PARK_CODE,
-            ParkContract.ParkEntry.COLUMN_PARK_LATLONG,
-            ParkContract.ParkEntry.COLUMN_PARK_DESCRIPTION,
-            ParkContract.ParkEntry.COLUMN_PARK_DESIGNATION,
-            ParkContract.ParkEntry.COLUMN_PARK_ADDRESS,
-            ParkContract.ParkEntry.COLUMN_PARK_PHONE,
-            ParkContract.ParkEntry.COLUMN_PARK_EMAIL,
-            ParkContract.ParkEntry.COLUMN_PARK_IMAGE
-    };
+    private static final String IS_FAV = "is_fav";
     @BindView(R.id.park_title)
     TextView titleTextview;
     @BindView(R.id.park_designation)
     TextView designationTextview;
     @BindView(R.id.park_state)
     TextView stateextview;
+
     @BindView(R.id.park_address)
     TextView addressTextview;
     @BindView(R.id.park_description)
@@ -65,25 +46,22 @@ public class InfoFragment extends Fragment implements LoaderManager.LoaderCallba
     ImageButton phoneButton;
     @BindView(R.id.park_email)
     ImageButton emailButton;
-    private Uri uri;
-    private String parkId;
-    private int position;
+    private String parkCode;
+    private ParkEntity parkEntity;
+    private boolean isFromFavNav;
     private String latLong;
-    private Cursor cursor;
-
 
     public InfoFragment() {
         // Required empty public constructor
     }
 
 
-    public static InfoFragment newInstance(Uri uri, String parkId, int position, String latlong) {
+    public static InfoFragment newInstance(String parkCode, boolean isFromFavNav, String latLong) {
         InfoFragment fragment = new InfoFragment();
         Bundle args = new Bundle();
-        args.putParcelable(URI, uri);
-        args.putString(PARK_ID, parkId);
-        args.putInt(POSITION, position);
-        args.putString(LATLONG, latlong);
+        args.putString(PARK_CODE, parkCode);
+        args.putBoolean(IS_FAV, isFromFavNav);
+        args.putString(LATLONG, latLong);
         fragment.setArguments(args);
         return fragment;
     }
@@ -93,20 +71,17 @@ public class InfoFragment extends Fragment implements LoaderManager.LoaderCallba
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-            uri = savedInstanceState.getParcelable(URI);
-            parkId = savedInstanceState.getString(PARK_ID);
-            position = savedInstanceState.getInt(POSITION);
+            parkCode = savedInstanceState.getString(PARK_CODE);
             latLong = savedInstanceState.getString(LATLONG);
-
+            isFromFavNav = savedInstanceState.getBoolean(IS_FAV);
         } else {
             if (getArguments() != null) {
-                uri = getArguments().getParcelable(URI);
-                parkId = getArguments().getString(PARK_ID);
-                position = getArguments().getInt(POSITION);
+                parkCode = getArguments().getString(PARK_CODE);
                 latLong = getArguments().getString(LATLONG);
+                isFromFavNav = getArguments().getBoolean(IS_FAV);
             }
         }
-        getLoaderManager().initLoader(LOADER_ID, null, this);
+
     }
 
     @Override
@@ -121,41 +96,44 @@ public class InfoFragment extends Fragment implements LoaderManager.LoaderCallba
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-    }
-
-
-    @NonNull
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
-        return new CursorLoader(getActivity(), uri, PROJECTION, null, null, null);
-    }
-
-
-    @Override
-    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
-        cursor = data;
-        if (cursor == null) {
-            return;
+        String apiKey = getResources().getString(R.string.NPSapiKey);
+        String trailApiKey = getResources().getString(R.string.HPapiKey);
+        String fields = getResources().getString(R.string.fields_cg);
+        DetailViewModelFactory factory = FactoryUtils.provideDVMFactory(this.getActivity().getApplicationContext(), parkCode, "", "", apiKey, trailApiKey, fields, latLong);
+        DetailViewModel viewModel = ViewModelProviders.of(getActivity(), factory).get(DetailViewModel.class);
+        if (!isFromFavNav) {
+            viewModel.getPark().observe(this, Park -> {
+                parkCode = Park.getParkCode();
+                updateUI(Park);
+            });
+        } else {
+            viewModel.getfavpark().observe(this, Park -> {
+                if (Park.size() == 1) {
+                    parkCode = Park.get(0).getParkCode();
+                    updateUI(Park.get(0));
+                }
+            });
         }
+    }
 
-        cursor.moveToPosition(position);
-        final String parkName = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_NAME));
-        titleTextview.setText(parkName);
-        designationTextview.setText(cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_DESIGNATION)));
-        stateextview.setText(cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_STATES)));
-        addressTextview.setText(cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_ADDRESS)));
-        descriptionTextview.setText(cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_DESCRIPTION)));
+
+    private void updateUI(ParkEntity parkEntity) {
+        titleTextview.setText(parkEntity.getPark_name());
+        designationTextview.setText(parkEntity.getDesignation());
+        stateextview.setText(parkEntity.getStates());
+        addressTextview.setText(parkEntity.getAddress());
+        descriptionTextview.setText(parkEntity.getDescription());
         StringToGPSCoordinates stringToGPSCoordinates = new StringToGPSCoordinates();
-        final String gpsCoodinates[] = stringToGPSCoordinates.convertToGPS(latLong);
+        final String gpsCoodinates[] = stringToGPSCoordinates.convertToGPS(parkEntity.getLatLong());
         mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_VIEW,
-                        Uri.parse("geo:" + gpsCoodinates[0] + "," + gpsCoodinates[1] + "?q=" + gpsCoodinates[0] + "," + gpsCoodinates[1] + "(" + parkName + ")?z=10"));
+                        Uri.parse("geo:" + gpsCoodinates[0] + "," + gpsCoodinates[1] + "?q=" + gpsCoodinates[0] + "," + gpsCoodinates[1] + "(" + parkEntity.getPark_name() + ")?z=10"));
                 startActivity(intent);
             }
         });
-        final String phoneNumber = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_PHONE));
+        final String phoneNumber = parkEntity.getPhone();
         phoneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -167,7 +145,7 @@ public class InfoFragment extends Fragment implements LoaderManager.LoaderCallba
                 }
             }
         });
-        final String emailId = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_EMAIL));
+        final String emailId = parkEntity.getEmail();
         emailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -181,21 +159,13 @@ public class InfoFragment extends Fragment implements LoaderManager.LoaderCallba
                 }
             }
         });
-
-
-    }
-
-    @Override
-    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
-        cursor = null;
     }
 
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putParcelable(URI, uri);
-        outState.putString(PARK_ID, parkId);
-        outState.putInt(POSITION, position);
+        outState.putString(PARK_CODE, parkCode);
+        outState.putBoolean(IS_FAV, isFromFavNav);
         outState.putString(LATLONG, latLong);
         super.onSaveInstanceState(outState);
     }

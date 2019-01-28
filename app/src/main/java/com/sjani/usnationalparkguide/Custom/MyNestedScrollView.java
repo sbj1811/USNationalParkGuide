@@ -1,24 +1,21 @@
 package com.sjani.usnationalparkguide.Custom;
 
 import android.content.Context;
-import android.support.v4.widget.NestedScrollView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
+
+import androidx.core.widget.NestedScrollView;
 
 public class MyNestedScrollView extends NestedScrollView {
     private int slop;
     private float mInitialMotionX;
     private float mInitialMotionY;
+    private float xDistance, yDistance, lastX, lastY;
 
     public MyNestedScrollView(Context context) {
         super(context);
         init(context);
-    }
-
-    private void init(Context context) {
-        ViewConfiguration config = ViewConfiguration.get(context);
-        slop = config.getScaledEdgeSlop();
     }
 
     public MyNestedScrollView(Context context, AttributeSet attrs) {
@@ -31,8 +28,10 @@ public class MyNestedScrollView extends NestedScrollView {
         init(context);
     }
 
-
-    private float xDistance, yDistance, lastX, lastY;
+    private void init(Context context) {
+        ViewConfiguration config = ViewConfiguration.get(context);
+        slop = config.getScaledEdgeSlop();
+    }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {

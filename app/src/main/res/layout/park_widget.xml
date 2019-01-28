@@ -1,5 +1,4 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/widget_main"
     android:layout_width="match_parent"
@@ -29,77 +28,77 @@
             android:layout_height="wrap_content"
             android:ellipsize="none"
             android:maxLines="100"
-            android:paddingBottom="8dp"
             android:paddingLeft="16dp"
-            android:paddingRight="16dp"
             android:paddingTop="16dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="8dp"
             android:scrollHorizontally="false"
             android:textColor="@color/White"
             tools:text="Park Title" />
 
-        <LinearLayout
-            android:id="@+id/widget_weather_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="8dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingTop="8dp">
+        <!--<LinearLayout-->
+        <!--android:id="@+id/widget_weather_layout"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:paddingBottom="8dp"-->
+        <!--android:paddingLeft="16dp"-->
+        <!--android:paddingRight="16dp"-->
+        <!--android:paddingTop="8dp">-->
 
-            <TextView
-                android:id="@+id/park_widget_weather_header"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                android:text="@string/curr_condition"
-                android:textColor="@color/White" />
+        <!--&lt;!&ndash;<TextView&ndash;&gt;-->
+        <!--&lt;!&ndash;android:id="@+id/park_widget_weather_header"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_marginEnd="8dp"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_marginRight="8dp"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:text="@string/curr_condition"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:textColor="@color/White" />&ndash;&gt;-->
 
-            <TextView
-                android:id="@+id/park_widget_temp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                android:textColor="@color/White" />
+        <!--&lt;!&ndash;<TextView&ndash;&gt;-->
+        <!--&lt;!&ndash;android:id="@+id/park_widget_temp"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_marginEnd="8dp"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_marginRight="8dp"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:textColor="@color/White" />&ndash;&gt;-->
 
-            <TextView
-                android:id="@+id/park_widget_condition"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/White" />
+        <!--<TextView-->
+        <!--android:id="@+id/park_widget_condition"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textColor="@color/White" />-->
 
-        </LinearLayout>
+        <!--</LinearLayout>-->
 
-        <LinearLayout
-            android:id="@+id/widget_distance_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="16dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingTop="8dp">
+        <!--<LinearLayout-->
+        <!--android:id="@+id/widget_distance_layout"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:paddingBottom="16dp"-->
+        <!--android:paddingLeft="16dp"-->
+        <!--android:paddingRight="16dp"-->
+        <!--android:paddingTop="8dp">-->
 
-            <TextView
-                android:id="@+id/park_widget_distance_header"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                android:text="@string/distance"
-                android:textColor="@color/White" />
+        <!--<TextView-->
+        <!--android:id="@+id/park_widget_distance_header"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginEnd="8dp"-->
+        <!--android:layout_marginRight="8dp"-->
+        <!--android:text="@string/distance"-->
+        <!--android:textColor="@color/White" />-->
 
-            <TextView
-                android:id="@+id/park_widget_distance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                android:textColor="@color/White" />
+        <!--<TextView-->
+        <!--android:id="@+id/park_widget_distance"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginEnd="8dp"-->
+        <!--android:layout_marginRight="8dp"-->
+        <!--android:textColor="@color/White" />-->
 
-        </LinearLayout>
+        <!--</LinearLayout>-->
 
     </LinearLayout>
 

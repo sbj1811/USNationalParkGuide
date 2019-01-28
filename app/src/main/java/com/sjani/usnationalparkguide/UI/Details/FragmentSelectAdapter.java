@@ -2,17 +2,18 @@ package com.sjani.usnationalparkguide.UI.Details;
 
 import android.content.Context;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
 
 import com.sjani.usnationalparkguide.R;
 import com.sjani.usnationalparkguide.UI.Details.Alerts.AlertFragment;
 import com.sjani.usnationalparkguide.UI.Details.Campgrounds.CampgroundFragment;
 import com.sjani.usnationalparkguide.UI.Details.Trails.TrailFragment;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.PagerAdapter;
 
 
 public class FragmentSelectAdapter extends FragmentStatePagerAdapter {
@@ -24,34 +25,33 @@ public class FragmentSelectAdapter extends FragmentStatePagerAdapter {
     private int mPosition;
     private String latlong;
     private String parkCode;
+    private boolean isFromFavNav;
 
-    public FragmentSelectAdapter(FragmentManager fm, Context mContext, Uri uri, String parkId, int position, String latlong, String parkCode) {
+    public FragmentSelectAdapter(FragmentManager fm, Context mContext, String latlong, String parkCode, boolean isFromFavNav) {
         super(fm);
         this.mContext = mContext;
-        this.uri = uri;
-        this.parkId = parkId;
-        this.mPosition = position;
         this.latlong = latlong;
         this.parkCode = parkCode;
+        this.isFromFavNav = isFromFavNav;
     }
 
     @Override
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                Fragment infoFragment = InfoFragment.newInstance(uri, parkId, mPosition, latlong);
+                Fragment infoFragment = InfoFragment.newInstance(parkCode, isFromFavNav, latlong);
                 return infoFragment;
             case 1:
-                Fragment weatherFragment = WeatherFragment.newInstance(uri, parkId, mPosition, latlong);
+                Fragment weatherFragment = WeatherFragment.newInstance(parkCode, isFromFavNav, latlong);
                 return weatherFragment;
             case 2:
-                Fragment trailFragment = TrailFragment.newInstance(uri, parkId, mPosition, latlong, parkCode);
+                Fragment trailFragment = TrailFragment.newInstance(parkCode, isFromFavNav, latlong);
                 return trailFragment;
             case 3:
-                Fragment campgroundFragment = CampgroundFragment.newInstance(uri, parkId, mPosition, latlong, parkCode);
+                Fragment campgroundFragment = CampgroundFragment.newInstance(parkCode, isFromFavNav, latlong);
                 return campgroundFragment;
             case 4:
-                Fragment alertFragment = AlertFragment.newInstance(uri, parkId, mPosition, latlong, parkCode);
+                Fragment alertFragment = AlertFragment.newInstance(parkCode, isFromFavNav, latlong);
                 return alertFragment;
             default:
                 return null;

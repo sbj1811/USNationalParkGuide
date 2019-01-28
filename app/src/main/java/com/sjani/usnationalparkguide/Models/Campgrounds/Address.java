@@ -1,15 +1,28 @@
-
 package com.sjani.usnationalparkguide.Models.Campgrounds;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Address implements Parcelable
-{
+public class Address implements Parcelable {
 
+    public final static Parcelable.Creator<Address> CREATOR = new Creator<Address>() {
+
+
+        @SuppressWarnings({
+                "unchecked"
+        })
+        public Address createFromParcel(Parcel in) {
+            return new Address(in);
+        }
+
+        public Address[] newArray(int size) {
+            return (new Address[size]);
+        }
+
+    };
     @SerializedName("postalCode")
     @Expose
     private String postalCode;
@@ -31,22 +44,6 @@ public class Address implements Parcelable
     @SerializedName("line2")
     @Expose
     private String line2;
-    public final static Parcelable.Creator<Address> CREATOR = new Creator<Address>() {
-
-
-        @SuppressWarnings({
-            "unchecked"
-        })
-        public Address createFromParcel(Parcel in) {
-            return new Address(in);
-        }
-
-        public Address[] newArray(int size) {
-            return (new Address[size]);
-        }
-
-    }
-    ;
 
     protected Address(Parcel in) {
         this.postalCode = ((String) in.readValue((String.class.getClassLoader())));
@@ -128,7 +125,7 @@ public class Address implements Parcelable
     }
 
     public int describeContents() {
-        return  0;
+        return 0;
     }
 
 }

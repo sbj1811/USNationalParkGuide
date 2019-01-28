@@ -1,15 +1,28 @@
-
 package com.sjani.usnationalparkguide.Models.Weather;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Weather implements Parcelable
-{
+public class Weather implements Parcelable {
 
+    public final static Parcelable.Creator<Weather> CREATOR = new Creator<Weather>() {
+
+
+        @SuppressWarnings({
+                "unchecked"
+        })
+        public Weather createFromParcel(Parcel in) {
+            return new Weather(in);
+        }
+
+        public Weather[] newArray(int size) {
+            return (new Weather[size]);
+        }
+
+    };
     @SerializedName("id")
     @Expose
     private Integer id;
@@ -22,22 +35,6 @@ public class Weather implements Parcelable
     @SerializedName("icon")
     @Expose
     private String icon;
-    public final static Parcelable.Creator<Weather> CREATOR = new Creator<Weather>() {
-
-
-        @SuppressWarnings({
-            "unchecked"
-        })
-        public Weather createFromParcel(Parcel in) {
-            return new Weather(in);
-        }
-
-        public Weather[] newArray(int size) {
-            return (new Weather[size]);
-        }
-
-    }
-    ;
 
     protected Weather(Parcel in) {
         this.id = ((Integer) in.readValue((Integer.class.getClassLoader())));
@@ -89,7 +86,7 @@ public class Weather implements Parcelable
     }
 
     public int describeContents() {
-        return  0;
+        return 0;
     }
 
 }

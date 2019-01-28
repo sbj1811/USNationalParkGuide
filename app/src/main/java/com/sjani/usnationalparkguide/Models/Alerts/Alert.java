@@ -1,17 +1,31 @@
-
 package com.sjani.usnationalparkguide.Models.Alerts;
 
-import java.util.ArrayList;
-import java.util.List;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Alert implements Parcelable
-{
+import java.util.ArrayList;
+import java.util.List;
 
+public class Alert implements Parcelable {
+
+    public final static Parcelable.Creator<Alert> CREATOR = new Creator<Alert>() {
+
+
+        @SuppressWarnings({
+                "unchecked"
+        })
+        public Alert createFromParcel(Parcel in) {
+            return new Alert(in);
+        }
+
+        public Alert[] newArray(int size) {
+            return (new Alert[size]);
+        }
+
+    };
     @SerializedName("total")
     @Expose
     private Integer total;
@@ -24,22 +38,6 @@ public class Alert implements Parcelable
     @SerializedName("start")
     @Expose
     private Double start;
-    public final static Parcelable.Creator<Alert> CREATOR = new Creator<Alert>() {
-
-
-        @SuppressWarnings({
-            "unchecked"
-        })
-        public Alert createFromParcel(Parcel in) {
-            return new Alert(in);
-        }
-
-        public Alert[] newArray(int size) {
-            return (new Alert[size]);
-        }
-
-    }
-    ;
 
     protected Alert(Parcel in) {
         this.total = in.readByte() == 0x00 ? null : ((Integer) in.readValue((Integer.class.getClassLoader())));
@@ -116,7 +114,7 @@ public class Alert implements Parcelable
     }
 
     public int describeContents() {
-        return  0;
+        return 0;
     }
 
 }

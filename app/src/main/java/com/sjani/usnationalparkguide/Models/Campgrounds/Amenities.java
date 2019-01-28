@@ -1,16 +1,30 @@
-
 package com.sjani.usnationalparkguide.Models.Campgrounds;
 
-import java.util.List;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Amenities implements Parcelable
-{
+import java.util.List;
 
+public class Amenities implements Parcelable {
+
+    public final static Parcelable.Creator<Amenities> CREATOR = new Creator<Amenities>() {
+
+
+        @SuppressWarnings({
+                "unchecked"
+        })
+        public Amenities createFromParcel(Parcel in) {
+            return new Amenities(in);
+        }
+
+        public Amenities[] newArray(int size) {
+            return (new Amenities[size]);
+        }
+
+    };
     @SerializedName("trashRecyclingCollection")
     @Expose
     private String trashRecyclingCollection;
@@ -56,22 +70,6 @@ public class Amenities implements Parcelable
     @SerializedName("foodStorageLockers")
     @Expose
     private String foodStorageLockers;
-    public final static Parcelable.Creator<Amenities> CREATOR = new Creator<Amenities>() {
-
-
-        @SuppressWarnings({
-            "unchecked"
-        })
-        public Amenities createFromParcel(Parcel in) {
-            return new Amenities(in);
-        }
-
-        public Amenities[] newArray(int size) {
-            return (new Amenities[size]);
-        }
-
-    }
-    ;
 
     protected Amenities(Parcel in) {
         this.trashRecyclingCollection = ((String) in.readValue((String.class.getClassLoader())));
@@ -233,7 +231,7 @@ public class Amenities implements Parcelable
     }
 
     public int describeContents() {
-        return  0;
+        return 0;
     }
 
 }

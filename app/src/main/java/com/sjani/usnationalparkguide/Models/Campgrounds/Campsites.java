@@ -1,15 +1,28 @@
-
 package com.sjani.usnationalparkguide.Models.Campgrounds;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Campsites implements Parcelable
-{
+public class Campsites implements Parcelable {
 
+    public final static Parcelable.Creator<Campsites> CREATOR = new Creator<Campsites>() {
+
+
+        @SuppressWarnings({
+                "unchecked"
+        })
+        public Campsites createFromParcel(Parcel in) {
+            return new Campsites(in);
+        }
+
+        public Campsites[] newArray(int size) {
+            return (new Campsites[size]);
+        }
+
+    };
     @SerializedName("other")
     @Expose
     private Double other;
@@ -34,22 +47,6 @@ public class Campsites implements Parcelable
     @SerializedName("walkBoatTo")
     @Expose
     private Double walkBoatTo;
-    public final static Parcelable.Creator<Campsites> CREATOR = new Creator<Campsites>() {
-
-
-        @SuppressWarnings({
-            "unchecked"
-        })
-        public Campsites createFromParcel(Parcel in) {
-            return new Campsites(in);
-        }
-
-        public Campsites[] newArray(int size) {
-            return (new Campsites[size]);
-        }
-
-    }
-    ;
 
     protected Campsites(Parcel in) {
         this.other = ((Double) in.readValue((Double.class.getClassLoader())));
@@ -141,7 +138,7 @@ public class Campsites implements Parcelable
     }
 
     public int describeContents() {
-        return  0;
+        return 0;
     }
 
 }

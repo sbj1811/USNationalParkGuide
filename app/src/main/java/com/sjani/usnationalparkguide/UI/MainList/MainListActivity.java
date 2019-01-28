@@ -1,88 +1,62 @@
 package com.sjani.usnationalparkguide.UI.MainList;
 
 import android.Manifest;
-import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
-import android.support.design.widget.NavigationView;
-import android.support.test.espresso.IdlingResource;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.firebase.ui.auth.AuthUI;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.sjani.usnationalparkguide.Data.ParkContract;
-import com.sjani.usnationalparkguide.R;
-import com.sjani.usnationalparkguide.UI.Details.DetailsActivity;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.stetho.Stetho;
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.sjani.usnationalparkguide.Data.FavParkEntity;
+import com.sjani.usnationalparkguide.R;
+import com.sjani.usnationalparkguide.UI.Details.DetailsActivity;
 import com.sjani.usnationalparkguide.UI.Settings.SettingsActivity;
 import com.sjani.usnationalparkguide.Utils.CircleTransform;
+import com.sjani.usnationalparkguide.Utils.FactoryUtils;
+import com.sjani.usnationalparkguide.Utils.GlideApp;
 import com.sjani.usnationalparkguide.Utils.ParkIdlingResource;
-import com.squareup.leakcanary.RefWatcher;
-import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.test.espresso.IdlingResource;
 import butterknife.ButterKnife;
 
 public class MainListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, MainListContract.MainListView {
 
-    public static final String ANONYMOUS = "anonymous";
     public static final int RC_SIGN_IN = 1;
     private static final String TAG = MainListActivity.class.getSimpleName();
     private static final String SELECTED_STATE = "selected_state";
-    private static final String URI = "uri";
-    private static final String PARK_ID = "park_id";
-    private static final String POSITION = "position";
-    private static final String LATLONG = "latlong";
     private static final String PARKCODE = "parkcode";
+    private static final String LATLONG = "latlong";
     private static final String FROM_FAV = "from_fav";
-    private static final String[] PROJECTION = new String[]{
-            ParkContract.ParkEntry._ID,
-            ParkContract.ParkEntry.COLUMN_PARK_ID,
-            ParkContract.ParkEntry.COLUMN_PARK_NAME,
-            ParkContract.ParkEntry.COLUMN_PARK_STATES,
-            ParkContract.ParkEntry.COLUMN_PARK_CODE,
-            ParkContract.ParkEntry.COLUMN_PARK_LATLONG,
-            ParkContract.ParkEntry.COLUMN_PARK_DESCRIPTION,
-            ParkContract.ParkEntry.COLUMN_PARK_DESIGNATION,
-            ParkContract.ParkEntry.COLUMN_PARK_ADDRESS,
-            ParkContract.ParkEntry.COLUMN_PARK_PHONE,
-            ParkContract.ParkEntry.COLUMN_PARK_EMAIL,
-            ParkContract.ParkEntry.COLUMN_PARK_IMAGE
-    };
-    private Spinner spinner;
+    FavParkEntity favParkEntity;
     private String state;
     private String title;
     private ListFragment listFragment;
@@ -94,6 +68,7 @@ public class MainListActivity extends AppCompatActivity
     private ParkIdlingResource idlingResource;
     private View navHeader;
     private MainListContract.MainListPresenter presenter;
+    private MainListViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,14 +113,14 @@ public class MainListActivity extends AppCompatActivity
             }
         }
 
-//        Stetho.initialize(
-//                Stetho.newInitializerBuilder(this)
-//                        .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
-//                        .build()
-//        );
+        Stetho.initialize(
+                Stetho.newInitializerBuilder(this)
+                        .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
+                        .build()
+        );
 
 
-        Fragment fragment = getFragmentManager().findFragmentById(R.id.details);
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.details);
         if ((getResources().getBoolean(R.bool.dual_pane)) && fragment == null) {
             EmptyStateFragment emptyStateFragment = new EmptyStateFragment();
             this.getSupportFragmentManager().beginTransaction()
@@ -192,32 +167,31 @@ public class MainListActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_fav) {
-            if (doesTableExist("favorite")) {
-                Cursor cursor = getContentResolver().query(ParkContract.ParkEntry.CONTENT_URI_FAVORITES,
-                        null,
-                        null,
-                        null, null);
-                cursor.moveToNext();
-                Uri uri = ParkContract.ParkEntry.CONTENT_URI_FAVORITES;
-                String parkId = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_ID));
-                int position = cursor.getPosition();
-                String latLong = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_LATLONG));
-                String parkCode = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_CODE));
-                Intent intent = new Intent(this, DetailsActivity.class);
-                intent.putExtra(PARK_ID, parkId);
-                intent.putExtra(POSITION, position);
-                intent.putExtra(URI, uri);
-                intent.putExtra(LATLONG, latLong);
-                intent.putExtra(PARKCODE, parkCode);
-                intent.putExtra(FROM_FAV, true);
-                startActivity(intent);
-                cursor.close();
-            } else {
-                Toast.makeText(this, getResources().getString(R.string.no_fav), Toast.LENGTH_LONG).show();
-            }
+            String fields = getResources().getString(R.string.fields);
+            String apiKey = getResources().getString(R.string.NPSapiKey);
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            String max_article = sharedPreferences.getString(getString(R.string.settings_max_articles_key), getString(R.string.settings_max_articles_default));
+            MainListViewModelFactory factory = FactoryUtils.provideMLVFactory(this.getApplicationContext(), apiKey, fields, state, max_article);
+            viewModel = ViewModelProviders.of(this, factory).get(MainListViewModel.class);
+            viewModel.getfavpark().observe(this, FavParkList -> {
+                if (FavParkList.size() == 1) {
+                    favParkEntity = FavParkList.get(0);
+                    String parkCode = favParkEntity.getParkCode();
+                    String latLong = favParkEntity.getLatLong();
+                    Intent intent = new Intent(this, DetailsActivity.class);
+                    intent.putExtra(PARKCODE, parkCode);
+                    intent.putExtra(LATLONG, latLong);
+                    intent.putExtra(FROM_FAV, true);
+                    startActivity(intent);
+                    overridePendingTransition(R.xml.slide_from_right, R.xml.slide_to_left);
+                } else {
+                    Toast.makeText(this, getResources().getString(R.string.no_fav), Toast.LENGTH_LONG).show();
+                }
+            });
         } else if (id == R.id.nav_settings) {
             Intent settingsIntent = new Intent(this, SettingsActivity.class);
             startActivity(settingsIntent);
+            overridePendingTransition(R.xml.slide_from_right, R.xml.slide_to_left);
         } else if (id == R.id.nav_logout) {
             AuthUI.getInstance().signOut(this);
         }
@@ -238,19 +212,6 @@ public class MainListActivity extends AppCompatActivity
         if (mAuthStateListener != null) {
             mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
         }
-    }
-
-
-    public boolean doesTableExist(String tableName) {
-        Cursor cursor = getContentResolver().query(ParkContract.ParkEntry.CONTENT_URI_FAVORITES, PROJECTION, null, null, null);
-        if (cursor != null) {
-            if (cursor.getCount() == 1 && cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_ID) != -1) {
-                cursor.close();
-                return true;
-            }
-            cursor.close();
-        }
-        return false;
     }
 
     @VisibleForTesting
@@ -317,10 +278,15 @@ public class MainListActivity extends AppCompatActivity
                     usernameTv.setText(mUsername);
                     emailTv.setText(mEmail);
                     if (mUserImage != null) {
-                        Glide.with(getApplicationContext())
+                        GlideApp
+                                .with(getApplicationContext())
                                 .load(mUserImage)
-                                .bitmapTransform(new CircleTransform(getApplicationContext()))
+                                .transform(new CircleTransform(getApplicationContext()))
                                 .into(profileImageView);
+//                        Glide.with(getApplicationContext())
+//                                .load(mUserImage)
+//                                .bitmapTransform(new CircleTransform(getApplicationContext()))
+//                                .into(profileImageView);
                     } else {
                         Glide.with(getApplicationContext())
                                 .load(R.drawable.ic_person)

@@ -1,26 +1,18 @@
-
 package com.sjani.usnationalparkguide.Models.Weather;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Coord implements Parcelable
-{
+public class Coord implements Parcelable {
 
-    @SerializedName("lon")
-    @Expose
-    private String lon;
-    @SerializedName("lat")
-    @Expose
-    private String lat;
     public final static Parcelable.Creator<Coord> CREATOR = new Creator<Coord>() {
 
 
         @SuppressWarnings({
-            "unchecked"
+                "unchecked"
         })
         public Coord createFromParcel(Parcel in) {
             return new Coord(in);
@@ -30,8 +22,13 @@ public class Coord implements Parcelable
             return (new Coord[size]);
         }
 
-    }
-    ;
+    };
+    @SerializedName("lon")
+    @Expose
+    private String lon;
+    @SerializedName("lat")
+    @Expose
+    private String lat;
 
     protected Coord(Parcel in) {
         this.lon = ((String) in.readValue((String.class.getClassLoader())));
@@ -63,7 +60,7 @@ public class Coord implements Parcelable
     }
 
     public int describeContents() {
-        return  0;
+        return 0;
     }
 
 }

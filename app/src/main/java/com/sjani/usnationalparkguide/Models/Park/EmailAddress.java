@@ -1,4 +1,3 @@
-
 package com.sjani.usnationalparkguide.Models.Park;
 
 import android.os.Parcel;
@@ -7,20 +6,13 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class EmailAddress implements Parcelable
-{
+public class EmailAddress implements Parcelable {
 
-    @SerializedName("description")
-    @Expose
-    private String description;
-    @SerializedName("emailAddress")
-    @Expose
-    private String emailAddress;
     public final static Parcelable.Creator<EmailAddress> CREATOR = new Creator<EmailAddress>() {
 
 
         @SuppressWarnings({
-            "unchecked"
+                "unchecked"
         })
         public EmailAddress createFromParcel(Parcel in) {
             return new EmailAddress(in);
@@ -30,8 +22,13 @@ public class EmailAddress implements Parcelable
             return (new EmailAddress[size]);
         }
 
-    }
-    ;
+    };
+    @SerializedName("description")
+    @Expose
+    private String description;
+    @SerializedName("emailAddress")
+    @Expose
+    private String emailAddress;
 
     protected EmailAddress(Parcel in) {
         this.description = ((String) in.readValue((String.class.getClassLoader())));
@@ -63,7 +60,7 @@ public class EmailAddress implements Parcelable
     }
 
     public int describeContents() {
-        return  0;
+        return 0;
     }
 
 }

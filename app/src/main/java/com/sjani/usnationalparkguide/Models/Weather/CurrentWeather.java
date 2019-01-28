@@ -1,17 +1,31 @@
-
 package com.sjani.usnationalparkguide.Models.Weather;
 
-import java.util.ArrayList;
-import java.util.List;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class CurrentWeather implements Parcelable
-{
+import java.util.ArrayList;
+import java.util.List;
 
+public class CurrentWeather implements Parcelable {
+
+    public final static Parcelable.Creator<CurrentWeather> CREATOR = new Creator<CurrentWeather>() {
+
+
+        @SuppressWarnings({
+                "unchecked"
+        })
+        public CurrentWeather createFromParcel(Parcel in) {
+            return new CurrentWeather(in);
+        }
+
+        public CurrentWeather[] newArray(int size) {
+            return (new CurrentWeather[size]);
+        }
+
+    };
     @SerializedName("coord")
     @Expose
     private Coord coord;
@@ -48,22 +62,6 @@ public class CurrentWeather implements Parcelable
     @SerializedName("cod")
     @Expose
     private Integer cod;
-    public final static Parcelable.Creator<CurrentWeather> CREATOR = new Creator<CurrentWeather>() {
-
-
-        @SuppressWarnings({
-            "unchecked"
-        })
-        public CurrentWeather createFromParcel(Parcel in) {
-            return new CurrentWeather(in);
-        }
-
-        public CurrentWeather[] newArray(int size) {
-            return (new CurrentWeather[size]);
-        }
-
-    }
-    ;
 
     protected CurrentWeather(Parcel in) {
         this.coord = in.readByte() == 0x00 ? null : ((Coord) in.readValue((Coord.class.getClassLoader())));
@@ -75,7 +73,7 @@ public class CurrentWeather implements Parcelable
         }
         this.base = in.readByte() == 0x00 ? null : ((String) in.readValue((String.class.getClassLoader())));
         this.main = in.readByte() == 0x00 ? null : ((Main) in.readValue((Main.class.getClassLoader())));
-        this.visibility = in.readByte() == 0x00 ? null :((Integer) in.readValue((Integer.class.getClassLoader())));
+        this.visibility = in.readByte() == 0x00 ? null : ((Integer) in.readValue((Integer.class.getClassLoader())));
         this.wind = in.readByte() == 0x00 ? null : ((Wind) in.readValue((Wind.class.getClassLoader())));
         this.clouds = in.readByte() == 0x00 ? null : ((Clouds) in.readValue((Clouds.class.getClassLoader())));
         this.dt = in.readByte() == 0x00 ? null : ((Integer) in.readValue((Integer.class.getClassLoader())));
@@ -261,7 +259,7 @@ public class CurrentWeather implements Parcelable
     }
 
     public int describeContents() {
-        return  0;
+        return 0;
     }
 
 }

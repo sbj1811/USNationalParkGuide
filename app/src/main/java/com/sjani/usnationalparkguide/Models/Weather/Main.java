@@ -1,15 +1,28 @@
-
 package com.sjani.usnationalparkguide.Models.Weather;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Main implements Parcelable
-{
+public class Main implements Parcelable {
 
+    public final static Parcelable.Creator<Main> CREATOR = new Creator<Main>() {
+
+
+        @SuppressWarnings({
+                "unchecked"
+        })
+        public Main createFromParcel(Parcel in) {
+            return new Main(in);
+        }
+
+        public Main[] newArray(int size) {
+            return (new Main[size]);
+        }
+
+    };
     @SerializedName("temp")
     @Expose
     private Double temp;
@@ -25,22 +38,6 @@ public class Main implements Parcelable
     @SerializedName("temp_max")
     @Expose
     private Double tempMax;
-    public final static Parcelable.Creator<Main> CREATOR = new Creator<Main>() {
-
-
-        @SuppressWarnings({
-            "unchecked"
-        })
-        public Main createFromParcel(Parcel in) {
-            return new Main(in);
-        }
-
-        public Main[] newArray(int size) {
-            return (new Main[size]);
-        }
-
-    }
-    ;
 
     protected Main(Parcel in) {
         this.temp = ((Double) in.readValue((Double.class.getClassLoader())));
@@ -102,7 +99,7 @@ public class Main implements Parcelable
     }
 
     public int describeContents() {
-        return  0;
+        return 0;
     }
 
 }

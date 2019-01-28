@@ -1,17 +1,9 @@
 package com.sjani.usnationalparkguide.UI.Details.Campgrounds;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,40 +15,24 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sjani.usnationalparkguide.Data.CampContract;
+import com.sjani.usnationalparkguide.Data.CampEntity;
 import com.sjani.usnationalparkguide.R;
+import com.sjani.usnationalparkguide.Utils.FactoryUtils;
 import com.sjani.usnationalparkguide.Utils.StringToGPSCoordinates;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProviders;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class CampDetailDialogFragment extends DialogFragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class CampDetailDialogFragment extends DialogFragment {
 
     private static final String CAMP_ID = "camp_id";
-    private static final String URI = "uri";
-    private static final String URI_CAMP = "uri_camp";
-    private static final String POSITION = "position";
-    private static final String PARK_ID = "park_id";
     private static final String PARKCODE = "parkcode";
-    private static final String LATLONG = "latlong";
-    private static final int LOADER_ID = 10;
-    private static final String[] PROJECTION = new String[]{
-            CampContract.CampEntry._ID,
-            CampContract.CampEntry.COLUMN_CAMP_ID,
-            CampContract.CampEntry.COLUMN_CAMP_NAME,
-            CampContract.CampEntry.COLUMN_CAMP_DESCRIPTION,
-            CampContract.CampEntry.COLUMN_CAMP_PARKCODE,
-            CampContract.CampEntry.COLUMN_CAMP_ADDRESSS,
-            CampContract.CampEntry.COLUMN_CAMP_LATLONG,
-            CampContract.CampEntry.COLUMN_CAMP_CELLRECEP,
-            CampContract.CampEntry.COLUMN_CAMP_SHOWERS,
-            CampContract.CampEntry.COLUMN_CAMP_INTERNET,
-            CampContract.CampEntry.COLUMN_CAMP_TOILET,
-            CampContract.CampEntry.COLUMN_CAMP_WHEELCHAIR,
-            CampContract.CampEntry.COLUMN_CAMP_RESERVURL,
-            CampContract.CampEntry.COLUMN_CAMP_DIRECTIONURL
-    };
+
     @BindView(R.id.camp_title)
     TextView titleTv;
     @BindView(R.id.camp_address)
@@ -83,29 +59,22 @@ public class CampDetailDialogFragment extends DialogFragment implements LoaderMa
     ImageButton backButton;
     @BindView(R.id.camp_address_linear_layout)
     LinearLayout addressLinearLayout;
-    private Uri uri;
+
     private String campId;
-    private int position;
-    private Uri uriPark;
-    private String parkId;
     private String parkCode;
-    private String latLong;
-    private Cursor cursor;
+    private String title;
+    private String latitude;
+    private String longitude;
 
     public CampDetailDialogFragment() {
         // Required empty public constructor
     }
 
 
-    public static CampDetailDialogFragment newInstance(Uri uri, String campId, int position, String parkId, String parkCode, String latLong, Uri parkUri) {
+    public static CampDetailDialogFragment newInstance(String campId, String parkCode) {
         CampDetailDialogFragment fragment = new CampDetailDialogFragment();
         Bundle args = new Bundle();
-        args.putParcelable(URI_CAMP, uri);
         args.putString(CAMP_ID, campId);
-        args.putInt(POSITION, position);
-        args.putParcelable(URI, parkUri);
-        args.putString(PARK_ID, parkId);
-        args.putString(LATLONG, latLong);
         args.putString(PARKCODE, parkCode);
         fragment.setArguments(args);
         return fragment;
@@ -138,78 +107,70 @@ public class CampDetailDialogFragment extends DialogFragment implements LoaderMa
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+        String apiKey = getResources().getString(R.string.NPSapiKey);
+        CampDetailViewModelFactory factory = FactoryUtils.provideCDVMFactory(this.getActivity().getApplicationContext(), apiKey, parkCode);
+        CampDetailViewModel viewModel = ViewModelProviders.of(getActivity(), factory).get(CampDetailViewModel.class);
+        viewModel.getCamp(campId).observe(this, CampEntity -> {
+            updateUI(CampEntity);
+        });
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (getArguments() != null) {
-            uri = getArguments().getParcelable(URI_CAMP);
             campId = getArguments().getString(CAMP_ID);
-            position = getArguments().getInt(POSITION);
-            uriPark = getArguments().getParcelable(URI);
-            latLong = getArguments().getString(LATLONG);
             parkCode = getArguments().getString(PARKCODE);
-            parkId = getArguments().getString(PARK_ID);
         }
-        getLoaderManager().initLoader(LOADER_ID, null, this);
     }
 
-    @NonNull
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
-        return new CursorLoader(getActivity(), uri, PROJECTION, null, null, null);
-    }
-
-    @Override
-    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
-        cursor = data;
-        if (cursor == null || cursor.getCount() <= 0) return;
-        cursor.moveToPosition(position);
-        final String title = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_NAME));
+    private void updateUI(CampEntity campEntity) {
+        title = campEntity.getCamp_name();
         titleTv.setText(title);
-        String summary = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_DESCRIPTION));
+        String summary = campEntity.getDescription();
         summaryTv.setText(summary);
-        String address = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_ADDRESSS));
+        String address = campEntity.getAddress();
         addressTv.setText(address);
-        String latLong = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_LATLONG));
+        String latLong = campEntity.getLatLong();
         StringToGPSCoordinates stringToGPSCoordinates = new StringToGPSCoordinates();
         final String gpsCoodinates[] = stringToGPSCoordinates.convertToGPS(latLong);
+        latitude = gpsCoodinates[0];
+        latitude = gpsCoodinates[1];
         addressLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_VIEW,
-                        Uri.parse("geo:" + gpsCoodinates[0] + "," + gpsCoodinates[1] + "?q=" + gpsCoodinates[0] + "," + gpsCoodinates[1] + "?z=10"));
+                        Uri.parse("geo:" + latitude + "," + latitude + "?q=" + latitude + "," + longitude + "?z=10"));
                 startActivity(intent);
             }
         });
-        String cellrecep = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_CELLRECEP));
+        String cellrecep = campEntity.getCellPhoneReception();
         if (cellrecep.equals("Yes - year round")) {
             cellrecepIv.setImageResource(R.drawable.ic_check_circle);
         } else {
             cellrecepIv.setImageResource(R.drawable.ic_cancel);
         }
-        String showers = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_SHOWERS));
+        String showers = campEntity.getShowers();
         if (showers.equals("None")) {
             showersIv.setImageResource(R.drawable.ic_cancel);
         } else {
             showersIv.setImageResource(R.drawable.ic_check_circle);
         }
-        String toilets = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_TOILET));
+        String toilets = campEntity.getToilets();
         if (toilets.equals("None")) {
             toiletsIv.setImageResource(R.drawable.ic_cancel);
         } else {
             toiletsIv.setImageResource(R.drawable.ic_check_circle);
         }
-        String internet = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_INTERNET));
+        String internet = campEntity.getInternetConnectivity();
         if (internet.equals("true")) {
             internetIv.setImageResource(R.drawable.ic_check_circle);
         } else {
             internetIv.setImageResource(R.drawable.ic_cancel);
         }
-        String wheelchair = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_WHEELCHAIR));
+        String wheelchair = campEntity.getWheelchairAccess();
         wheelchairTv.setText(wheelchair);
-        final String reservationUrl = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_RESERVURL));
+        final String reservationUrl = campEntity.getReservationsUrl();
         reservationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -221,7 +182,7 @@ public class CampDetailDialogFragment extends DialogFragment implements LoaderMa
                 }
             }
         });
-        final String directionUrl = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_DIRECTIONURL));
+        final String directionUrl = campEntity.getDirectionsUrl();
         directionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -236,10 +197,10 @@ public class CampDetailDialogFragment extends DialogFragment implements LoaderMa
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
-                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, title);
-                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, title + "\nOpen in Google Maps https://maps.google.com/?q=" + gpsCoodinates[0] + "," + gpsCoodinates[1]);
+                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, title);
+                sharingIntent.putExtra(Intent.EXTRA_TEXT, title + "\nOpen in Google Maps https://maps.google.com/?q=" + gpsCoodinates[0] + "," + gpsCoodinates[1]);
                 startActivity(Intent.createChooser(sharingIntent, "Share via"));
             }
         });
@@ -250,12 +211,7 @@ public class CampDetailDialogFragment extends DialogFragment implements LoaderMa
                 getActivity().onBackPressed();
             }
         });
-
     }
 
-    @Override
-    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
-        cursor = null;
-    }
 
 }

@@ -1,29 +1,18 @@
-
 package com.sjani.usnationalparkguide.Models.Weather;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Wind implements Parcelable
-{
+public class Wind implements Parcelable {
 
-    @SerializedName("speed")
-    @Expose
-    private Double speed;
-    @SerializedName("deg")
-    @Expose
-    private Double deg;
-    @SerializedName("gust")
-    @Expose
-    private Double gust;
     public final static Parcelable.Creator<Wind> CREATOR = new Creator<Wind>() {
 
 
         @SuppressWarnings({
-            "unchecked"
+                "unchecked"
         })
         public Wind createFromParcel(Parcel in) {
             return new Wind(in);
@@ -33,8 +22,16 @@ public class Wind implements Parcelable
             return (new Wind[size]);
         }
 
-    }
-    ;
+    };
+    @SerializedName("speed")
+    @Expose
+    private Double speed;
+    @SerializedName("deg")
+    @Expose
+    private Double deg;
+    @SerializedName("gust")
+    @Expose
+    private Double gust;
 
     protected Wind(Parcel in) {
         this.speed = ((Double) in.readValue((Double.class.getClassLoader())));
@@ -76,7 +73,7 @@ public class Wind implements Parcelable
     }
 
     public int describeContents() {
-        return  0;
+        return 0;
     }
 
 }

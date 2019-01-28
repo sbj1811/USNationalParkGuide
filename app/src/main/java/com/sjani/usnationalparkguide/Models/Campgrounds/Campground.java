@@ -1,17 +1,31 @@
-
 package com.sjani.usnationalparkguide.Models.Campgrounds;
 
-import java.util.ArrayList;
-import java.util.List;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Campground implements Parcelable
-{
+import java.util.ArrayList;
+import java.util.List;
 
+public class Campground implements Parcelable {
+
+    public final static Parcelable.Creator<Campground> CREATOR = new Creator<Campground>() {
+
+
+        @SuppressWarnings({
+                "unchecked"
+        })
+        public Campground createFromParcel(Parcel in) {
+            return new Campground(in);
+        }
+
+        public Campground[] newArray(int size) {
+            return (new Campground[size]);
+        }
+
+    };
     @SerializedName("total")
     @Expose
     private Long total;
@@ -24,22 +38,6 @@ public class Campground implements Parcelable
     @SerializedName("start")
     @Expose
     private Double start;
-    public final static Parcelable.Creator<Campground> CREATOR = new Creator<Campground>() {
-
-
-        @SuppressWarnings({
-            "unchecked"
-        })
-        public Campground createFromParcel(Parcel in) {
-            return new Campground(in);
-        }
-
-        public Campground[] newArray(int size) {
-            return (new Campground[size]);
-        }
-
-    }
-    ;
 
     protected Campground(Parcel in) {
         this.total = in.readByte() == 0x00 ? null : ((Long) in.readValue((Long.class.getClassLoader())));
@@ -48,7 +46,7 @@ public class Campground implements Parcelable
             in.readList(this.data, (CampDatum.class.getClassLoader()));
         } else {
             this.data = null;
-        }       
+        }
         this.limit = in.readByte() == 0x00 ? null : ((Double) in.readValue((Double.class.getClassLoader())));
         this.start = in.readByte() == 0x00 ? null : ((Double) in.readValue((Double.class.getClassLoader())));
     }
@@ -116,7 +114,7 @@ public class Campground implements Parcelable
     }
 
     public int describeContents() {
-        return  0;
+        return 0;
     }
 
 }

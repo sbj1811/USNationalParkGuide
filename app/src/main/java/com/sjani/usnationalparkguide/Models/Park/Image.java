@@ -1,4 +1,3 @@
-
 package com.sjani.usnationalparkguide.Models.Park;
 
 import android.os.Parcel;
@@ -7,9 +6,23 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Image implements Parcelable
-{
+public class Image implements Parcelable {
 
+    public final static Parcelable.Creator<Image> CREATOR = new Creator<Image>() {
+
+
+        @SuppressWarnings({
+                "unchecked"
+        })
+        public Image createFromParcel(Parcel in) {
+            return new Image(in);
+        }
+
+        public Image[] newArray(int size) {
+            return (new Image[size]);
+        }
+
+    };
     @SerializedName("credit")
     @Expose
     private String credit;
@@ -28,22 +41,6 @@ public class Image implements Parcelable
     @SerializedName("url")
     @Expose
     private String url;
-    public final static Parcelable.Creator<Image> CREATOR = new Creator<Image>() {
-
-
-        @SuppressWarnings({
-            "unchecked"
-        })
-        public Image createFromParcel(Parcel in) {
-            return new Image(in);
-        }
-
-        public Image[] newArray(int size) {
-            return (new Image[size]);
-        }
-
-    }
-    ;
 
     protected Image(Parcel in) {
         this.credit = ((String) in.readValue((String.class.getClassLoader())));
@@ -115,7 +112,7 @@ public class Image implements Parcelable
     }
 
     public int describeContents() {
-        return  0;
+        return 0;
     }
 
 }

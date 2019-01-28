@@ -1,9 +1,6 @@
 package com.sjani.usnationalparkguide.UI.Details.Trails;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +8,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.sjani.usnationalparkguide.Data.TrailContract;
+import com.bumptech.glide.request.RequestOptions;
+import com.sjani.usnationalparkguide.Data.TrailEntity;
 import com.sjani.usnationalparkguide.R;
 import com.sjani.usnationalparkguide.Utils.Listeners.OnListFragmentInteractionListener;
 
+import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -23,7 +24,7 @@ public class TrailRecyclerViewAdapter extends RecyclerView.Adapter<TrailRecycler
     private static final String TAG = TrailRecyclerViewAdapter.class.getSimpleName();
     private final OnListFragmentInteractionListener mListener;
     private Context mContext;
-    private Cursor cursor;
+    private List<TrailEntity> trailEntities;
 
     public TrailRecyclerViewAdapter(OnListFragmentInteractionListener listener, Context context) {
         mContext = context;
@@ -39,49 +40,45 @@ public class TrailRecyclerViewAdapter extends RecyclerView.Adapter<TrailRecycler
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        try {
-            cursor.moveToPosition(position);
-            String title = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_NAME));
-            String imageUrl = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_IMAGE_MED));
-            holder.trailTitleView.setText(title);
-            if (imageUrl.equals("")) {
-                Glide.with(holder.trailImageView.getContext())
-                        .load(R.drawable.empty_detail)
-                        .fitCenter()
-                        .into(holder.trailImageView);
-            } else {
-                Glide.with(holder.trailImageView.getContext())
-                        .load(imageUrl)
-                        .fitCenter()
-                        .into(holder.trailImageView);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
 
+        TrailEntity trailEntity = trailEntities.get(position);
+        String title = trailEntity.getTrail_name();
+        String imageUrl = trailEntity.getImage_med();
+        holder.trailTitleView.setText(title);
+        if (imageUrl.equals("")) {
+            Glide.with(holder.trailImageView.getContext())
+                    .load(R.drawable.empty_detail)
+                    .apply(new RequestOptions()
+                            .fitCenter())
+                    .into(holder.trailImageView);
+        } else {
+            Glide.with(holder.trailImageView.getContext())
+                    .load(imageUrl)
+                    .apply(new RequestOptions()
+                            .fitCenter())
+                    .into(holder.trailImageView);
         }
+
     }
 
     @Override
     public int getItemCount() {
-        if (cursor == null) {
+        if (trailEntities == null) {
             return 0;
         }
-        return cursor.getCount();
+        return trailEntities.size();
     }
 
-    public Cursor swapCursor(Cursor c) {
-        if (cursor == c) {
-            return null;
+    public void swapTrails(List<TrailEntity> trailEntityList) {
+        if (trailEntities == trailEntityList) {
+            return;
         }
-
-        Cursor temp = cursor;
-        this.cursor = c;
-
-        if (c != null) {
+        List<TrailEntity> temp = trailEntityList;
+        this.trailEntities = trailEntityList;
+        if (trailEntityList != null) {
             this.notifyDataSetChanged();
         }
-        return temp;
+        return;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -101,8 +98,8 @@ public class TrailRecyclerViewAdapter extends RecyclerView.Adapter<TrailRecycler
         @Override
         public void onClick(View view) {
             int position = getAdapterPosition();
-            cursor.moveToPosition(position);
-            String trailId = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_ID));
+            TrailEntity trailEntity = trailEntities.get(position);
+            String trailId = trailEntity.getTrail_id();
             mListener.onListFragmentInteraction(trailId, position);
         }
     }

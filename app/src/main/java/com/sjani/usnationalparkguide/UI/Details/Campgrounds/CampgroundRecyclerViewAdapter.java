@@ -2,25 +2,28 @@ package com.sjani.usnationalparkguide.UI.Details.Campgrounds;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.sjani.usnationalparkguide.Data.CampContract;
+import com.sjani.usnationalparkguide.Data.CampEntity;
 import com.sjani.usnationalparkguide.R;
 import com.sjani.usnationalparkguide.Utils.Listeners.OnListFragmentInteractionListener;
 
+import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class CampgroundRecyclerViewAdapter extends RecyclerView.Adapter<CampgroundRecyclerViewAdapter.ViewHolder> {
+public class CampgroundRecyclerViewAdapter extends androidx.recyclerview.widget.RecyclerView.Adapter<CampgroundRecyclerViewAdapter.ViewHolder> {
 
     private static final String TAG = CampgroundRecyclerViewAdapter.class.getSimpleName();
     private final OnListFragmentInteractionListener mListener;
     private Context mContext;
     private Cursor cursor;
+    private List<CampEntity> campEntities;
 
     public CampgroundRecyclerViewAdapter(OnListFragmentInteractionListener listener, Context context) {
         mContext = context;
@@ -36,36 +39,31 @@ public class CampgroundRecyclerViewAdapter extends RecyclerView.Adapter<Campgrou
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        try {
-            cursor.moveToPosition(position);
-            String title = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_NAME));
-            holder.campTitleTv.setText(title);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-        }
+        CampEntity campEntity = campEntities.get(position);
+        String title = campEntity.getCamp_name();
+        holder.campTitleTv.setText(title);
     }
 
     @Override
     public int getItemCount() {
-        if (cursor == null) {
+        if (campEntities == null) {
             return 0;
         }
-        return cursor.getCount();
+        return campEntities.size();
     }
 
-    public Cursor swapCursor(Cursor c) {
-        if (cursor == c) {
-            return null;
+    public void swapCamps(List<CampEntity> campEntityList) {
+        if (campEntities == campEntityList) {
+            return;
         }
 
-        Cursor temp = cursor;
-        this.cursor = c;
+        List<CampEntity> temp = campEntityList;
+        this.campEntities = campEntityList;
 
-        if (c != null) {
+        if (campEntityList != null) {
             this.notifyDataSetChanged();
         }
-        return temp;
+        return;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -83,8 +81,8 @@ public class CampgroundRecyclerViewAdapter extends RecyclerView.Adapter<Campgrou
         @Override
         public void onClick(View view) {
             int position = getAdapterPosition();
-            cursor.moveToPosition(position);
-            String campId = cursor.getString(cursor.getColumnIndex(CampContract.CampEntry.COLUMN_CAMP_ID));
+            CampEntity campEntity = campEntities.get(position);
+            String campId = campEntity.getCamp_id();
             mListener.onListFragmentInteraction(campId, position);
 
         }

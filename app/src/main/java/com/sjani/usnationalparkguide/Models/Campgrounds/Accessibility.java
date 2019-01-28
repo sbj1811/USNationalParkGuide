@@ -1,16 +1,30 @@
-
 package com.sjani.usnationalparkguide.Models.Campgrounds;
 
-import java.util.List;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Accessibility implements Parcelable
-{
+import java.util.List;
 
+public class Accessibility implements Parcelable {
+
+    public final static Parcelable.Creator<Accessibility> CREATOR = new Creator<Accessibility>() {
+
+
+        @SuppressWarnings({
+                "unchecked"
+        })
+        public Accessibility createFromParcel(Parcel in) {
+            return new Accessibility(in);
+        }
+
+        public Accessibility[] newArray(int size) {
+            return (new Accessibility[size]);
+        }
+
+    };
     @SerializedName("wheelchairAccess")
     @Expose
     private String wheelchairAccess;
@@ -50,22 +64,6 @@ public class Accessibility implements Parcelable
     @SerializedName("classifications")
     @Expose
     private List<String> classifications = null;
-    public final static Parcelable.Creator<Accessibility> CREATOR = new Creator<Accessibility>() {
-
-
-        @SuppressWarnings({
-            "unchecked"
-        })
-        public Accessibility createFromParcel(Parcel in) {
-            return new Accessibility(in);
-        }
-
-        public Accessibility[] newArray(int size) {
-            return (new Accessibility[size]);
-        }
-
-    }
-    ;
 
     protected Accessibility(Parcel in) {
         this.wheelchairAccess = ((String) in.readValue((String.class.getClassLoader())));
@@ -207,7 +205,7 @@ public class Accessibility implements Parcelable
     }
 
     public int describeContents() {
-        return  0;
+        return 0;
     }
 
 }

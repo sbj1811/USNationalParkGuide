@@ -7,7 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class OpenWeatherMapApiConnection {
 
-    public static OpenWeatherMapApiEndpointInterface getApi () {
+    public static OpenWeatherMapApiEndpointInterface getApi() {
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);

@@ -5,69 +5,45 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-import com.sjani.usnationalparkguide.Data.ParkContract;
-import com.sjani.usnationalparkguide.R;
-import com.sjani.usnationalparkguide.UI.Details.DetailsActivity;
-import com.sjani.usnationalparkguide.UI.Details.DetailsFragment;
-import com.sjani.usnationalparkguide.Utils.Listeners.GridItemClickListener;
-import com.sjani.usnationalparkguide.Utils.NetworkSync.NPS.AccountModel;
-import com.sjani.usnationalparkguide.Utils.NetworkSync.NPS.ParkSyncAdapter;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.sjani.usnationalparkguide.R;
+import com.sjani.usnationalparkguide.UI.Details.DetailsActivity;
+import com.sjani.usnationalparkguide.UI.Details.DetailsFragment;
+import com.sjani.usnationalparkguide.Utils.FactoryUtils;
+import com.sjani.usnationalparkguide.Utils.Listeners.GridItemClickListener;
 import com.sjani.usnationalparkguide.Utils.ParkIdlingResource;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, GridItemClickListener,ListContract.ListFragmentView {
+public class ListFragment extends Fragment implements GridItemClickListener, ListContract.ListFragmentView {
 
     private static final String TAG = ListFragment.class.getSimpleName();
-    private static final int LOADER_ID = 1;
-    private static final String SELECTED_STATE = "selected_state";
     private static final String LIST_STATE_KEY = "list_state_key";
-    private static final String URI = "uri";
-    private static final String PARK_ID = "park_id";
-    private static final String POSITION = "position";
-    private static final String LATLONG = "latlong";
     private static final String PARKCODE = "parkcode";
     private static final String FROM_FAV = "from_fav";
-    private static final String[] PROJECTION = new String[]{
-            ParkContract.ParkEntry._ID,
-            ParkContract.ParkEntry.COLUMN_PARK_ID,
-            ParkContract.ParkEntry.COLUMN_PARK_NAME,
-            ParkContract.ParkEntry.COLUMN_PARK_STATES,
-            ParkContract.ParkEntry.COLUMN_PARK_CODE,
-            ParkContract.ParkEntry.COLUMN_PARK_LATLONG,
-            ParkContract.ParkEntry.COLUMN_PARK_DESCRIPTION,
-            ParkContract.ParkEntry.COLUMN_PARK_DESIGNATION,
-            ParkContract.ParkEntry.COLUMN_PARK_ADDRESS,
-            ParkContract.ParkEntry.COLUMN_PARK_PHONE,
-            ParkContract.ParkEntry.COLUMN_PARK_EMAIL,
-            ParkContract.ParkEntry.COLUMN_PARK_IMAGE
-    };
+    private static final String LATLONG = "latlong";
     static int currentVisiblePosition = 0;
     @BindView(R.id.rv_main)
     RecyclerView recyclerView;
@@ -81,6 +57,7 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
     private AdView mAdView;
     private GridLayoutManager layoutManager;
     private ListFragmentPresenterImpl presenter;
+    private MainListViewModel viewModel;
 
 
     public ListFragment() {
@@ -96,17 +73,10 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        AccountModel.createSyncAccount(context);
         idlingResource = (ParkIdlingResource) ((MainListActivity) getActivity()).getIdlingResource();
         if (idlingResource != null) {
             idlingResource.setIdleState(true);
         }
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String max_article = sharedPreferences.getString(getString(R.string.settings_max_articles_key), getString(R.string.settings_max_articles_default));
-        state = sharedPreferences.getString(getString(R.string.settings_state_key), getString(R.string.settings_states_default));
-        uri = ParkContract.ParkEntry.CONTENT_URI_PARKS;
-        presenter = new ListFragmentPresenterImpl(this, uri, PROJECTION,state,max_article,getContext());
-        presenter.getDataFromServer();
         MobileAds.initialize(getActivity(), "ca-app-pub-1510923228147176~5607247189");
     }
 
@@ -114,7 +84,6 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getLoaderManager().initLoader(LOADER_ID, null, this);
     }
 
     @Nullable
@@ -126,7 +95,7 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
         mAdView.setAdSize(AdSize.BANNER);
         LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.admob_ll);
         linearLayout.addView(mAdView);
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).addTestDevice("Somestring").build();
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).addTestDevice("82DB6E6641D0CCA845D58CE176AF15E").build();
         mAdView.loadAd(adRequest);
         return view;
     }
@@ -135,27 +104,43 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String max_article = sharedPreferences.getString(getString(R.string.settings_max_articles_key), getString(R.string.settings_max_articles_default));
+        state = sharedPreferences.getString(getString(R.string.settings_state_key), getString(R.string.settings_states_default));
+        String fields = getContext().getResources().getString(R.string.fields);
+        String apiKey = getContext().getResources().getString(R.string.NPSapiKey);
+        MainListViewModelFactory factory = FactoryUtils.provideMLVFactory(this.getActivity().getApplicationContext(), apiKey, fields, state, max_article);
+        viewModel = ViewModelProviders.of(this, factory).get(MainListViewModel.class);
+        presenter = new ListFragmentPresenterImpl(this);
         presenter.createUI();
     }
 
     @Override
     public void onItemClick(String parkId, String latlong, int position, String parkCode) {
         if (mDualPane) {
-            DetailsFragment detailsFragment = DetailsFragment.newInstance(uri, parkId, position, latlong, parkCode, false);
+            DetailsFragment detailsFragment = DetailsFragment.newInstance(parkCode, latlong, false);
             getFragmentManager().beginTransaction()
                     .replace(R.id.details, detailsFragment)
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                     .addToBackStack(null)
                     .commit();
         } else {
+            ImageView imageView = (ImageView) getActivity().findViewById(R.id.park_thumbnail);
+
             Intent intent = new Intent(getActivity(), DetailsActivity.class);
-            intent.putExtra(PARK_ID, parkId);
-            intent.putExtra(POSITION, position);
-            intent.putExtra(URI, uri);
-            intent.putExtra(LATLONG, latlong);
             intent.putExtra(PARKCODE, parkCode);
+            intent.putExtra(LATLONG, latlong);
             intent.putExtra(FROM_FAV, false);
-            startActivity(intent);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//                ActivityOptionsCompat options = ActivityOptionsCompat.
+//                        makeSceneTransitionAnimation(getActivity(), imageView, getString(R.string.transition_image));
+//                startActivity(intent, options.toBundle());
+                startActivity(intent);
+                getActivity().overridePendingTransition(R.xml.slide_from_right, R.xml.slide_to_left);
+            } else {
+                startActivity(intent);
+            }
         }
     }
 
@@ -169,25 +154,6 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onDestroy() {
         super.onDestroy();
-    }
-
-    @NonNull
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
-        return presenter.getDatafromDatabase();
-    }
-
-    @Override
-    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
-        adapter.swapCursor(data);
-        presenter.updateUI();
-    }
-
-    @Override
-    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
-        if (adapter != null) {
-            adapter.swapCursor(null);
-        }
     }
 
     @Override
@@ -205,9 +171,12 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
             layoutManager = new GridLayoutManager(getActivity(), 4);
             recyclerView.setLayoutManager(layoutManager);
         }
-        recyclerView.getLayoutManager().scrollToPosition(currentVisiblePosition);
-        currentVisiblePosition = 0;
-
+        viewModel.getParksfromViewModel().observe(this, ParkList -> {
+            adapter.swapParks(ParkList);
+            recyclerView.getLayoutManager().scrollToPosition(currentVisiblePosition);
+            currentVisiblePosition = 0;
+            presenter.updateUI();
+        });
         View detailsView = getActivity().findViewById(R.id.details);
         mDualPane = detailsView != null && detailsView.getVisibility() == View.VISIBLE;
     }
@@ -217,4 +186,5 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
         recyclerView.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.INVISIBLE);
     }
+
 }

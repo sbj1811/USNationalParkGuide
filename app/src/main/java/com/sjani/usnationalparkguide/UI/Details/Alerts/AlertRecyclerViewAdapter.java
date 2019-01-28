@@ -2,15 +2,17 @@ package com.sjani.usnationalparkguide.UI.Details.Alerts;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.sjani.usnationalparkguide.Data.AlertContract;
+import com.sjani.usnationalparkguide.Data.AlertEntity;
 import com.sjani.usnationalparkguide.R;
 
+import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -18,6 +20,7 @@ public class AlertRecyclerViewAdapter extends RecyclerView.Adapter<AlertRecycler
 
     private Context mContext;
     private Cursor cursor;
+    private List<AlertEntity> alertEntities;
 
     public AlertRecyclerViewAdapter(Context context) {
         mContext = context;
@@ -32,40 +35,35 @@ public class AlertRecyclerViewAdapter extends RecyclerView.Adapter<AlertRecycler
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        try {
-            cursor.moveToPosition(position);
-            String title = cursor.getString(cursor.getColumnIndex(AlertContract.AlertEntry.COLUMN_ALERT_NAME));
-            String description = cursor.getString(cursor.getColumnIndex(AlertContract.AlertEntry.COLUMN_ALERT_DESCRIPTION));
-            String category = cursor.getString(cursor.getColumnIndex(AlertContract.AlertEntry.COLUMN_ALERT_CATEGORY));
-            holder.alertTitleTv.setText(title);
-            holder.alertDescriptionTv.setText(description);
-            holder.alertCategoryTv.setText(category);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-        }
+        AlertEntity alertEntity = alertEntities.get(position);
+        String title = alertEntity.getAlert_name();
+        String description = alertEntity.getDescription();
+        String category = alertEntity.getCategory();
+        holder.alertTitleTv.setText(title);
+        holder.alertDescriptionTv.setText(description);
+        holder.alertCategoryTv.setText(category);
     }
 
     @Override
     public int getItemCount() {
-        if (cursor == null) {
+        if (alertEntities == null) {
             return 0;
         }
-        return cursor.getCount();
+        return alertEntities.size();
     }
 
-    public Cursor swapCursor(Cursor c) {
-        if (cursor == c) {
-            return null;
+    public void swapAlerts(List<AlertEntity> alertEntityList) {
+        if (alertEntities == alertEntityList) {
+            return;
         }
 
-        Cursor temp = cursor;
-        this.cursor = c;
+        List<AlertEntity> temp = alertEntityList;
+        this.alertEntities = alertEntityList;
 
-        if (c != null) {
+        if (alertEntityList != null) {
             this.notifyDataSetChanged();
         }
-        return temp;
+        return;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

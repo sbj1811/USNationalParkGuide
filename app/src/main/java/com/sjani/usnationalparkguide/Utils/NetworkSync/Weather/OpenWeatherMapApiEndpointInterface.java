@@ -11,6 +11,6 @@ public interface OpenWeatherMapApiEndpointInterface {
     String API_ENDPOINT = "https://api.openweathermap.org";
 
     @GET("/data/2.5/weather")
-    Call<CurrentWeather> getWeather(@Query("lat") String lat, @Query("lon") String lon , @Query("appid") String apiKey, @Query("units") String units);
+    Call<CurrentWeather> getWeather(@Query("lat") String lat, @Query("lon") String lon, @Query("appid") String apiKey, @Query("units") String units);
 
 }

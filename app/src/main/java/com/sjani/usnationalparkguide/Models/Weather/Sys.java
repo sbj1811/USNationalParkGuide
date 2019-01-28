@@ -1,15 +1,28 @@
-
 package com.sjani.usnationalparkguide.Models.Weather;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Sys implements Parcelable
-{
+public class Sys implements Parcelable {
 
+    public final static Parcelable.Creator<Sys> CREATOR = new Creator<Sys>() {
+
+
+        @SuppressWarnings({
+                "unchecked"
+        })
+        public Sys createFromParcel(Parcel in) {
+            return new Sys(in);
+        }
+
+        public Sys[] newArray(int size) {
+            return (new Sys[size]);
+        }
+
+    };
     @SerializedName("type")
     @Expose
     private Integer type;
@@ -28,22 +41,6 @@ public class Sys implements Parcelable
     @SerializedName("sunset")
     @Expose
     private Long sunset;
-    public final static Parcelable.Creator<Sys> CREATOR = new Creator<Sys>() {
-
-
-        @SuppressWarnings({
-            "unchecked"
-        })
-        public Sys createFromParcel(Parcel in) {
-            return new Sys(in);
-        }
-
-        public Sys[] newArray(int size) {
-            return (new Sys[size]);
-        }
-
-    }
-    ;
 
     protected Sys(Parcel in) {
         this.type = ((Integer) in.readValue((Integer.class.getClassLoader())));
@@ -115,7 +112,7 @@ public class Sys implements Parcelable
     }
 
     public int describeContents() {
-        return  0;
+        return 0;
     }
 
 }

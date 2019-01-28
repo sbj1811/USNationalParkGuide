@@ -1,4 +1,3 @@
-
 package com.sjani.usnationalparkguide.Models.Alerts;
 
 import android.os.Parcel;
@@ -7,9 +6,23 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class AlertDatum implements Parcelable
-{
+public class AlertDatum implements Parcelable {
 
+    public final static Parcelable.Creator<AlertDatum> CREATOR = new Creator<AlertDatum>() {
+
+
+        @SuppressWarnings({
+                "unchecked"
+        })
+        public AlertDatum createFromParcel(Parcel in) {
+            return new AlertDatum(in);
+        }
+
+        public AlertDatum[] newArray(int size) {
+            return (new AlertDatum[size]);
+        }
+
+    };
     @SerializedName("title")
     @Expose
     private String title;
@@ -28,22 +41,6 @@ public class AlertDatum implements Parcelable
     @SerializedName("parkCode")
     @Expose
     private String parkCode;
-    public final static Parcelable.Creator<AlertDatum> CREATOR = new Creator<AlertDatum>() {
-
-
-        @SuppressWarnings({
-            "unchecked"
-        })
-        public AlertDatum createFromParcel(Parcel in) {
-            return new AlertDatum(in);
-        }
-
-        public AlertDatum[] newArray(int size) {
-            return (new AlertDatum[size]);
-        }
-
-    }
-    ;
 
     protected AlertDatum(Parcel in) {
         this.title = ((String) in.readValue((String.class.getClassLoader())));
@@ -115,7 +112,7 @@ public class AlertDatum implements Parcelable
     }
 
     public int describeContents() {
-        return  0;
+        return 0;
     }
 
 }

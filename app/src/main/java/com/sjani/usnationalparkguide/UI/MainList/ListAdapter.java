@@ -1,21 +1,21 @@
 package com.sjani.usnationalparkguide.UI.MainList;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.sjani.usnationalparkguide.Data.ParkContract;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.sjani.usnationalparkguide.Data.ParkEntity;
 import com.sjani.usnationalparkguide.R;
 import com.sjani.usnationalparkguide.Utils.Listeners.GridItemClickListener;
-import com.facebook.drawee.view.SimpleDraweeView;
 
+import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -24,7 +24,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListAdapterVie
     private static final String TAG = ListAdapter.class.getSimpleName();
     final GridItemClickListener listener;
     private Context context;
-    private Cursor cursor;
+    private List<ParkEntity> parkEntities;
 
     public ListAdapter(GridItemClickListener mListener, Context mContext) {
         this.listener = mListener;
@@ -41,9 +41,10 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListAdapterVie
 
     @Override
     public void onBindViewHolder(@NonNull ListAdapterViewHolder holder, int position) {
-        cursor.moveToPosition(position);
-        String title = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_NAME));
-        String imageUrl = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_IMAGE));
+
+        ParkEntity parkEntity = parkEntities.get(position);
+        String title = parkEntity.getPark_name();
+        String imageUrl = parkEntity.getImage();
         holder.parkTitle.setText(title);
         if (imageUrl.equals("")) {
             Glide.with(holder.parkThumbnail.getContext())
@@ -58,24 +59,22 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListAdapterVie
 
     @Override
     public int getItemCount() {
-        if (cursor == null) {
+        if (parkEntities == null) {
             return 0;
         }
-        return cursor.getCount();
+        return parkEntities.size();
     }
 
-    public Cursor swapCursor(Cursor c) {
-        if (cursor == c) {
-            return null;
+    public void swapParks(List<ParkEntity> parkEntityList) {
+        if (parkEntities == parkEntityList) {
+            return;
         }
-
-        Cursor temp = cursor;
-        this.cursor = c;
-
-        if (c != null) {
+        List<ParkEntity> temp = parkEntityList;
+        this.parkEntities = parkEntityList;
+        if (parkEntityList != null) {
             this.notifyDataSetChanged();
         }
-        return temp;
+        return;
     }
 
     public class ListAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -95,10 +94,10 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListAdapterVie
         @Override
         public void onClick(View view) {
             int position = getAdapterPosition();
-            cursor.moveToPosition(position);
-            String parkId = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_ID));
-            String parkCode = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_CODE));
-            String latlong = cursor.getString(cursor.getColumnIndex(ParkContract.ParkEntry.COLUMN_PARK_LATLONG));
+            ParkEntity parkEntity = parkEntities.get(position);
+            String parkId = parkEntity.getPark_id();
+            String parkCode = parkEntity.getParkCode();
+            String latlong = parkEntity.getLatLong();
             listener.onItemClick(parkId, latlong, position, parkCode);
         }
     }

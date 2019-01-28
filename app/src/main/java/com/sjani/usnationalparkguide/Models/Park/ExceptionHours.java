@@ -1,4 +1,3 @@
-
 package com.sjani.usnationalparkguide.Models.Park;
 
 import android.os.Parcel;
@@ -7,9 +6,23 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ExceptionHours implements Parcelable
-{
+public class ExceptionHours implements Parcelable {
 
+    public final static Parcelable.Creator<ExceptionHours> CREATOR = new Creator<ExceptionHours>() {
+
+
+        @SuppressWarnings({
+                "unchecked"
+        })
+        public ExceptionHours createFromParcel(Parcel in) {
+            return new ExceptionHours(in);
+        }
+
+        public ExceptionHours[] newArray(int size) {
+            return (new ExceptionHours[size]);
+        }
+
+    };
     @SerializedName("wednesday")
     @Expose
     private String wednesday;
@@ -31,22 +44,6 @@ public class ExceptionHours implements Parcelable
     @SerializedName("saturday")
     @Expose
     private String saturday;
-    public final static Parcelable.Creator<ExceptionHours> CREATOR = new Creator<ExceptionHours>() {
-
-
-        @SuppressWarnings({
-            "unchecked"
-        })
-        public ExceptionHours createFromParcel(Parcel in) {
-            return new ExceptionHours(in);
-        }
-
-        public ExceptionHours[] newArray(int size) {
-            return (new ExceptionHours[size]);
-        }
-
-    }
-    ;
 
     protected ExceptionHours(Parcel in) {
         this.wednesday = ((String) in.readValue((String.class.getClassLoader())));
@@ -128,7 +125,7 @@ public class ExceptionHours implements Parcelable
     }
 
     public int describeContents() {
-        return  0;
+        return 0;
     }
 
 }

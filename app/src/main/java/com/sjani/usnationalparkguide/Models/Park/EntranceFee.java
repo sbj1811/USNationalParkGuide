@@ -1,4 +1,3 @@
-
 package com.sjani.usnationalparkguide.Models.Park;
 
 import android.os.Parcel;
@@ -7,23 +6,13 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class EntranceFee implements Parcelable
-{
+public class EntranceFee implements Parcelable {
 
-    @SerializedName("cost")
-    @Expose
-    private Double cost;
-    @SerializedName("description")
-    @Expose
-    private String description;
-    @SerializedName("title")
-    @Expose
-    private String title;
     public final static Parcelable.Creator<EntranceFee> CREATOR = new Creator<EntranceFee>() {
 
 
         @SuppressWarnings({
-            "unchecked"
+                "unchecked"
         })
         public EntranceFee createFromParcel(Parcel in) {
             return new EntranceFee(in);
@@ -33,8 +22,16 @@ public class EntranceFee implements Parcelable
             return (new EntranceFee[size]);
         }
 
-    }
-    ;
+    };
+    @SerializedName("cost")
+    @Expose
+    private Double cost;
+    @SerializedName("description")
+    @Expose
+    private String description;
+    @SerializedName("title")
+    @Expose
+    private String title;
 
     protected EntranceFee(Parcel in) {
         this.cost = ((Double) in.readValue((Double.class.getClassLoader())));
@@ -76,7 +73,7 @@ public class EntranceFee implements Parcelable
     }
 
     public int describeContents() {
-        return  0;
+        return 0;
     }
 
 }

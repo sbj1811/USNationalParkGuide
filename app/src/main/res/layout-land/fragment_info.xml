@@ -8,7 +8,7 @@
     android:padding="@dimen/horizontal_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -69,11 +69,11 @@
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
             android:layout_marginTop="24dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -86,8 +86,8 @@
                 android:layout_height="40dp"
                 android:layout_weight="1"
                 android:background="@color/White"
-                android:scaleType="fitCenter"
                 android:contentDescription="@string/image"
+                android:scaleType="fitCenter"
                 android:src="@drawable/ic_map" />
 
             <ImageButton
@@ -96,8 +96,8 @@
                 android:layout_height="40dp"
                 android:layout_weight="1"
                 android:background="@color/White"
-                android:scaleType="fitCenter"
                 android:contentDescription="@string/image"
+                android:scaleType="fitCenter"
                 android:src="@drawable/ic_local_phone" />
 
             <ImageButton
@@ -106,8 +106,8 @@
                 android:layout_height="40dp"
                 android:layout_weight="1"
                 android:background="@color/White"
-                android:scaleType="fitCenter"
                 android:contentDescription="@string/image"
+                android:scaleType="fitCenter"
                 android:src="@drawable/ic_email" />
 
         </LinearLayout>
@@ -117,11 +117,11 @@
             android:id="@+id/address_linear_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
             android:layout_marginTop="24dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -139,8 +139,8 @@
                 android:id="@+id/park_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
                 android:textIsSelectable="true"
                 tools:text="address, CA 95134" />
 
@@ -151,11 +151,11 @@
             style="@style/TextAppearance.AppCompat.Subhead"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             android:autoLink="web"
             android:linksClickable="true"
             android:textColor="@color/secondaryText"
@@ -165,6 +165,6 @@
             tools:text="@string/lorem_ipsum" />
 
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

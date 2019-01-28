@@ -1,4 +1,3 @@
-
 package com.sjani.usnationalparkguide.Models.Park;
 
 import android.os.Parcel;
@@ -7,9 +6,23 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class PhoneNumber implements Parcelable
-{
+public class PhoneNumber implements Parcelable {
 
+    public final static Parcelable.Creator<PhoneNumber> CREATOR = new Creator<PhoneNumber>() {
+
+
+        @SuppressWarnings({
+                "unchecked"
+        })
+        public PhoneNumber createFromParcel(Parcel in) {
+            return new PhoneNumber(in);
+        }
+
+        public PhoneNumber[] newArray(int size) {
+            return (new PhoneNumber[size]);
+        }
+
+    };
     @SerializedName("phoneNumber")
     @Expose
     private String phoneNumber;
@@ -22,22 +35,6 @@ public class PhoneNumber implements Parcelable
     @SerializedName("type")
     @Expose
     private String type;
-    public final static Parcelable.Creator<PhoneNumber> CREATOR = new Creator<PhoneNumber>() {
-
-
-        @SuppressWarnings({
-            "unchecked"
-        })
-        public PhoneNumber createFromParcel(Parcel in) {
-            return new PhoneNumber(in);
-        }
-
-        public PhoneNumber[] newArray(int size) {
-            return (new PhoneNumber[size]);
-        }
-
-    }
-    ;
 
     protected PhoneNumber(Parcel in) {
         this.phoneNumber = ((String) in.readValue((String.class.getClassLoader())));
@@ -89,7 +86,7 @@ public class PhoneNumber implements Parcelable
     }
 
     public int describeContents() {
-        return  0;
+        return 0;
     }
 
 }

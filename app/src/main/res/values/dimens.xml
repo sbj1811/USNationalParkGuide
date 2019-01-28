@@ -11,7 +11,7 @@
     <dimen name="text_margin">16dp</dimen>
     <dimen name="horizontal_margin">16dp</dimen>
     <dimen name="imagebutton_icon">30dp</dimen>
-    <dimen name="fab_top_margin">32dp</dimen>
+    <dimen name="fab_top_margin">120dp</dimen>
 
     <!--
 Refer to App Widget Documentation for margin information

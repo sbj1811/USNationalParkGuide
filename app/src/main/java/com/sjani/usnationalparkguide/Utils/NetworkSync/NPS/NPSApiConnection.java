@@ -7,7 +7,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NPSApiConnection {
 
-    public static NPSApiEndpointInterface getApi () {
+    private static final String TAG = NPSApiConnection.class.getSimpleName();
+
+    public static NPSApiEndpointInterface getApi() {
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);

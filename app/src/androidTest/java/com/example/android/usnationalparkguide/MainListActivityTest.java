@@ -1,20 +1,6 @@
 package com.example.android.usnationalparkguide;
 
 
-import android.support.test.espresso.Espresso;
-import android.support.test.espresso.IdlingResource;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
-
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import android.support.test.espresso.contrib.RecyclerViewActions;
-
-
 import com.sjani.usnationalparkguide.R;
 import com.sjani.usnationalparkguide.UI.MainList.MainListActivity;
 
@@ -24,13 +10,24 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import androidx.test.espresso.Espresso;
+import androidx.test.espresso.IdlingResource;
+import androidx.test.espresso.contrib.RecyclerViewActions;
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.runner.AndroidJUnit4;
+
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+
 @RunWith(AndroidJUnit4.class)
 public class MainListActivityTest {
 
-    private IdlingResource idlingResource;
-
     @Rule
-    public ActivityTestRule<MainListActivity> activityTestRule =  new ActivityTestRule<>(MainListActivity.class);
+    public ActivityTestRule<MainListActivity> activityTestRule = new ActivityTestRule<>(MainListActivity.class);
+    private IdlingResource idlingResource;
 
     @Before
     public void registerIdlingResource() {
@@ -46,8 +43,8 @@ public class MainListActivityTest {
     }
 
     @Test
-    public void clickListItemToOpenActivity (){
-        onView(withId(R.id.rv_main)).perform(RecyclerViewActions.actionOnItemAtPosition(1,click()));
+    public void clickListItemToOpenActivity() {
+        onView(withId(R.id.rv_main)).perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
         onView(withId(R.id.detail_photo)).check(matches(isDisplayed()));
     }
 

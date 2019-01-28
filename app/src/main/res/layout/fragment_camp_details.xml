@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,11 +11,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <android.support.constraint.Guideline
+            <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline"
                 android:layout_width="8dp"
                 android:layout_height="match_parent"
@@ -29,11 +28,11 @@
                 style="@style/TextAppearance.AppCompat.Headline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/horizontal_margin"
-                android:layout_marginLeft="@dimen/horizontal_margin"
-                android:layout_marginRight="@dimen/horizontal_margin"
                 android:layout_marginStart="@dimen/horizontal_margin"
+                android:layout_marginLeft="@dimen/horizontal_margin"
                 android:layout_marginTop="24dp"
+                android:layout_marginEnd="@dimen/horizontal_margin"
+                android:layout_marginRight="@dimen/horizontal_margin"
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:scrollHorizontally="false"
@@ -51,11 +50,11 @@
                 android:id="@+id/camp_address_linear_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/horizontal_margin"
-                android:layout_marginLeft="@dimen/horizontal_margin"
-                android:layout_marginRight="@dimen/horizontal_margin"
                 android:layout_marginStart="@dimen/horizontal_margin"
+                android:layout_marginLeft="@dimen/horizontal_margin"
                 android:layout_marginTop="24dp"
+                android:layout_marginEnd="@dimen/horizontal_margin"
+                android:layout_marginRight="@dimen/horizontal_margin"
                 android:clickable="true"
                 android:focusable="true"
                 android:orientation="horizontal"
@@ -75,8 +74,8 @@
                     android:id="@+id/camp_address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
                     android:textIsSelectable="true"
                     tools:text="address, CA 95134" />
 
@@ -88,9 +87,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/horizontal_margin"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
-                android:layout_marginTop="16dp"
                 android:text="@string/amenities"
                 android:textIsSelectable="true"
                 android:textStyle="bold"
@@ -103,8 +102,8 @@
                 android:id="@+id/showers_linearLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
                 android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
@@ -121,8 +120,8 @@
                     android:id="@+id/showers_iv"
                     android:layout_width="24dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/horizontal_margin"
                     android:layout_marginStart="@dimen/horizontal_margin"
+                    android:layout_marginLeft="@dimen/horizontal_margin"
                     android:contentDescription="@string/image"
                     tools:src="@drawable/ic_check_circle" />
             </LinearLayout>
@@ -132,11 +131,11 @@
                 android:id="@+id/toilets_linearLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="60dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="60dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginEnd="60dp"
+                android:layout_marginRight="60dp"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.212"
@@ -154,8 +153,8 @@
                     android:id="@+id/toilets_iv"
                     android:layout_width="24dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/horizontal_margin"
                     android:layout_marginStart="@dimen/horizontal_margin"
+                    android:layout_marginLeft="@dimen/horizontal_margin"
                     android:contentDescription="@string/image"
                     tools:src="@drawable/ic_check_circle" />
             </LinearLayout>
@@ -164,8 +163,8 @@
                 android:id="@+id/cellrecep_linearLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
                 android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
@@ -182,8 +181,8 @@
                     android:id="@+id/cellrecep_iv"
                     android:layout_width="24dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/horizontal_margin"
                     android:layout_marginStart="@dimen/horizontal_margin"
+                    android:layout_marginLeft="@dimen/horizontal_margin"
                     android:contentDescription="@string/image"
                     tools:src="@drawable/ic_check_circle" />
             </LinearLayout>
@@ -193,11 +192,11 @@
                 android:id="@+id/internet_linearLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="60dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="60dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginEnd="60dp"
+                android:layout_marginRight="60dp"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.212"
@@ -215,8 +214,8 @@
                     android:id="@+id/internet_iv"
                     android:layout_width="24dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/horizontal_margin"
                     android:layout_marginStart="@dimen/horizontal_margin"
+                    android:layout_marginLeft="@dimen/horizontal_margin"
                     android:contentDescription="@string/image"
                     tools:src="@drawable/ic_check_circle" />
             </LinearLayout>
@@ -225,11 +224,11 @@
                 android:id="@+id/wheelchair_linearLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="8dp"
                 android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -254,11 +253,11 @@
                 android:id="@+id/reservation_button"
                 android:layout_width="132dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="8dp"
                 android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
                 android:text="@string/reservations"
                 app:layout_constraintEnd_toStartOf="@+id/guideline"
                 app:layout_constraintHorizontal_bias="0.46"
@@ -269,11 +268,11 @@
                 android:id="@+id/direction_button"
                 android:layout_width="120dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="8dp"
                 android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
                 android:text="@string/directions"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.491"
@@ -285,12 +284,12 @@
                 style="@style/TextAppearance.AppCompat.Subhead"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/horizontal_margin"
-                android:layout_marginEnd="@dimen/horizontal_margin"
-                android:layout_marginLeft="@dimen/horizontal_margin"
-                android:layout_marginRight="@dimen/horizontal_margin"
                 android:layout_marginStart="@dimen/horizontal_margin"
+                android:layout_marginLeft="@dimen/horizontal_margin"
                 android:layout_marginTop="24dp"
+                android:layout_marginEnd="@dimen/horizontal_margin"
+                android:layout_marginRight="@dimen/horizontal_margin"
+                android:layout_marginBottom="@dimen/horizontal_margin"
                 android:autoLink="web"
                 android:linksClickable="true"
                 android:paddingBottom="@dimen/horizontal_margin"
@@ -302,7 +301,7 @@
                 tools:text="@string/lorem_ipsum" />
 
 
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
 </FrameLayout>

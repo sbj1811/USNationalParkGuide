@@ -1,158 +1,71 @@
 package com.sjani.usnationalparkguide.UI.Details.Campgrounds;
 
-import android.content.ContentResolver;
-import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-
-import com.sjani.usnationalparkguide.Data.CampContract;
-import com.sjani.usnationalparkguide.Models.Campgrounds.Address;
-import com.sjani.usnationalparkguide.Models.Campgrounds.CampDatum;
-import com.sjani.usnationalparkguide.Models.Campgrounds.Campground;
 import com.sjani.usnationalparkguide.R;
+import com.sjani.usnationalparkguide.UI.Details.DetailViewModel;
+import com.sjani.usnationalparkguide.UI.Details.DetailViewModelFactory;
+import com.sjani.usnationalparkguide.Utils.FactoryUtils;
 import com.sjani.usnationalparkguide.Utils.Listeners.OnListFragmentInteractionListener;
-import com.sjani.usnationalparkguide.Utils.NetworkSync.NPS.NPSApiConnection;
 
-import java.io.IOException;
-import java.util.List;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Response;
 
-public class CampgroundFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, OnListFragmentInteractionListener {
+public class CampgroundFragment extends Fragment implements OnListFragmentInteractionListener {
 
     private static final String TAG = CampgroundFragment.class.getSimpleName();
     private static final String CAMP_ID = "camp_id";
-    private static final String URI = "uri";
-    private static final String URI_CAMP = "uri_camp";
-    private static final String POSITION = "position";
-    private static final String PARK_ID = "park_id";
-    private static final String PARKCODE = "parkcode";
     private static final String LATLONG = "latlong";
-    private static final int LOADER_ID = 8;
-    private static final String[] PROJECTION = new String[]{
-            CampContract.CampEntry._ID,
-            CampContract.CampEntry.COLUMN_CAMP_ID,
-            CampContract.CampEntry.COLUMN_CAMP_NAME,
-            CampContract.CampEntry.COLUMN_CAMP_DESCRIPTION,
-            CampContract.CampEntry.COLUMN_CAMP_PARKCODE,
-            CampContract.CampEntry.COLUMN_CAMP_ADDRESSS,
-            CampContract.CampEntry.COLUMN_CAMP_LATLONG,
-            CampContract.CampEntry.COLUMN_CAMP_CELLRECEP,
-            CampContract.CampEntry.COLUMN_CAMP_SHOWERS,
-            CampContract.CampEntry.COLUMN_CAMP_INTERNET,
-            CampContract.CampEntry.COLUMN_CAMP_TOILET,
-            CampContract.CampEntry.COLUMN_CAMP_WHEELCHAIR,
-            CampContract.CampEntry.COLUMN_CAMP_RESERVURL,
-            CampContract.CampEntry.COLUMN_CAMP_DIRECTIONURL
-    };
+    private static final String IS_FAV = "is_fav";
+    private static final String PARK_CODE = "parkcode";
     @BindView(R.id.rv_camp)
     RecyclerView recyclerView;
     private String parkCode;
-    private Uri uri;
-    private String parkId;
-    private String latLong;
+    private String campId;
     private CampgroundRecyclerViewAdapter adapter;
-    private List<CampDatum> camps;
-    private Context mContext;
+    private boolean isFromFavNav;
+    private String latLong;
 
     public CampgroundFragment() {
     }
 
-    public static CampgroundFragment newInstance(Uri uri, String parkId, int position, String latlong, String parkCode) {
+    public static CampgroundFragment newInstance(String parkCode, boolean isFromFavNav, String latLong) {
         CampgroundFragment fragment = new CampgroundFragment();
         Bundle args = new Bundle();
-        args.putParcelable(URI, uri);
-        args.putString(PARK_ID, parkId);
-        args.putInt(POSITION, position);
-        args.putString(LATLONG, latlong);
-        args.putString(PARKCODE, parkCode);
+        args.putString(PARK_CODE, parkCode);
+        args.putBoolean(IS_FAV, isFromFavNav);
+        args.putString(LATLONG, latLong);
         fragment.setArguments(args);
         return fragment;
     }
 
-    public static ContentValues[] makeContentFromCampList(List<CampDatum> list) {
-        if (list == null) {
-            return null;
-        }
-        ContentValues[] result = new ContentValues[list.size()];
-
-        for (int i = 0; i < list.size(); i++) {
-            CampDatum data = list.get(i);
-            ContentValues campValues = new ContentValues();
-            campValues.put(CampContract.CampEntry.COLUMN_CAMP_ID, data.getId());
-            campValues.put(CampContract.CampEntry.COLUMN_CAMP_NAME, data.getName());
-            campValues.put(CampContract.CampEntry.COLUMN_CAMP_DESCRIPTION, data.getDescription());
-            campValues.put(CampContract.CampEntry.COLUMN_CAMP_PARKCODE, data.getParkCode());
-            String address = String.valueOf(R.string.NA);
-            if (data.getAddresses() == null || data.getAddresses().size() == 0) {
-                campValues.put(CampContract.CampEntry.COLUMN_CAMP_ADDRESSS, String.valueOf(R.string.NA));
-            } else {
-                for (Address addresses : data.getAddresses()) {
-                    if (addresses.getType().equals("Physical")) {
-                        address = addresses.getLine1() + ", "
-                                + (addresses.getLine3().equals("") ? "" : addresses.getLine3() + ", ")
-                                + addresses.getCity() + ", "
-                                + addresses.getStateCode() + " "
-                                + addresses.getPostalCode();
-                        break;
-                    } else {
-                        address = addresses.getLine1() + ", "
-                                + (addresses.getLine2().equals("") ? "" : addresses.getLine2() + ", ")
-                                + (addresses.getLine3().equals("") ? "" : addresses.getLine3() + ", ")
-                                + addresses.getCity() + ", "
-                                + addresses.getStateCode() + " "
-                                + addresses.getPostalCode();
-                    }
-                }
-
-                campValues.put(CampContract.CampEntry.COLUMN_CAMP_ADDRESSS, address);
-            }
-            campValues.put(CampContract.CampEntry.COLUMN_CAMP_LATLONG, data.getLatLong());
-            campValues.put(CampContract.CampEntry.COLUMN_CAMP_CELLRECEP, data.getAmenities().getCellPhoneReception());
-            if (data.getAmenities().getShowers().size() != 0) {
-                campValues.put(CampContract.CampEntry.COLUMN_CAMP_SHOWERS, data.getAmenities().getShowers().get(0));
-            } else {
-                campValues.put(CampContract.CampEntry.COLUMN_CAMP_SHOWERS, String.valueOf(R.string.none));
-            }
-            campValues.put(CampContract.CampEntry.COLUMN_CAMP_INTERNET, data.getAmenities().getInternetConnectivity().toString());
-            if (data.getAmenities().getToilets().size() != 0) {
-                campValues.put(CampContract.CampEntry.COLUMN_CAMP_TOILET, data.getAmenities().getToilets().get(0));
-            } else {
-                campValues.put(CampContract.CampEntry.COLUMN_CAMP_TOILET, String.valueOf(R.string.none));
-            }
-            campValues.put(CampContract.CampEntry.COLUMN_CAMP_WHEELCHAIR, data.getAccessibility().getWheelchairAccess());
-            campValues.put(CampContract.CampEntry.COLUMN_CAMP_RESERVURL, data.getReservationsUrl());
-            campValues.put(CampContract.CampEntry.COLUMN_CAMP_DIRECTIONURL, data.getDirectionsUrl());
-            result[i] = campValues;
-        }
-        return result;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getLoaderManager().initLoader(LOADER_ID, null, this);
+        if (savedInstanceState != null) {
+            parkCode = savedInstanceState.getString(PARK_CODE);
+            campId = savedInstanceState.getString(CAMP_ID);
+            latLong = savedInstanceState.getString(LATLONG);
+            isFromFavNav = savedInstanceState.getBoolean(IS_FAV);
+        } else {
+            if (getArguments() != null) {
+                parkCode = getArguments().getString(PARK_CODE);
+                campId = getArguments().getString(CAMP_ID);
+                latLong = getArguments().getString(LATLONG);
+                isFromFavNav = getArguments().getBoolean(IS_FAV);
+            }
+        }
     }
 
     @Override
@@ -165,100 +78,39 @@ public class CampgroundFragment extends Fragment implements LoaderManager.Loader
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+        String apiKey = getResources().getString(R.string.NPSapiKey);
+        String trailApiKey = getResources().getString(R.string.HPapiKey);
+        String fields = getResources().getString(R.string.fields_cg);
+        DetailViewModelFactory factory = FactoryUtils.provideDVMFactory(this.getActivity().getApplicationContext(), parkCode, "", "", apiKey, trailApiKey, fields, latLong);
+        DetailViewModel viewModel = ViewModelProviders.of(getActivity(), factory).get(DetailViewModel.class);
+        viewModel.getCamps().observe(this, CampList -> {
+            adapter.swapCamps(CampList);
+        });
         adapter = new CampgroundRecyclerViewAdapter(this, getContext());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mContext = context;
-        if (getArguments() != null) {
-            latLong = getArguments().getString(LATLONG);
-            parkId = getArguments().getString(PARK_ID);
-            parkCode = getArguments().getString(PARKCODE);
-            uri = getArguments().getParcelable(URI);
-        }
-        Observable.fromCallable(() -> {
-            camps = loadCampData();
-            ContentValues[] campContent = makeContentFromCampList(camps);
-            if (campContent != null) {
-                ContentResolver contentResolver = mContext.getContentResolver();
-                contentResolver.delete(CampContract.CampEntry.CONTENT_URI_CAMP, null, null);
-                contentResolver.bulkInsert(CampContract.CampEntry.CONTENT_URI_CAMP, campContent);
-            }
-            return false;
-        })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mContext.getContentResolver().delete(CampContract.CampEntry.CONTENT_URI_CAMP, null, null);
-    }
-
-    @NonNull
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
-        uri = CampContract.CampEntry.CONTENT_URI_CAMP;
-        return new android.support.v4.content.CursorLoader(getActivity(), uri, PROJECTION, null, null, null);
-    }
-
-    @Override
-    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
-        adapter.swapCursor(data);
-    }
-
-    @Override
-    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
-        if (adapter != null) {
-            adapter.swapCursor(null);
-        }
-    }
 
     @Override
     public void onListFragmentInteraction(String id, int position) {
 
-        Uri uriCamp = CampContract.CampEntry.CONTENT_URI_CAMP;
+
         Intent intent = new Intent(getActivity(), CampDetailActivity.class);
-        intent.putExtra(URI, uri);
-        intent.putExtra(URI_CAMP, uriCamp);
-        intent.putExtra(PARK_ID, parkId);
-        intent.putExtra(PARKCODE, parkCode);
-        intent.putExtra(LATLONG, latLong);
+        intent.putExtra(PARK_CODE, parkCode);
         intent.putExtra(CAMP_ID, id);
-        intent.putExtra(POSITION, position);
         startActivity(intent);
+        getActivity().overridePendingTransition(R.xml.slide_from_right, R.xml.slide_to_left);
 
-    }
-
-    private List<CampDatum> loadCampData() {
-        String apiKey = mContext.getResources().getString(R.string.NPSapiKey);
-        String feilds = mContext.getResources().getString(R.string.fields_cg);
-        Call<Campground> campData = NPSApiConnection.getApi().getCampgound(parkCode, apiKey, feilds);
-        Response<Campground> response = null;
-        try {
-            response = campData.execute();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if (response != null) {
-            return response.body().getData();
-        } else
-            return null;
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(URI, uri);
-        outState.putString(PARK_ID, parkId);
-        outState.putString(PARKCODE, parkCode);
+        outState.putString(PARK_CODE, parkCode);
         outState.putString(LATLONG, latLong);
+        outState.putBoolean(IS_FAV, isFromFavNav);
+        outState.putString(CAMP_ID, campId);
     }
 
 }

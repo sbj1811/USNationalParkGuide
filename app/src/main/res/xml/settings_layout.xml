@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/settings_title">
 
     <EditTextPreference
@@ -12,12 +11,11 @@
 
 
     <ListPreference
-        android:key="@string/settings_state_key"
-        android:title="@string/settings_states_label"
         android:defaultValue="@string/settings_states_default"
         android:entries="@array/state_name_array"
         android:entryValues="@array/state_arrays"
+        android:key="@string/settings_state_key"
         android:summary="@string/state_prompt"
-        />
+        android:title="@string/settings_states_label" />
 
 </PreferenceScreen>

@@ -1,13 +1,11 @@
 package com.sjani.usnationalparkguide.Utils.NetworkSync.Trails;
 
-import com.sjani.usnationalparkguide.Utils.NetworkSync.NPS.NPSApiEndpointInterface;
-
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class HikingprojectApiConnection {
 
-    public static HikingprojectEndpointInterface getApi () {
+    public static HikingprojectEndpointInterface getApi() {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(HikingprojectEndpointInterface.API_ENDPOINT)

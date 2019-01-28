@@ -1,29 +1,18 @@
-
 package com.sjani.usnationalparkguide.Models.Campgrounds;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Fee implements Parcelable
-{
+public class Fee implements Parcelable {
 
-    @SerializedName("cost")
-    @Expose
-    private Double cost;
-    @SerializedName("description")
-    @Expose
-    private String description;
-    @SerializedName("title")
-    @Expose
-    private String title;
     public final static Parcelable.Creator<Fee> CREATOR = new Creator<Fee>() {
 
 
         @SuppressWarnings({
-            "unchecked"
+                "unchecked"
         })
         public Fee createFromParcel(Parcel in) {
             return new Fee(in);
@@ -33,8 +22,16 @@ public class Fee implements Parcelable
             return (new Fee[size]);
         }
 
-    }
-    ;
+    };
+    @SerializedName("cost")
+    @Expose
+    private Double cost;
+    @SerializedName("description")
+    @Expose
+    private String description;
+    @SerializedName("title")
+    @Expose
+    private String title;
 
     protected Fee(Parcel in) {
         this.cost = ((Double) in.readValue((Double.class.getClassLoader())));
@@ -76,7 +73,7 @@ public class Fee implements Parcelable
     }
 
     public int describeContents() {
-        return  0;
+        return 0;
     }
 
 }

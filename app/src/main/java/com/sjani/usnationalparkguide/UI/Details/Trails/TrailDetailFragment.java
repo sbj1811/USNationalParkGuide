@@ -2,19 +2,10 @@ package com.sjani.usnationalparkguide.UI.Details.Trails;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v7.graphics.Palette;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,41 +17,29 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.sjani.usnationalparkguide.Data.TrailContract;
+import com.bumptech.glide.request.RequestOptions;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.sjani.usnationalparkguide.Data.TrailEntity;
 import com.sjani.usnationalparkguide.R;
+import com.sjani.usnationalparkguide.Utils.FactoryUtils;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.palette.graphics.Palette;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TrailDetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class TrailDetailFragment extends Fragment {
 
     private static final String TAG = TrailDetailFragment.class.getSimpleName();
     private static final String TRAIL_ID = "trail_id";
-    private static final String URI = "uri";
-    private static final String URI_TRAIL = "uri_trail";
-    private static final String POSITION = "position";
-    private static final String PARK_ID = "park_id";
     private static final String PARKCODE = "parkcode";
     private static final String LATLONG = "latlong";
-    private static final int LOADER_ID = 6;
-    private static final String[] PROJECTION = new String[]{
-            TrailContract.TrailEntry._ID,
-            TrailContract.TrailEntry.COLUMN_TRAIL_ID,
-            TrailContract.TrailEntry.COLUMN_TRAIL_NAME,
-            TrailContract.TrailEntry.COLUMN_TRAIL_SUMMARY,
-            TrailContract.TrailEntry.COLUMN_TRAIL_DIFFICULTY,
-            TrailContract.TrailEntry.COLUMN_TRAIL_IMAGE_SMALL,
-            TrailContract.TrailEntry.COLUMN_TRAIL_IMAGE_MED,
-            TrailContract.TrailEntry.COLUMN_TRAIL_LENGTH,
-            TrailContract.TrailEntry.COLUMN_TRAIL_ASCENT,
-            TrailContract.TrailEntry.COLUMN_TRAIL_LAT,
-            TrailContract.TrailEntry.COLUMN_TRAIL_LONG,
-            TrailContract.TrailEntry.COLUMN_TRAIL_LOCATION,
-            TrailContract.TrailEntry.COLUMN_TRAIL_CONDITION,
-            TrailContract.TrailEntry.COLUMN_TRAIL_MOREINFO
-    };
+
     @BindView(R.id.trail_detail_title)
     TextView titleTv;
     @BindView(R.id.trail_address)
@@ -81,13 +60,9 @@ public class TrailDetailFragment extends Fragment implements LoaderManager.Loade
     LinearLayout addressLl;
     @BindView(R.id.trail_detail_collapsing_toolbar)
     CollapsingToolbarLayout collapsingToolbarLayout;
-    private Uri uri;
-    private String trailId;
-    private int position;
-    private Cursor cursor;
-    private Uri uriPark;
-    private String parkId;
+
     private String parkCode;
+    private String trailId;
     private String latLong;
     private String title;
     private String latitude;
@@ -98,14 +73,10 @@ public class TrailDetailFragment extends Fragment implements LoaderManager.Loade
         // Required empty public constructor
     }
 
-    public static TrailDetailFragment newInstance(Uri uri, String trailId, int position, String parkId, String parkCode, String latLong, Uri parkUri) {
+    public static TrailDetailFragment newInstance(String trailId, String parkCode, String latLong) {
         TrailDetailFragment fragment = new TrailDetailFragment();
         Bundle args = new Bundle();
-        args.putParcelable(URI_TRAIL, uri);
         args.putString(TRAIL_ID, trailId);
-        args.putInt(POSITION, position);
-        args.putParcelable(URI, parkUri);
-        args.putString(PARK_ID, parkId);
         args.putString(LATLONG, latLong);
         args.putString(PARKCODE, parkCode);
         fragment.setArguments(args);
@@ -128,22 +99,23 @@ public class TrailDetailFragment extends Fragment implements LoaderManager.Loade
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+        String trailApiKey = getResources().getString(R.string.HPapiKey);
         collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
+        TrailDetailViewModelFactory factory = FactoryUtils.provideTDVMFactory(this.getActivity().getApplicationContext(), trailApiKey, latLong);
+        TrailDetailViewModel viewModel = ViewModelProviders.of(getActivity(), factory).get(TrailDetailViewModel.class);
+        viewModel.getTrail(trailId).observe(this, TrailEntity -> {
+            updateUI(TrailEntity);
+        });
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (getArguments() != null) {
-            uri = getArguments().getParcelable(URI_TRAIL);
             trailId = getArguments().getString(TRAIL_ID);
-            position = getArguments().getInt(POSITION);
-            uriPark = getArguments().getParcelable(URI);
             latLong = getArguments().getString(LATLONG);
             parkCode = getArguments().getString(PARKCODE);
-            parkId = getArguments().getString(PARK_ID);
         }
-        getLoaderManager().initLoader(LOADER_ID, null, this);
     }
 
     @Override
@@ -160,6 +132,7 @@ public class TrailDetailFragment extends Fragment implements LoaderManager.Loade
                 // this takes the user 'back', as if they pressed the left-facing triangle icon on the main android toolbar.
                 // if this doesn't work as desired, another possibility is to call `finish()` here.
                 getActivity().onBackPressed();
+                getActivity().overridePendingTransition(R.xml.slide_from_left, R.xml.slide_to_right);
                 break;
             case R.id.action_share:
                 Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
@@ -174,27 +147,20 @@ public class TrailDetailFragment extends Fragment implements LoaderManager.Loade
         return true;
     }
 
-    @NonNull
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
-        return new CursorLoader(getActivity(), uri, PROJECTION, null, null, null);
-    }
-
-    @Override
-    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
-        cursor = data;
-        if (cursor == null || cursor.getCount() <= 0) return;
-        cursor.moveToPosition(position);
-        title = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_NAME));
+    private void updateUI(TrailEntity trailEntity) {
+        title = trailEntity.getTrail_name();
         titleTv.setText(title);
-        String distance = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_LENGTH));
+        String distance = trailEntity.getLength();
         distanceTv.setText(distance + " " + getContext().getResources().getString(R.string.miles));
-        String elevation = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_ASCENT));
+        String elevation = trailEntity.getAscent();
         elevationTv.setText(elevation + " " + getContext().getResources().getString(R.string.ft));
-        String address = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_LOCATION));
+        String address = trailEntity.getLocation();
+        ;
         trailAddressTv.setText(address);
-        latitude = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_LAT));
-        longitude = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_LONG));
+        latitude = trailEntity.getLatitude();
+        ;
+        longitude = trailEntity.getLongitude();
+        ;
         addressLl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -203,9 +169,9 @@ public class TrailDetailFragment extends Fragment implements LoaderManager.Loade
                 startActivity(intent);
             }
         });
-        String summary = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_SUMMARY));
+        String summary = trailEntity.getSummary();
         summaryTv.setText(summary);
-        String condition = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_CONDITION));
+        String condition = trailEntity.getCondition();
         if (!(condition == null)) {
             if (!condition.equals("")) {
                 conditionTv.setText(condition);
@@ -213,7 +179,7 @@ public class TrailDetailFragment extends Fragment implements LoaderManager.Loade
         } else {
             conditionTv.setText(getActivity().getResources().getString(R.string.na));
         }
-        String difficultyMark = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_DIFFICULTY));
+        String difficultyMark = trailEntity.getDifficulty();
         String difficultyLevel;
         if (difficultyMark.equals("greenBlue")) {
             difficultyLevel = getContext().getResources().getString(R.string.easy);
@@ -225,16 +191,18 @@ public class TrailDetailFragment extends Fragment implements LoaderManager.Loade
             difficultyLevel = getContext().getResources().getString(R.string.unknown);
         }
         difficultyTv.setText(difficultyLevel);
-        String imageUrl = cursor.getString(cursor.getColumnIndex(TrailContract.TrailEntry.COLUMN_TRAIL_IMAGE_MED));
+        String imageUrl = trailEntity.getImage_med();
         if (imageUrl.equals("")) {
             Glide.with(trailIv.getContext())
                     .load(R.drawable.empty_detail)
-                    .fitCenter()
+                    .apply(new RequestOptions()
+                            .fitCenter())
                     .into(trailIv);
         } else {
             Glide.with(trailIv.getContext())
                     .load(imageUrl)
-                    .fitCenter()
+                    .apply(new RequestOptions()
+                            .fitCenter())
                     .into(trailIv);
 
             Picasso.with(trailIv.getContext())
@@ -243,7 +211,8 @@ public class TrailDetailFragment extends Fragment implements LoaderManager.Loade
                         @Override
                         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                             Palette.from(bitmap).maximumColorCount(24).generate(new Palette.PaletteAsyncListener() {
-                                @Override public void onGenerated(Palette palette) {
+                                @Override
+                                public void onGenerated(Palette palette) {
 
                                     int defaultColor = 0x000000;
                                     int lightMutedColor = palette.getLightMutedColor(defaultColor);
@@ -267,11 +236,6 @@ public class TrailDetailFragment extends Fragment implements LoaderManager.Loade
                         }
                     });
         }
-
     }
 
-    @Override
-    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
-        cursor = null;
-    }
 }

@@ -1,16 +1,30 @@
-
 package com.sjani.usnationalparkguide.Models.Park;
 
-import java.util.List;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class OperatingHour implements Parcelable
-{
+import java.util.List;
 
+public class OperatingHour implements Parcelable {
+
+    public final static Parcelable.Creator<OperatingHour> CREATOR = new Creator<OperatingHour>() {
+
+
+        @SuppressWarnings({
+                "unchecked"
+        })
+        public OperatingHour createFromParcel(Parcel in) {
+            return new OperatingHour(in);
+        }
+
+        public OperatingHour[] newArray(int size) {
+            return (new OperatingHour[size]);
+        }
+
+    };
     @SerializedName("exceptions")
     @Expose
     private List<Exception> exceptions = null;
@@ -23,22 +37,6 @@ public class OperatingHour implements Parcelable
     @SerializedName("name")
     @Expose
     private String name;
-    public final static Parcelable.Creator<OperatingHour> CREATOR = new Creator<OperatingHour>() {
-
-
-        @SuppressWarnings({
-            "unchecked"
-        })
-        public OperatingHour createFromParcel(Parcel in) {
-            return new OperatingHour(in);
-        }
-
-        public OperatingHour[] newArray(int size) {
-            return (new OperatingHour[size]);
-        }
-
-    }
-    ;
 
     protected OperatingHour(Parcel in) {
         in.readList(this.exceptions, (com.sjani.usnationalparkguide.Models.Park.Exception.class.getClassLoader()));
@@ -90,7 +88,7 @@ public class OperatingHour implements Parcelable
     }
 
     public int describeContents() {
-        return  0;
+        return 0;
     }
 
 }

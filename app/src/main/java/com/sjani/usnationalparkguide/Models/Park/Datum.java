@@ -1,16 +1,31 @@
-
 package com.sjani.usnationalparkguide.Models.Park;
 
-import java.util.List;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Datum implements Parcelable
-{
+import java.util.List;
 
+
+public class Datum implements Parcelable {
+
+    public final static Parcelable.Creator<Datum> CREATOR = new Creator<Datum>() {
+
+
+        @SuppressWarnings({
+                "unchecked"
+        })
+        public Datum createFromParcel(Parcel in) {
+            return new Datum(in);
+        }
+
+        public Datum[] newArray(int size) {
+            return (new Datum[size]);
+        }
+
+    };
     @SerializedName("contacts")
     @Expose
     private Contacts contacts;
@@ -65,22 +80,6 @@ public class Datum implements Parcelable
     @SerializedName("fullName")
     @Expose
     private String fullName;
-    public final static Parcelable.Creator<Datum> CREATOR = new Creator<Datum>() {
-
-
-        @SuppressWarnings({
-            "unchecked"
-        })
-        public Datum createFromParcel(Parcel in) {
-            return new Datum(in);
-        }
-
-        public Datum[] newArray(int size) {
-            return (new Datum[size]);
-        }
-
-    }
-    ;
 
     protected Datum(Parcel in) {
         this.contacts = ((Contacts) in.readValue((Contacts.class.getClassLoader())));
@@ -272,7 +271,7 @@ public class Datum implements Parcelable
     }
 
     public int describeContents() {
-        return  0;
+        return 0;
     }
 
 }

@@ -1,28 +1,21 @@
-
 package com.sjani.usnationalparkguide.Models.Trails;
 
-import java.util.ArrayList;
-import java.util.List;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Trail implements Parcelable
-{
+import java.util.ArrayList;
+import java.util.List;
 
-    @SerializedName("trails")
-    @Expose
-    private List<TrailDatum> trails = null;
-    @SerializedName("success")
-    @Expose
-    private Long success;
+public class Trail implements Parcelable {
+
     public final static Parcelable.Creator<Trail> CREATOR = new Creator<Trail>() {
 
 
         @SuppressWarnings({
-            "unchecked"
+                "unchecked"
         })
         public Trail createFromParcel(Parcel in) {
             return new Trail(in);
@@ -32,8 +25,13 @@ public class Trail implements Parcelable
             return (new Trail[size]);
         }
 
-    }
-    ;
+    };
+    @SerializedName("trails")
+    @Expose
+    private List<TrailDatum> trails = null;
+    @SerializedName("success")
+    @Expose
+    private Long success;
 
     protected Trail(Parcel in) {
         if (in.readByte() == 0x01) {
@@ -80,7 +78,7 @@ public class Trail implements Parcelable
     }
 
     public int describeContents() {
-        return  0;
+        return 0;
     }
 
 }

@@ -1,4 +1,3 @@
-
 package com.sjani.usnationalparkguide.Models.Trails;
 
 import android.os.Parcel;
@@ -7,9 +6,23 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class TrailDatum implements Parcelable
-{
+public class TrailDatum implements Parcelable {
 
+    public final static Parcelable.Creator<TrailDatum> CREATOR = new Creator<TrailDatum>() {
+
+
+        @SuppressWarnings({
+                "unchecked"
+        })
+        public TrailDatum createFromParcel(Parcel in) {
+            return new TrailDatum(in);
+        }
+
+        public TrailDatum[] newArray(int size) {
+            return (new TrailDatum[size]);
+        }
+
+    };
     @SerializedName("id")
     @Expose
     private Long id;
@@ -79,22 +92,6 @@ public class TrailDatum implements Parcelable
     @SerializedName("conditionDate")
     @Expose
     private String conditionDate;
-    public final static Parcelable.Creator<TrailDatum> CREATOR = new Creator<TrailDatum>() {
-
-
-        @SuppressWarnings({
-            "unchecked"
-        })
-        public TrailDatum createFromParcel(Parcel in) {
-            return new TrailDatum(in);
-        }
-
-        public TrailDatum[] newArray(int size) {
-            return (new TrailDatum[size]);
-        }
-
-    }
-    ;
 
     protected TrailDatum(Parcel in) {
         this.id = ((Long) in.readValue((Long.class.getClassLoader())));
@@ -336,7 +333,7 @@ public class TrailDatum implements Parcelable
     }
 
     public int describeContents() {
-        return  0;
+        return 0;
     }
 
 }

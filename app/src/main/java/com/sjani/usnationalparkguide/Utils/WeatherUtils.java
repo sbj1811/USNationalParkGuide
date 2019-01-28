@@ -1,7 +1,6 @@
 package com.sjani.usnationalparkguide.Utils;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.sjani.usnationalparkguide.R;
 

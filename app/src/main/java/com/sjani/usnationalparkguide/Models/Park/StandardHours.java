@@ -1,4 +1,3 @@
-
 package com.sjani.usnationalparkguide.Models.Park;
 
 import android.os.Parcel;
@@ -7,9 +6,23 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class StandardHours implements Parcelable
-{
+public class StandardHours implements Parcelable {
 
+    public final static Parcelable.Creator<StandardHours> CREATOR = new Creator<StandardHours>() {
+
+
+        @SuppressWarnings({
+                "unchecked"
+        })
+        public StandardHours createFromParcel(Parcel in) {
+            return new StandardHours(in);
+        }
+
+        public StandardHours[] newArray(int size) {
+            return (new StandardHours[size]);
+        }
+
+    };
     @SerializedName("wednesday")
     @Expose
     private String wednesday;
@@ -31,22 +44,6 @@ public class StandardHours implements Parcelable
     @SerializedName("saturday")
     @Expose
     private String saturday;
-    public final static Parcelable.Creator<StandardHours> CREATOR = new Creator<StandardHours>() {
-
-
-        @SuppressWarnings({
-            "unchecked"
-        })
-        public StandardHours createFromParcel(Parcel in) {
-            return new StandardHours(in);
-        }
-
-        public StandardHours[] newArray(int size) {
-            return (new StandardHours[size]);
-        }
-
-    }
-    ;
 
     protected StandardHours(Parcel in) {
         this.wednesday = ((String) in.readValue((String.class.getClassLoader())));
@@ -128,7 +125,7 @@ public class StandardHours implements Parcelable
     }
 
     public int describeContents() {
-        return  0;
+        return 0;
     }
 
 }
