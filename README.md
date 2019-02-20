@@ -1,6 +1,6 @@
 # National Park Guide App 
 
-![NPS-play](https://play.google.com/store/apps/details?id=com.sjani.usnationalparkguide): ./media/play.jpg
+[Google Play](https://play.google.com/store/apps/details?id=com.sjani.usnationalparkguide) 
 
 National Park Guide boasts rich, detailed information on America’s most popular National
 Parks, including key features, history, maps, campgrounds, hiking trails, current weather and
