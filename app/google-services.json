@@ -15,15 +15,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "110785084793-m53v0kd3ghlpv9fqc8j3boe760mf8pgn.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.sjani.usnationalparkguide",
-            "certificate_hash": "9b4de34e2ccfb432e44dade29f6e30924a0712aa"
-          }
-        },
-        {
-          "client_id": "110785084793-p6v64l77vov36go98qi9ulucin0tlsg2.apps.googleusercontent.com",
+          "client_id": "110785084793-sfqqp0otis196jmhgapcpras344svh1o.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.sjani.usnationalparkguide",
@@ -56,7 +48,8 @@
         "ads_service": {
           "status": 2
         }
-      }
+      },
+      "admob_app_id": "ca-app-pub-1510923228147176~5607247189"
     }
   ],
   "configuration_version": "1"
