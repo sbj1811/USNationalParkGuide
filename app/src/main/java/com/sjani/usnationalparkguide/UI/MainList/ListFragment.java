@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,6 +59,7 @@ public class ListFragment extends Fragment implements GridItemClickListener, Lis
     private GridLayoutManager layoutManager;
     private ListFragmentPresenterImpl presenter;
     private MainListViewModel viewModel;
+    private boolean saveInstanceIsNull;
 
 
     public ListFragment() {
@@ -84,6 +86,9 @@ public class ListFragment extends Fragment implements GridItemClickListener, Lis
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(savedInstanceState == null){
+            saveInstanceIsNull = true;
+        }
     }
 
     @Nullable
@@ -95,7 +100,7 @@ public class ListFragment extends Fragment implements GridItemClickListener, Lis
         mAdView.setAdSize(AdSize.BANNER);
         LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.admob_ll);
         linearLayout.addView(mAdView);
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).addTestDevice("82DB6E6641D0CCA845D58CE176AF15E").build();
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).addTestDevice("82DB6E6641D0CCA845D58CE176AF15ED").build();
         mAdView.loadAd(adRequest);
         return view;
     }
@@ -120,10 +125,8 @@ public class ListFragment extends Fragment implements GridItemClickListener, Lis
         if (mDualPane) {
             DetailsFragment detailsFragment = DetailsFragment.newInstance(parkCode, latlong, false);
             getFragmentManager().beginTransaction()
-                    .replace(R.id.details, detailsFragment)
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                    .addToBackStack(null)
-                    .commit();
+                        .replace(R.id.details, detailsFragment)
+                        .commit();
         } else {
             ImageView imageView = (ImageView) getActivity().findViewById(R.id.park_thumbnail);
 

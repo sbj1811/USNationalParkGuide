@@ -1,6 +1,8 @@
 package com.sjani.usnationalparkguide.Utils;
 
 
+import android.util.Log;
+
 import com.sjani.usnationalparkguide.Data.AlertDao;
 import com.sjani.usnationalparkguide.Data.AlertEntity;
 import com.sjani.usnationalparkguide.Data.CampDao;
@@ -73,7 +75,6 @@ public class ParkRepository {
             @Override
             public void onResponse(Call<Parks> call, Response<Parks> response) {
                 parks = response.body().getData();
-
                 Observable.fromCallable(() -> {
                     parkDao.clearTable();
                     for (Datum p : parks) {
@@ -353,8 +354,16 @@ public class ParkRepository {
             phone = String.valueOf(R.string.NA);
             email = String.valueOf(R.string.NA);
         } else {
-            phone = p.getContacts().getPhoneNumbers().get(0).getPhoneNumber();
-            email = p.getContacts().getEmailAddresses().get(0).getEmailAddress();
+            if(p.getContacts().getPhoneNumbers() == null || p.getContacts().getPhoneNumbers().size()==0){
+                phone = String.valueOf(R.string.NA);
+            } else {
+                phone = p.getContacts().getPhoneNumbers().get(0).getPhoneNumber();
+            }
+            if(p.getContacts().getEmailAddresses() == null || p.getContacts().getEmailAddresses().size()==0){
+                email = String.valueOf(R.string.NA);
+            } else {
+                email = p.getContacts().getEmailAddresses().get(0).getEmailAddress();
+            }
         }
         parkEntity.setImage(image);
         parkEntity.setPhone(phone);
