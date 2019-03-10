@@ -194,6 +194,9 @@ public class MainListActivity extends AppCompatActivity
             overridePendingTransition(R.xml.slide_from_right, R.xml.slide_to_left);
         } else if (id == R.id.nav_logout) {
             AuthUI.getInstance().signOut(this);
+        } else if (id == R.id.nav_policy) {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.policy_url)));
+            startActivity(browserIntent);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
