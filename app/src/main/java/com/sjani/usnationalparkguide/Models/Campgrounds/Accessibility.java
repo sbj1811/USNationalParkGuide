@@ -25,40 +25,40 @@ public class Accessibility implements Parcelable {
         }
 
     };
-    @SerializedName("wheelchairAccess")
+    @SerializedName("wheelchairaccess")
     @Expose
     private String wheelchairAccess;
-    @SerializedName("internetInfo")
+    @SerializedName("internetinfo")
     @Expose
     private String internetInfo;
-    @SerializedName("rvAllowed")
+    @SerializedName("rvallowed")
     @Expose
     private Double rvAllowed;
-    @SerializedName("cellPhoneInfo")
+    @SerializedName("cellphoneinfo")
     @Expose
     private String cellPhoneInfo;
-    @SerializedName("fireStovePolicy")
+    @SerializedName("firestovepolicy")
     @Expose
     private String fireStovePolicy;
-    @SerializedName("rvMaxLength")
+    @SerializedName("rvmaxlength")
     @Expose
     private Double rvMaxLength;
-    @SerializedName("additionalInfo")
+    @SerializedName("additionalinfo")
     @Expose
     private String additionalInfo;
-    @SerializedName("trailerMaxLength")
+    @SerializedName("trailermaxlength")
     @Expose
     private Double trailerMaxLength;
-    @SerializedName("adaInfo")
+    @SerializedName("adainfo")
     @Expose
     private String adaInfo;
-    @SerializedName("rvInfo")
+    @SerializedName("rvinfo")
     @Expose
     private String rvInfo;
-    @SerializedName("accessRoads")
+    @SerializedName("accessroads")
     @Expose
     private List<String> accessRoads = null;
-    @SerializedName("trailerAllowed")
+    @SerializedName("trailerallowed")
     @Expose
     private Double trailerAllowed;
     @SerializedName("classifications")

@@ -32,19 +32,19 @@ public class Campsites implements Parcelable {
     @SerializedName("horse")
     @Expose
     private Double horse;
-    @SerializedName("totalSites")
+    @SerializedName("totalsites")
     @Expose
     private Double totalSites;
-    @SerializedName("tentOnly")
+    @SerializedName("tentonly")
     @Expose
     private Double tentOnly;
-    @SerializedName("electricalHookups")
+    @SerializedName("electricalhookups")
     @Expose
     private Double electricalHookups;
-    @SerializedName("rvOnly")
+    @SerializedName("rvonly")
     @Expose
     private Double rvOnly;
-    @SerializedName("walkBoatTo")
+    @SerializedName("walkboatto")
     @Expose
     private Double walkBoatTo;
 

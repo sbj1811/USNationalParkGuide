@@ -35,28 +35,28 @@ public class Datum implements Parcelable {
     @SerializedName("entranceFees")
     @Expose
     private List<EntranceFee> entranceFees = null;
-    @SerializedName("directionsInfo")
+    @SerializedName("directionsinfo")
     @Expose
     private String directionsInfo;
     @SerializedName("entrancePasses")
     @Expose
     private List<EntrancePass> entrancePasses = null;
-    @SerializedName("directionsUrl")
+    @SerializedName("directionsurl")
     @Expose
     private String directionsUrl;
     @SerializedName("url")
     @Expose
     private String url;
-    @SerializedName("weatherInfo")
+    @SerializedName("weatherinfo")
     @Expose
     private String weatherInfo;
     @SerializedName("name")
     @Expose
     private String name;
-    @SerializedName("operatingHours")
+    @SerializedName("operatinghours")
     @Expose
     private List<OperatingHour> operatingHours = null;
-    @SerializedName("latLong")
+    @SerializedName("latlong")
     @Expose
     private String latLong;
     @SerializedName("description")
@@ -68,7 +68,7 @@ public class Datum implements Parcelable {
     @SerializedName("designation")
     @Expose
     private String designation;
-    @SerializedName("parkCode")
+    @SerializedName("parkcode")
     @Expose
     private String parkCode;
     @SerializedName("addresses")
@@ -77,7 +77,7 @@ public class Datum implements Parcelable {
     @SerializedName("id")
     @Expose
     private String id;
-    @SerializedName("fullName")
+    @SerializedName("fullname")
     @Expose
     private String fullName;
 
@@ -163,6 +163,30 @@ public class Datum implements Parcelable {
 
     public String getWeatherInfo() {
         return weatherInfo;
+    }
+
+    @Override
+    public String toString() {
+        return "Datum{" +
+                "contacts=" + contacts +
+                ", states='" + states + '\'' +
+                ", entranceFees=" + entranceFees +
+                ", directionsInfo='" + directionsInfo + '\'' +
+                ", entrancePasses=" + entrancePasses +
+                ", directionsUrl='" + directionsUrl + '\'' +
+                ", url='" + url + '\'' +
+                ", weatherInfo='" + weatherInfo + '\'' +
+                ", name='" + name + '\'' +
+                ", operatingHours=" + operatingHours +
+                ", latLong='" + latLong + '\'' +
+                ", description='" + description + '\'' +
+                ", images=" + images +
+                ", designation='" + designation + '\'' +
+                ", parkCode='" + parkCode + '\'' +
+                ", addresses=" + addresses +
+                ", id='" + id + '\'' +
+                ", fullName='" + fullName + '\'' +
+                '}';
     }
 
     public void setWeatherInfo(String weatherInfo) {

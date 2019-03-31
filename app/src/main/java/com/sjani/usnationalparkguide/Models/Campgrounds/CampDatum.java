@@ -25,10 +25,10 @@ public class CampDatum implements Parcelable {
         }
 
     };
-    @SerializedName("regulationsUrl")
+    @SerializedName("regulationsurl")
     @Expose
     private String regulationsUrl;
-    @SerializedName("weatherOverview")
+    @SerializedName("weatheroverview")
     @Expose
     private String weatherOverview;
     @SerializedName("campsites")
@@ -37,31 +37,31 @@ public class CampDatum implements Parcelable {
     @SerializedName("accessibility")
     @Expose
     private Accessibility accessibility;
-    @SerializedName("directionsOverview")
+    @SerializedName("directionsoverview")
     @Expose
     private String directionsOverview;
-    @SerializedName("reservationsUrl")
+    @SerializedName("reservationsurl")
     @Expose
     private String reservationsUrl;
-    @SerializedName("directionsUrl")
+    @SerializedName("directionsurl")
     @Expose
     private String directionsUrl;
     @SerializedName("fees")
     @Expose
     private List<Fee> fees = null;
-    @SerializedName("reservationsSitesFirstCome")
+    @SerializedName("reservationssitesfirstcome")
     @Expose
     private String reservationsSitesFirstCome;
     @SerializedName("name")
     @Expose
     private String name;
-    @SerializedName("regulationsOverview")
+    @SerializedName("regulationsoverview")
     @Expose
     private String regulationsOverview;
-    @SerializedName("operatingHours")
+    @SerializedName("operatinghours")
     @Expose
     private List<OperatingHour> operatingHours = null;
-    @SerializedName("latLong")
+    @SerializedName("latlong")
     @Expose
     private String latLong;
     @SerializedName("description")
@@ -70,7 +70,7 @@ public class CampDatum implements Parcelable {
     @SerializedName("reservationsSitesReservable")
     @Expose
     private String reservationsSitesReservable;
-    @SerializedName("parkCode")
+    @SerializedName("parkcode")
     @Expose
     private String parkCode;
     @SerializedName("amenities")
@@ -82,7 +82,7 @@ public class CampDatum implements Parcelable {
     @SerializedName("id")
     @Expose
     private Long id;
-    @SerializedName("reservationsDescription")
+    @SerializedName("reservationsdescription")
     @Expose
     private String reservationsDescription;
 

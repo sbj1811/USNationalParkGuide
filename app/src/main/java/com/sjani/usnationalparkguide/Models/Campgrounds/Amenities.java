@@ -25,19 +25,19 @@ public class Amenities implements Parcelable {
         }
 
     };
-    @SerializedName("trashRecyclingCollection")
+    @SerializedName("trashrecyclingcollection")
     @Expose
     private String trashRecyclingCollection;
     @SerializedName("toilets")
     @Expose
     private List<String> toilets = null;
-    @SerializedName("internetConnectivity")
+    @SerializedName("internetconnectivity")
     @Expose
     private Boolean internetConnectivity;
     @SerializedName("showers")
     @Expose
     private List<String> showers = null;
-    @SerializedName("cellPhoneReception")
+    @SerializedName("cellphonereception")
     @Expose
     private String cellPhoneReception;
     @SerializedName("laundry")
@@ -46,28 +46,28 @@ public class Amenities implements Parcelable {
     @SerializedName("amphitheater")
     @Expose
     private String amphitheater;
-    @SerializedName("dumpStation")
+    @SerializedName("dumpstation")
     @Expose
     private Boolean dumpStation;
-    @SerializedName("campStore")
+    @SerializedName("campstore")
     @Expose
     private Boolean campStore;
-    @SerializedName("staffOrVolunteerHostOnSite")
+    @SerializedName("stafforvolunteerhostonsite")
     @Expose
     private Boolean staffOrVolunteerHostOnSite;
     @SerializedName("potableWater")
     @Expose
     private List<String> potableWater = null;
-    @SerializedName("iceAvailableForSale")
+    @SerializedName("iceavailableforsale")
     @Expose
     private Boolean iceAvailableForSale;
-    @SerializedName("firewoodForSale")
+    @SerializedName("firewoodforsale")
     @Expose
     private Boolean firewoodForSale;
     @SerializedName("ampitheater")
     @Expose
     private Boolean ampitheater;
-    @SerializedName("foodStorageLockers")
+    @SerializedName("foodstoragelockers")
     @Expose
     private String foodStorageLockers;
 

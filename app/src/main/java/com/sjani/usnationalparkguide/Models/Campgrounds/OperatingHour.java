@@ -31,7 +31,7 @@ public class OperatingHour implements Parcelable {
     @SerializedName("description")
     @Expose
     private String description;
-    @SerializedName("standardHours")
+    @SerializedName("standardhours")
     @Expose
     private StandardHours standardHours;
     @SerializedName("name")

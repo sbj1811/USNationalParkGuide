@@ -26,7 +26,7 @@ public class EmailAddress implements Parcelable {
     @SerializedName("description")
     @Expose
     private String description;
-    @SerializedName("emailAddress")
+    @SerializedName("emailaddress")
     @Expose
     private String emailAddress;
 
