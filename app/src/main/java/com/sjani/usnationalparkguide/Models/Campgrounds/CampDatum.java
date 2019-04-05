@@ -43,7 +43,7 @@ public class CampDatum implements Parcelable {
     @SerializedName("reservationsurl")
     @Expose
     private String reservationsUrl;
-    @SerializedName("directionsurl")
+    @SerializedName("directionsUrl")
     @Expose
     private String directionsUrl;
     @SerializedName("fees")
@@ -58,10 +58,10 @@ public class CampDatum implements Parcelable {
     @SerializedName("regulationsoverview")
     @Expose
     private String regulationsOverview;
-    @SerializedName("operatinghours")
+    @SerializedName("operatingHours")
     @Expose
     private List<OperatingHour> operatingHours = null;
-    @SerializedName("latlong")
+    @SerializedName("latLong")
     @Expose
     private String latLong;
     @SerializedName("description")
@@ -70,7 +70,7 @@ public class CampDatum implements Parcelable {
     @SerializedName("reservationsSitesReservable")
     @Expose
     private String reservationsSitesReservable;
-    @SerializedName("parkcode")
+    @SerializedName("parkCode")
     @Expose
     private String parkCode;
     @SerializedName("amenities")
@@ -81,7 +81,7 @@ public class CampDatum implements Parcelable {
     private List<Address> addresses = null;
     @SerializedName("id")
     @Expose
-    private Long id;
+    private String id;
     @SerializedName("reservationsdescription")
     @Expose
     private String reservationsDescription;
@@ -105,7 +105,7 @@ public class CampDatum implements Parcelable {
         this.parkCode = ((String) in.readValue((String.class.getClassLoader())));
         this.amenities = ((Amenities) in.readValue((Amenities.class.getClassLoader())));
         in.readList(this.addresses, (com.sjani.usnationalparkguide.Models.Campgrounds.Address.class.getClassLoader()));
-        this.id = ((Long) in.readValue((Long.class.getClassLoader())));
+        this.id = ((String) in.readValue((String.class.getClassLoader())));
         this.reservationsDescription = ((String) in.readValue((String.class.getClassLoader())));
     }
 
@@ -212,7 +212,7 @@ public class CampDatum implements Parcelable {
         return latLong;
     }
 
-    public void setLatLong(String latLong) {
+    public void setlatLong(String latLong) {
         this.latLong = latLong;
     }
 
@@ -256,11 +256,11 @@ public class CampDatum implements Parcelable {
         this.addresses = addresses;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

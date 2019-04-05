@@ -23,7 +23,7 @@ public class PhoneNumber implements Parcelable {
         }
 
     };
-    @SerializedName("phonenumber")
+    @SerializedName("phoneNumber")
     @Expose
     private String phoneNumber;
     @SerializedName("description")

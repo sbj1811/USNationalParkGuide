@@ -33,7 +33,7 @@ public class Amenities implements Parcelable {
     private List<String> toilets = null;
     @SerializedName("internetconnectivity")
     @Expose
-    private Boolean internetConnectivity;
+    private String internetConnectivity;
     @SerializedName("showers")
     @Expose
     private List<String> showers = null;
@@ -42,31 +42,31 @@ public class Amenities implements Parcelable {
     private String cellPhoneReception;
     @SerializedName("laundry")
     @Expose
-    private Boolean laundry;
+    private String laundry;
     @SerializedName("amphitheater")
     @Expose
     private String amphitheater;
     @SerializedName("dumpstation")
     @Expose
-    private Boolean dumpStation;
+    private String dumpStation;
     @SerializedName("campstore")
     @Expose
-    private Boolean campStore;
+    private String campStore;
     @SerializedName("stafforvolunteerhostonsite")
     @Expose
-    private Boolean staffOrVolunteerHostOnSite;
+    private String staffOrVolunteerHostOnSite;
     @SerializedName("potableWater")
     @Expose
     private List<String> potableWater = null;
     @SerializedName("iceavailableforsale")
     @Expose
-    private Boolean iceAvailableForSale;
+    private String iceAvailableForSale;
     @SerializedName("firewoodforsale")
     @Expose
-    private Boolean firewoodForSale;
+    private String firewoodForSale;
     @SerializedName("ampitheater")
     @Expose
-    private Boolean ampitheater;
+    private String ampitheater;
     @SerializedName("foodstoragelockers")
     @Expose
     private String foodStorageLockers;
@@ -74,18 +74,18 @@ public class Amenities implements Parcelable {
     protected Amenities(Parcel in) {
         this.trashRecyclingCollection = ((String) in.readValue((String.class.getClassLoader())));
         in.readList(this.toilets, (java.lang.String.class.getClassLoader()));
-        this.internetConnectivity = ((Boolean) in.readValue((Boolean.class.getClassLoader())));
+        this.internetConnectivity = ((String) in.readValue((String.class.getClassLoader())));
         in.readList(this.showers, (java.lang.String.class.getClassLoader()));
         this.cellPhoneReception = ((String) in.readValue((String.class.getClassLoader())));
-        this.laundry = ((Boolean) in.readValue((Boolean.class.getClassLoader())));
+        this.laundry = ((String) in.readValue((String.class.getClassLoader())));
         this.amphitheater = ((String) in.readValue((String.class.getClassLoader())));
-        this.dumpStation = ((Boolean) in.readValue((Boolean.class.getClassLoader())));
-        this.campStore = ((Boolean) in.readValue((Boolean.class.getClassLoader())));
-        this.staffOrVolunteerHostOnSite = ((Boolean) in.readValue((Boolean.class.getClassLoader())));
+        this.dumpStation = ((String) in.readValue((String.class.getClassLoader())));
+        this.campStore = ((String) in.readValue((String.class.getClassLoader())));
+        this.staffOrVolunteerHostOnSite = ((String) in.readValue((String.class.getClassLoader())));
         in.readList(this.potableWater, (java.lang.String.class.getClassLoader()));
-        this.iceAvailableForSale = ((Boolean) in.readValue((Boolean.class.getClassLoader())));
-        this.firewoodForSale = ((Boolean) in.readValue((Boolean.class.getClassLoader())));
-        this.ampitheater = ((Boolean) in.readValue((Boolean.class.getClassLoader())));
+        this.iceAvailableForSale = ((String) in.readValue((String.class.getClassLoader())));
+        this.firewoodForSale = ((String) in.readValue((String.class.getClassLoader())));
+        this.ampitheater = ((String) in.readValue((String.class.getClassLoader())));
         this.foodStorageLockers = ((String) in.readValue((String.class.getClassLoader())));
     }
 
@@ -108,11 +108,11 @@ public class Amenities implements Parcelable {
         this.toilets = toilets;
     }
 
-    public Boolean getInternetConnectivity() {
+    public String getInternetConnectivity() {
         return internetConnectivity;
     }
 
-    public void setInternetConnectivity(Boolean internetConnectivity) {
+    public void setInternetConnectivity(String internetConnectivity) {
         this.internetConnectivity = internetConnectivity;
     }
 
@@ -132,11 +132,11 @@ public class Amenities implements Parcelable {
         this.cellPhoneReception = cellPhoneReception;
     }
 
-    public Boolean getLaundry() {
+    public String getLaundry() {
         return laundry;
     }
 
-    public void setLaundry(Boolean laundry) {
+    public void setLaundry(String laundry) {
         this.laundry = laundry;
     }
 
@@ -148,27 +148,27 @@ public class Amenities implements Parcelable {
         this.amphitheater = amphitheater;
     }
 
-    public Boolean getDumpStation() {
+    public String getDumpStation() {
         return dumpStation;
     }
 
-    public void setDumpStation(Boolean dumpStation) {
+    public void setDumpStation(String dumpStation) {
         this.dumpStation = dumpStation;
     }
 
-    public Boolean getCampStore() {
+    public String getCampStore() {
         return campStore;
     }
 
-    public void setCampStore(Boolean campStore) {
+    public void setCampStore(String campStore) {
         this.campStore = campStore;
     }
 
-    public Boolean getStaffOrVolunteerHostOnSite() {
+    public String getStaffOrVolunteerHostOnSite() {
         return staffOrVolunteerHostOnSite;
     }
 
-    public void setStaffOrVolunteerHostOnSite(Boolean staffOrVolunteerHostOnSite) {
+    public void setStaffOrVolunteerHostOnSite(String staffOrVolunteerHostOnSite) {
         this.staffOrVolunteerHostOnSite = staffOrVolunteerHostOnSite;
     }
 
@@ -180,27 +180,27 @@ public class Amenities implements Parcelable {
         this.potableWater = potableWater;
     }
 
-    public Boolean getIceAvailableForSale() {
+    public String getIceAvailableForSale() {
         return iceAvailableForSale;
     }
 
-    public void setIceAvailableForSale(Boolean iceAvailableForSale) {
+    public void setIceAvailableForSale(String iceAvailableForSale) {
         this.iceAvailableForSale = iceAvailableForSale;
     }
 
-    public Boolean getFirewoodForSale() {
+    public String getFirewoodForSale() {
         return firewoodForSale;
     }
 
-    public void setFirewoodForSale(Boolean firewoodForSale) {
+    public void setFirewoodForSale(String firewoodForSale) {
         this.firewoodForSale = firewoodForSale;
     }
 
-    public Boolean getAmpitheater() {
+    public String getAmpitheater() {
         return ampitheater;
     }
 
-    public void setAmpitheater(Boolean ampitheater) {
+    public void setAmpitheater(String ampitheater) {
         this.ampitheater = ampitheater;
     }
 

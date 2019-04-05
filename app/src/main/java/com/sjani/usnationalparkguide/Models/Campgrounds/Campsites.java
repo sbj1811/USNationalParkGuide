@@ -25,104 +25,104 @@ public class Campsites implements Parcelable {
     };
     @SerializedName("other")
     @Expose
-    private Double other;
+    private String other;
     @SerializedName("group")
     @Expose
-    private Double group;
+    private String group;
     @SerializedName("horse")
     @Expose
-    private Double horse;
+    private String horse;
     @SerializedName("totalsites")
     @Expose
-    private Double totalSites;
+    private String totalSites;
     @SerializedName("tentonly")
     @Expose
-    private Double tentOnly;
+    private String tentOnly;
     @SerializedName("electricalhookups")
     @Expose
-    private Double electricalHookups;
+    private String electricalHookups;
     @SerializedName("rvonly")
     @Expose
-    private Double rvOnly;
+    private String rvOnly;
     @SerializedName("walkboatto")
     @Expose
-    private Double walkBoatTo;
+    private String walkBoatTo;
 
     protected Campsites(Parcel in) {
-        this.other = ((Double) in.readValue((Double.class.getClassLoader())));
-        this.group = ((Double) in.readValue((Double.class.getClassLoader())));
-        this.horse = ((Double) in.readValue((Double.class.getClassLoader())));
-        this.totalSites = ((Double) in.readValue((Double.class.getClassLoader())));
-        this.tentOnly = ((Double) in.readValue((Double.class.getClassLoader())));
-        this.electricalHookups = ((Double) in.readValue((Double.class.getClassLoader())));
-        this.rvOnly = ((Double) in.readValue((Double.class.getClassLoader())));
-        this.walkBoatTo = ((Double) in.readValue((Double.class.getClassLoader())));
+        this.other = ((String) in.readValue((String.class.getClassLoader())));
+        this.group = ((String) in.readValue((String.class.getClassLoader())));
+        this.horse = ((String) in.readValue((String.class.getClassLoader())));
+        this.totalSites = ((String) in.readValue((String.class.getClassLoader())));
+        this.tentOnly = ((String) in.readValue((String.class.getClassLoader())));
+        this.electricalHookups = ((String) in.readValue((String.class.getClassLoader())));
+        this.rvOnly = ((String) in.readValue((String.class.getClassLoader())));
+        this.walkBoatTo = ((String) in.readValue((String.class.getClassLoader())));
     }
 
     public Campsites() {
     }
 
-    public Double getOther() {
+    public String getOther() {
         return other;
     }
 
-    public void setOther(Double other) {
+    public void setOther(String other) {
         this.other = other;
     }
 
-    public Double getGroup() {
+    public String getGroup() {
         return group;
     }
 
-    public void setGroup(Double group) {
+    public void setGroup(String group) {
         this.group = group;
     }
 
-    public Double getHorse() {
+    public String getHorse() {
         return horse;
     }
 
-    public void setHorse(Double horse) {
+    public void setHorse(String horse) {
         this.horse = horse;
     }
 
-    public Double getTotalSites() {
+    public String getTotalSites() {
         return totalSites;
     }
 
-    public void setTotalSites(Double totalSites) {
+    public void setTotalSites(String totalSites) {
         this.totalSites = totalSites;
     }
 
-    public Double getTentOnly() {
+    public String getTentOnly() {
         return tentOnly;
     }
 
-    public void setTentOnly(Double tentOnly) {
+    public void setTentOnly(String tentOnly) {
         this.tentOnly = tentOnly;
     }
 
-    public Double getElectricalHookups() {
+    public String getElectricalHookups() {
         return electricalHookups;
     }
 
-    public void setElectricalHookups(Double electricalHookups) {
+    public void setElectricalHookups(String electricalHookups) {
         this.electricalHookups = electricalHookups;
     }
 
-    public Double getRvOnly() {
+    public String getRvOnly() {
         return rvOnly;
     }
 
-    public void setRvOnly(Double rvOnly) {
+    public void setRvOnly(String rvOnly) {
         this.rvOnly = rvOnly;
     }
 
-    public Double getWalkBoatTo() {
+    public String getWalkBoatTo() {
         return walkBoatTo;
     }
 
-    public void setWalkBoatTo(Double walkBoatTo) {
+    public void setWalkBoatTo(String walkBoatTo) {
         this.walkBoatTo = walkBoatTo;
     }
 

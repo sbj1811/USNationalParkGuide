@@ -23,13 +23,13 @@ public class Address implements Parcelable {
         }
 
     };
-    @SerializedName("postalcode")
+    @SerializedName("postalCode")
     @Expose
     private String postalCode;
     @SerializedName("city")
     @Expose
     private String city;
-    @SerializedName("statecode")
+    @SerializedName("stateCode")
     @Expose
     private String stateCode;
     @SerializedName("line1")

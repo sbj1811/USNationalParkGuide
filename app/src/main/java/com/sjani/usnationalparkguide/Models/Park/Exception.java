@@ -23,16 +23,16 @@ public class Exception implements Parcelable {
         }
 
     };
-    @SerializedName("exceptionhours")
+    @SerializedName("exceptionHours")
     @Expose
     private ExceptionHours exceptionHours;
-    @SerializedName("startdate")
+    @SerializedName("startDate")
     @Expose
     private String startDate;
     @SerializedName("name")
     @Expose
     private String name;
-    @SerializedName("enddate")
+    @SerializedName("endDate")
     @Expose
     private String endDate;
 

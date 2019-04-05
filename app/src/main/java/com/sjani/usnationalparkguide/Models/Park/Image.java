@@ -26,7 +26,7 @@ public class Image implements Parcelable {
     @SerializedName("credit")
     @Expose
     private String credit;
-    @SerializedName("alttext")
+    @SerializedName("altText")
     @Expose
     private String altText;
     @SerializedName("title")

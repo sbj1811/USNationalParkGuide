@@ -25,10 +25,10 @@ public class Contacts implements Parcelable {
         }
 
     };
-    @SerializedName("phonenumbers")
+    @SerializedName("phoneNumbers")
     @Expose
     private List<PhoneNumber> phoneNumbers = null;
-    @SerializedName("emailaddresses")
+    @SerializedName("emailAddresses")
     @Expose
     private List<EmailAddress> emailAddresses = null;
 

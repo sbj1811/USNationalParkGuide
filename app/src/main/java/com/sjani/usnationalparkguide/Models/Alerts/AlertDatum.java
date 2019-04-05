@@ -38,7 +38,7 @@ public class AlertDatum implements Parcelable {
     @SerializedName("url")
     @Expose
     private String url;
-    @SerializedName("parkcode")
+    @SerializedName("parkCode")
     @Expose
     private String parkCode;
 
