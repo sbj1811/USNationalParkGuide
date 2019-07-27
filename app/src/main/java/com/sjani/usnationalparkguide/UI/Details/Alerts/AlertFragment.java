@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.sjani.usnationalparkguide.R;
 import com.sjani.usnationalparkguide.UI.Details.DetailViewModel;
@@ -28,6 +29,8 @@ public class AlertFragment extends Fragment {
     private static final String IS_FAV = "is_fav";
     @BindView(R.id.rv_alert)
     RecyclerView recyclerView;
+    @BindView(R.id.alert_loading_indicator)
+    ProgressBar progressBar;
     private String parkCode;
     private AlertRecyclerViewAdapter adapter;
     private boolean isFromFavNav;
@@ -74,6 +77,7 @@ public class AlertFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+        progressBar.setVisibility(View.VISIBLE);
         String apiKey = getResources().getString(R.string.NPSapiKey);
         String trailApiKey = getResources().getString(R.string.HPapiKey);
         String fields = getResources().getString(R.string.fields_cg);
@@ -85,6 +89,7 @@ public class AlertFragment extends Fragment {
         adapter = new AlertRecyclerViewAdapter(getContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override

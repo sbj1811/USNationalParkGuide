@@ -15,8 +15,8 @@ android {
         minSdkVersion 16
         targetSdkVersion 28
         multiDexEnabled true
-        versionCode 8
-        versionName "2019.2.1"
+        versionCode 9
+        versionName "2019.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -80,5 +80,6 @@ dependencies {
     implementation "androidx.room:room-runtime:$roomX_version"
     annotationProcessor "androidx.room:room-compiler:$roomX_version"
     implementation "androidx.room:room-rxjava2:$roomX_version"
+    implementation 'io.branch.sdk.android:library:2.+'
 }
 apply plugin: 'com.google.gms.google-services'

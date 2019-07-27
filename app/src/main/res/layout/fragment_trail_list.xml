@@ -13,5 +13,12 @@
         android:clickable="true"
         android:focusable="true" />
 
+    <ProgressBar
+        android:id="@+id/trail_loading_indicator"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_gravity="center"
+        android:indeterminateDrawable="@drawable/progress"/>
+
 
 </FrameLayout>

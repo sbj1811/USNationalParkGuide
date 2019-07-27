@@ -19,6 +19,10 @@ public class AlertEntity {
     private String description;
     @ColumnInfo(name = "parkCode")
     private String parkCode;
+
+    public AlertEntity() {
+    }
+
     @ColumnInfo(name = "category")
     private String category;
 
@@ -61,5 +65,14 @@ public class AlertEntity {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+
+
+    public AlertEntity(@NonNull String alert_id, String alert_name, String description, String parkCode) {
+        this.alert_id = alert_id;
+        this.alert_name = alert_name;
+        this.description = description;
+        this.parkCode = parkCode;
     }
 }

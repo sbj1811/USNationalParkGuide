@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.sjani.usnationalparkguide.R;
 import com.sjani.usnationalparkguide.UI.Details.DetailViewModel;
@@ -30,6 +31,8 @@ public class CampgroundFragment extends Fragment implements OnListFragmentIntera
     private static final String PARK_CODE = "parkcode";
     @BindView(R.id.rv_camp)
     RecyclerView recyclerView;
+    @BindView(R.id.camp_loading_indicator)
+    ProgressBar progressBar;
     private String parkCode;
     private String campId;
     private CampgroundRecyclerViewAdapter adapter;
@@ -78,6 +81,7 @@ public class CampgroundFragment extends Fragment implements OnListFragmentIntera
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+        progressBar.setVisibility(View.VISIBLE);
         String apiKey = getResources().getString(R.string.NPSapiKey);
         String trailApiKey = getResources().getString(R.string.HPapiKey);
         String fields = getResources().getString(R.string.fields_cg);
@@ -89,6 +93,7 @@ public class CampgroundFragment extends Fragment implements OnListFragmentIntera
         adapter = new CampgroundRecyclerViewAdapter(this, getContext());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
 

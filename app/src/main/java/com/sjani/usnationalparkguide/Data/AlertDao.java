@@ -21,4 +21,7 @@ public interface AlertDao {
     @Query("DELETE FROM alerts")
     void clearTable();
 
+    @Query("SELECT * FROM alerts")
+    List<AlertEntity> getAllAlerts2();
+
 }

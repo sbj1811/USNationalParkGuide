@@ -147,7 +147,6 @@ public class ParkRepository {
         NPSApiConnection.getApi().getCampgound(parkCode, apiKey, fields).enqueue(new Callback<Campground>() {
             @Override
             public void onResponse(Call<Campground> call, Response<Campground> response) {
-                Log.e(TAG, "onResponse: HERE: "+response);
                 camps = response.body().getData();
                 Observable.fromCallable(() -> {
                     campDao.clearTable();
@@ -226,7 +225,6 @@ public class ParkRepository {
         NPSApiConnection.getApi().getAlerts(parkCode, apiKey).enqueue(new Callback<Alert>() {
             @Override
             public void onResponse(Call<Alert> call, Response<Alert> response) {
-                Log.e(TAG, "onResponse: HERE: "+response);
                 alerts = response.body().getData();
                 Observable.fromCallable(() -> {
                     alertDao.clearTable();

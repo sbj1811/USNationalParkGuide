@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.sjani.usnationalparkguide.R;
 import com.sjani.usnationalparkguide.UI.Details.DetailViewModel;
@@ -31,6 +32,8 @@ public class TrailFragment extends Fragment implements OnListFragmentInteraction
     private static final String PARK_CODE = "parkcode";
     @BindView(R.id.rv_trail)
     RecyclerView recyclerView;
+    @BindView(R.id.trail_loading_indicator)
+    ProgressBar progressBar;
     private String latLong;
     private String trailId;
     private String parkCode;
@@ -78,6 +81,7 @@ public class TrailFragment extends Fragment implements OnListFragmentInteraction
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+        progressBar.setVisibility(View.VISIBLE);
         String apiKey = getResources().getString(R.string.NPSapiKey);
         String trailApiKey = getResources().getString(R.string.HPapiKey);
         String fields = getResources().getString(R.string.fields_cg);
@@ -89,6 +93,7 @@ public class TrailFragment extends Fragment implements OnListFragmentInteraction
         adapter = new TrailRecyclerViewAdapter(this, getContext());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
 
