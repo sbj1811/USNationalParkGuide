@@ -124,82 +124,84 @@ public class TrailDetailDialogFragment extends DialogFragment {
 
 
     private void updateUI(TrailEntity trailEntity) {
-        title = trailEntity.getTrail_name();
-        titleTv.setText(title);
-        String distance = trailEntity.getLength();
-        distanceTv.setText(distance + " " + getContext().getResources().getString(R.string.miles));
-        String elevation = trailEntity.getAscent();
-        elevationTv.setText(elevation + " " + getContext().getResources().getString(R.string.ft));
-        String address = trailEntity.getLocation();
-        ;
-        trailAddressTv.setText(address);
-        latitude = trailEntity.getLatitude();
-        ;
-        longitude = trailEntity.getLongitude();
-        ;
-        addressLl.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_VIEW,
-                        Uri.parse("geo:" + latitude + "," + longitude + "?z=10"));
-                startActivity(intent);
+        if (trailEntity != null) {
+            title = trailEntity.getTrail_name();
+            titleTv.setText(title);
+            String distance = trailEntity.getLength();
+            distanceTv.setText(distance + " " + getContext().getResources().getString(R.string.miles));
+            String elevation = trailEntity.getAscent();
+            elevationTv.setText(elevation + " " + getContext().getResources().getString(R.string.ft));
+            String address = trailEntity.getLocation();
+            ;
+            trailAddressTv.setText(address);
+            latitude = trailEntity.getLatitude();
+            ;
+            longitude = trailEntity.getLongitude();
+            ;
+            addressLl.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("geo:" + latitude + "," + longitude + "?z=10"));
+                    startActivity(intent);
+                }
+            });
+            String summary = trailEntity.getSummary();
+            summaryTv.setText(summary);
+            String condition = trailEntity.getCondition();
+            if (!(condition == null)) {
+                if (!condition.equals("")) {
+                    conditionTv.setText(condition);
+                }
+            } else {
+                conditionTv.setText(getActivity().getResources().getString(R.string.na));
             }
-        });
-        String summary = trailEntity.getSummary();
-        summaryTv.setText(summary);
-        String condition = trailEntity.getCondition();
-        if (!(condition == null)) {
-            if (!condition.equals("")) {
-                conditionTv.setText(condition);
+            String difficultyMark = trailEntity.getDifficulty();
+            String difficultyLevel;
+            if (difficultyMark.equals("greenBlue")) {
+                difficultyLevel = getContext().getResources().getString(R.string.easy);
+            } else if (difficultyMark.equals("blue")) {
+                difficultyLevel = getContext().getResources().getString(R.string.moderate);
+            } else if (difficultyMark.equals("blueBlack")) {
+                difficultyLevel = getContext().getResources().getString(R.string.strenuous);
+            } else {
+                difficultyLevel = getContext().getResources().getString(R.string.unknown);
             }
-        } else {
-            conditionTv.setText(getActivity().getResources().getString(R.string.na));
-        }
-        String difficultyMark = trailEntity.getDifficulty();
-        String difficultyLevel;
-        if (difficultyMark.equals("greenBlue")) {
-            difficultyLevel = getContext().getResources().getString(R.string.easy);
-        } else if (difficultyMark.equals("blue")) {
-            difficultyLevel = getContext().getResources().getString(R.string.moderate);
-        } else if (difficultyMark.equals("blueBlack")) {
-            difficultyLevel = getContext().getResources().getString(R.string.strenuous);
-        } else {
-            difficultyLevel = getContext().getResources().getString(R.string.unknown);
-        }
-        difficultyTv.setText(difficultyLevel);
-        String imageUrl = trailEntity.getImage_med();
-        if (imageUrl.equals("")) {
-            Glide.with(trailIv.getContext())
-                    .load(R.drawable.empty_detail)
-                    .apply(new RequestOptions()
-                            .fitCenter())
-                    .into(trailIv);
-        } else {
-            Glide.with(trailIv.getContext())
-                    .load(imageUrl)
-                    .apply(new RequestOptions()
-                            .fitCenter())
-                    .into(trailIv);
-        }
+            difficultyTv.setText(difficultyLevel);
+            String imageUrl = trailEntity.getImage_med();
+            if (imageUrl.equals("")) {
+                Glide.with(trailIv.getContext())
+                        .load(R.drawable.empty_detail)
+                        .apply(new RequestOptions()
+                                .fitCenter())
+                        .into(trailIv);
+            } else {
+                Glide.with(trailIv.getContext())
+                        .load(imageUrl)
+                        .apply(new RequestOptions()
+                                .fitCenter())
+                        .into(trailIv);
+            }
 
-        shareButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-                sharingIntent.setType("text/plain");
-                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, title);
-                sharingIntent.putExtra(Intent.EXTRA_TEXT, title + "\nOpen in Google Maps https://maps.google.com/?q=" + latitude + "," + longitude);
-                startActivity(Intent.createChooser(sharingIntent, "Share via"));
-            }
-        });
+            shareButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                    sharingIntent.setType("text/plain");
+                    sharingIntent.putExtra(Intent.EXTRA_SUBJECT, title);
+                    sharingIntent.putExtra(Intent.EXTRA_TEXT, title + "\nOpen in Google Maps https://maps.google.com/?q=" + latitude + "," + longitude);
+                    startActivity(Intent.createChooser(sharingIntent, "Share via"));
+                }
+            });
 
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-                getActivity().onBackPressed();
-            }
-        });
+            backButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dismiss();
+                    getActivity().onBackPressed();
+                }
+            });
+        }
     }
 
 

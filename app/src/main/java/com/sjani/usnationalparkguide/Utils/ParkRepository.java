@@ -208,12 +208,12 @@ public class ParkRepository {
         campEntity.setCellPhoneReception(p.getAmenities().getCellPhoneReception());
         campEntity.setShowers(showers);
         String toilets;
-        if (p.getAmenities().getToilets().size() != 0) {
+        if (p.getAmenities().getToilets() != null && p.getAmenities().getToilets().size() != 0) {
             toilets = p.getAmenities().getToilets().get(0);
         } else {
             toilets = String.valueOf(R.string.none);
         }
-        campEntity.setInternetConnectivity(p.getAmenities().getInternetConnectivity().toString());
+        if(p.getAmenities().getInternetConnectivity() != null) campEntity.setInternetConnectivity(p.getAmenities().getInternetConnectivity().toString());
         campEntity.setToilets(toilets);
         campEntity.setWheelchairAccess(p.getAccessibility().getWheelchairAccess());
         campEntity.setReservationsUrl(p.getReservationsUrl());

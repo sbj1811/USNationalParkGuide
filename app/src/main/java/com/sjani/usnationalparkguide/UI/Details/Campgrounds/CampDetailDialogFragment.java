@@ -125,93 +125,93 @@ public class CampDetailDialogFragment extends DialogFragment {
     }
 
     private void updateUI(CampEntity campEntity) {
-        title = campEntity.getCamp_name();
-        titleTv.setText(title);
-        String summary = campEntity.getDescription();
-        summaryTv.setText(summary);
-        String address = campEntity.getAddress();
-        addressTv.setText(address);
-        String latLong = campEntity.getLatLong();
-        StringToGPSCoordinates stringToGPSCoordinates = new StringToGPSCoordinates();
-        final String gpsCoodinates[] = stringToGPSCoordinates.convertToGPS(latLong);
-        latitude = gpsCoodinates[0];
-        latitude = gpsCoodinates[1];
-        addressLinearLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_VIEW,
-                        Uri.parse("geo:" + latitude + "," + latitude + "?q=" + latitude + "," + longitude + "?z=10"));
-                startActivity(intent);
-            }
-        });
-        String cellrecep = campEntity.getCellPhoneReception();
-        if (cellrecep.equals("Yes - year round")) {
-            cellrecepIv.setImageResource(R.drawable.ic_check_circle);
-        } else {
-            cellrecepIv.setImageResource(R.drawable.ic_cancel);
-        }
-        String showers = campEntity.getShowers();
-        if (showers.equals("None")) {
-            showersIv.setImageResource(R.drawable.ic_cancel);
-        } else {
-            showersIv.setImageResource(R.drawable.ic_check_circle);
-        }
-        String toilets = campEntity.getToilets();
-        if (toilets.equals("None")) {
-            toiletsIv.setImageResource(R.drawable.ic_cancel);
-        } else {
-            toiletsIv.setImageResource(R.drawable.ic_check_circle);
-        }
-        String internet = campEntity.getInternetConnectivity();
-        if (internet.equals("true")) {
-            internetIv.setImageResource(R.drawable.ic_check_circle);
-        } else {
-            internetIv.setImageResource(R.drawable.ic_cancel);
-        }
-        String wheelchair = campEntity.getWheelchairAccess();
-        wheelchairTv.setText(wheelchair);
-        final String reservationUrl = campEntity.getReservationsUrl();
-        reservationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (reservationUrl.equals("")) {
-                    Toast.makeText(getContext(), getContext().getResources().getString(R.string.reservatiton_message), Toast.LENGTH_SHORT).show();
-                } else {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(reservationUrl));
-                    startActivity(browserIntent);
+        if (campEntity != null) {
+            title = campEntity.getCamp_name();
+            titleTv.setText(title);
+            String summary = campEntity.getDescription();
+            summaryTv.setText(summary);
+            String address = campEntity.getAddress();
+            addressTv.setText(address);
+            String latLong = campEntity.getLatLong();
+            StringToGPSCoordinates stringToGPSCoordinates = new StringToGPSCoordinates();
+            final String gpsCoodinates[] = stringToGPSCoordinates.convertToGPS(latLong);
+            latitude = gpsCoodinates[0];
+            latitude = gpsCoodinates[1];
+            addressLinearLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("geo:" + latitude + "," + latitude + "?q=" + latitude + "," + longitude + "?z=10"));
+                    startActivity(intent);
                 }
-            }
-        });
-        final String directionUrl = campEntity.getDirectionsUrl();
-        directionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (directionUrl.equals("")) {
-                    Toast.makeText(getContext(), getContext().getResources().getString(R.string.direction_message), Toast.LENGTH_SHORT).show();
+            });
+            String cellrecep = campEntity.getCellPhoneReception();
+            if (cellrecep != null) {
+                if (cellrecep.equals("Yes - year round")) {
+                    cellrecepIv.setImageResource(R.drawable.ic_check_circle);
                 } else {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(directionUrl));
-                    startActivity(browserIntent);
+                    cellrecepIv.setImageResource(R.drawable.ic_cancel);
                 }
+            } else {
+                cellrecepIv.setImageResource(R.drawable.ic_cancel);
             }
-        });
-        shareButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-                sharingIntent.setType("text/plain");
-                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, title);
-                sharingIntent.putExtra(Intent.EXTRA_TEXT, title + "\nOpen in Google Maps https://maps.google.com/?q=" + gpsCoodinates[0] + "," + gpsCoodinates[1]);
-                startActivity(Intent.createChooser(sharingIntent, "Share via"));
+            String showers = campEntity.getShowers();
+            if (showers != null) {
+                if (showers.equals("None")) {
+                    showersIv.setImageResource(R.drawable.ic_cancel);
+                } else {
+                    showersIv.setImageResource(R.drawable.ic_check_circle);
+                }
+            } else {
+                showersIv.setImageResource(R.drawable.ic_cancel);
             }
-        });
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-                getActivity().onBackPressed();
+            String toilets = campEntity.getToilets();
+            if (toilets != null) {
+                if (toilets.equals("None")) {
+                    toiletsIv.setImageResource(R.drawable.ic_cancel);
+                } else {
+                    toiletsIv.setImageResource(R.drawable.ic_check_circle);
+                }
+            } else {
+                toiletsIv.setImageResource(R.drawable.ic_cancel);
             }
-        });
+            String internet = campEntity.getInternetConnectivity();
+            if (internet != null) {
+                if (internet.equals("true")) {
+                    internetIv.setImageResource(R.drawable.ic_check_circle);
+                } else {
+                    internetIv.setImageResource(R.drawable.ic_cancel);
+                }
+            } else {
+                internetIv.setImageResource(R.drawable.ic_cancel);
+            }
+            String wheelchair = campEntity.getWheelchairAccess();
+            wheelchairTv.setText(wheelchair);
+            final String reservationUrl = campEntity.getReservationsUrl();
+            reservationButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (reservationUrl.equals("")) {
+                        Toast.makeText(getContext(), getContext().getResources().getString(R.string.reservatiton_message), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(reservationUrl));
+                        startActivity(browserIntent);
+                    }
+                }
+            });
+            final String directionUrl = campEntity.getDirectionsUrl();
+            directionButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (directionUrl.equals("")) {
+                        Toast.makeText(getContext(), getContext().getResources().getString(R.string.direction_message), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(directionUrl));
+                        startActivity(browserIntent);
+                    }
+                }
+            });
+        }
     }
-
 
 }

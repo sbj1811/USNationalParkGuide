@@ -148,93 +148,95 @@ public class TrailDetailFragment extends Fragment {
     }
 
     private void updateUI(TrailEntity trailEntity) {
-        title = trailEntity.getTrail_name();
-        titleTv.setText(title);
-        String distance = trailEntity.getLength();
-        distanceTv.setText(distance + " " + getContext().getResources().getString(R.string.miles));
-        String elevation = trailEntity.getAscent();
-        elevationTv.setText(elevation + " " + getContext().getResources().getString(R.string.ft));
-        String address = trailEntity.getLocation();
-        ;
-        trailAddressTv.setText(address);
-        latitude = trailEntity.getLatitude();
-        ;
-        longitude = trailEntity.getLongitude();
-        ;
-        addressLl.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_VIEW,
-                        Uri.parse("geo:" + latitude + "," + longitude + "?z=10"));
-                startActivity(intent);
+        if (trailEntity != null) {
+            title = trailEntity.getTrail_name();
+            titleTv.setText(title);
+            String distance = trailEntity.getLength();
+            distanceTv.setText(distance + " " + getContext().getResources().getString(R.string.miles));
+            String elevation = trailEntity.getAscent();
+            elevationTv.setText(elevation + " " + getContext().getResources().getString(R.string.ft));
+            String address = trailEntity.getLocation();
+            ;
+            trailAddressTv.setText(address);
+            latitude = trailEntity.getLatitude();
+            ;
+            longitude = trailEntity.getLongitude();
+            ;
+            addressLl.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("geo:" + latitude + "," + longitude + "?z=10"));
+                    startActivity(intent);
+                }
+            });
+            String summary = trailEntity.getSummary();
+            summaryTv.setText(summary);
+            String condition = trailEntity.getCondition();
+            if (!(condition == null)) {
+                if (!condition.equals("")) {
+                    conditionTv.setText(condition);
+                }
+            } else {
+                conditionTv.setText(getActivity().getResources().getString(R.string.na));
             }
-        });
-        String summary = trailEntity.getSummary();
-        summaryTv.setText(summary);
-        String condition = trailEntity.getCondition();
-        if (!(condition == null)) {
-            if (!condition.equals("")) {
-                conditionTv.setText(condition);
+            String difficultyMark = trailEntity.getDifficulty();
+            String difficultyLevel;
+            if (difficultyMark.equals("greenBlue")) {
+                difficultyLevel = getContext().getResources().getString(R.string.easy);
+            } else if (difficultyMark.equals("blue")) {
+                difficultyLevel = getContext().getResources().getString(R.string.moderate);
+            } else if (difficultyMark.equals("blueBlack")) {
+                difficultyLevel = getContext().getResources().getString(R.string.strenuous);
+            } else {
+                difficultyLevel = getContext().getResources().getString(R.string.unknown);
             }
-        } else {
-            conditionTv.setText(getActivity().getResources().getString(R.string.na));
-        }
-        String difficultyMark = trailEntity.getDifficulty();
-        String difficultyLevel;
-        if (difficultyMark.equals("greenBlue")) {
-            difficultyLevel = getContext().getResources().getString(R.string.easy);
-        } else if (difficultyMark.equals("blue")) {
-            difficultyLevel = getContext().getResources().getString(R.string.moderate);
-        } else if (difficultyMark.equals("blueBlack")) {
-            difficultyLevel = getContext().getResources().getString(R.string.strenuous);
-        } else {
-            difficultyLevel = getContext().getResources().getString(R.string.unknown);
-        }
-        difficultyTv.setText(difficultyLevel);
-        String imageUrl = trailEntity.getImage_med();
-        if (imageUrl.equals("")) {
-            Glide.with(trailIv.getContext())
-                    .load(R.drawable.empty_detail)
-                    .apply(new RequestOptions()
-                            .fitCenter())
-                    .into(trailIv);
-        } else {
-            Glide.with(trailIv.getContext())
-                    .load(imageUrl)
-                    .apply(new RequestOptions()
-                            .fitCenter())
-                    .into(trailIv);
+            difficultyTv.setText(difficultyLevel);
+            String imageUrl = trailEntity.getImage_med();
+            if (imageUrl.equals("")) {
+                Glide.with(trailIv.getContext())
+                        .load(R.drawable.empty_detail)
+                        .apply(new RequestOptions()
+                                .fitCenter())
+                        .into(trailIv);
+            } else {
+                Glide.with(trailIv.getContext())
+                        .load(imageUrl)
+                        .apply(new RequestOptions()
+                                .fitCenter())
+                        .into(trailIv);
 
-            Picasso.with(trailIv.getContext())
-                    .load(imageUrl)
-                    .into(new Target() {
-                        @Override
-                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                            Palette.from(bitmap).maximumColorCount(24).generate(new Palette.PaletteAsyncListener() {
-                                @Override
-                                public void onGenerated(Palette palette) {
+                Picasso.with(trailIv.getContext())
+                        .load(imageUrl)
+                        .into(new Target() {
+                            @Override
+                            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                Palette.from(bitmap).maximumColorCount(24).generate(new Palette.PaletteAsyncListener() {
+                                    @Override
+                                    public void onGenerated(Palette palette) {
 
-                                    int defaultColor = 0x000000;
-                                    int lightMutedColor = palette.getLightMutedColor(defaultColor);
-                                    int darkMutedColor = palette.getDarkMutedColor(defaultColor);
-                                    if (collapsingToolbarLayout != null) {
-                                        collapsingToolbarLayout.setContentScrimColor(lightMutedColor);
-                                        collapsingToolbarLayout.setStatusBarScrimColor(darkMutedColor);
+                                        int defaultColor = 0x000000;
+                                        int lightMutedColor = palette.getLightMutedColor(defaultColor);
+                                        int darkMutedColor = palette.getDarkMutedColor(defaultColor);
+                                        if (collapsingToolbarLayout != null) {
+                                            collapsingToolbarLayout.setContentScrimColor(lightMutedColor);
+                                            collapsingToolbarLayout.setStatusBarScrimColor(darkMutedColor);
+                                        }
                                     }
-                                }
-                            });
-                        }
+                                });
+                            }
 
-                        @Override
-                        public void onBitmapFailed(Drawable errorDrawable) {
+                            @Override
+                            public void onBitmapFailed(Drawable errorDrawable) {
 
-                        }
+                            }
 
-                        @Override
-                        public void onPrepareLoad(Drawable placeHolderDrawable) {
+                            @Override
+                            public void onPrepareLoad(Drawable placeHolderDrawable) {
 
-                        }
-                    });
+                            }
+                        });
+            }
         }
     }
 
