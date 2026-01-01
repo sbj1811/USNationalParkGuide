@@ -1,16 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#E07936</color>
-    <color name="colorPrimaryDark">#C16830</color>
-    <color name="colorPrimaryCenter">#CC6D33</color>
-    <color name="colorAccent">#009688</color>
-    <color name="colorAccent2">#D0AF9C</color>
-    <color name="colorAccent3">#8BB4C9</color>
-    <color name="colorAccent4">#425225</color>
-    <color name="Black">#000000</color>
+    <!-- Primary Colors - Forest Theme -->
+    <color name="forest_green">#2D5016</color>
+    <color name="deep_forest">#1A3009</color>
+    <color name="moss_green">#4A7023</color>
+    <color name="sage_green">#87A96B</color>
+    <color name="light_sage">#B8D4A8</color>
+    
+    <!-- Accent Colors -->
+    <color name="sunset_orange">#E8733E</color>
+    <color name="warm_amber">#F5A623</color>
+    <color name="sandstone">#DEB887</color>
+    
+    <!-- Blue Accents -->
+    <color name="sky_blue">#5DADE2</color>
+    <color name="mountain_blue">#2E86AB</color>
+    
+    <!-- Neutrals -->
+    <color name="rock_gray">#6B6B6B</color>
+    <color name="stone_gray">#9E9E9E</color>
+    <color name="light_stone">#F5F5F5</color>
+    <color name="background">#FBF6EF</color>
+    
+    <!-- Alert Colors -->
+    <color name="alert_red">#D32F2F</color>
+    <color name="warning_yellow">#FFC107</color>
+    <color name="success_green">#388E3C</color>
+    
+    <!-- Dark Theme -->
+    <color name="dark_background">#121212</color>
+    <color name="dark_surface">#1E1E1E</color>
+    <color name="dark_card">#2D2D2D</color>
+    
+    <!-- Legacy colors for compatibility -->
+    <color name="colorPrimary">#2D5016</color>
+    <color name="colorPrimaryDark">#1A3009</color>
+    <color name="colorAccent">#E8733E</color>
+    
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    
+    <!-- Legacy colors for old XML layouts -->
     <color name="White">#FFFFFF</color>
-    <color name="primaryText">#373737</color>
-    <color name="secondaryText">#707070</color>
-    <color name="tertiaryText">#5D5D5D</color>
-    <color name="transparent">#0000</color>
+    <color name="colorPrimaryCenter">#3D6A1E</color>
+    <color name="colorAccent2">#F5A623</color>
+    <color name="primaryText">#212121</color>
+    <color name="secondaryText">#757575</color>
+    <color name="tertiaryText">#9E9E9E</color>
 </resources>

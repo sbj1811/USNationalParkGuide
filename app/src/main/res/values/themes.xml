@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <!-- Main app theme with splash screen support -->
+    <style name="Theme.USNationalParkGuide" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@drawable/onboarding_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_app_square</item>
+        <item name="postSplashScreenTheme">@style/Theme.USNationalParkGuide.Main</item>
+    </style>
+    
+    <!-- Post splash screen theme -->
+    <style name="Theme.USNationalParkGuide.Main" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:colorPrimary">@color/forest_green</item>
+        <item name="android:colorPrimaryDark">@color/deep_forest</item>
+        <item name="android:colorAccent">@color/sunset_orange</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+    </style>
+    
+    <!-- Firebase Auth UI theme - No ActionBar -->
+    <style name="Theme.USNationalParkGuide.FirebaseAuth" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/forest_green</item>
+        <item name="colorPrimaryDark">@color/deep_forest</item>
+        <item name="colorAccent">@color/sunset_orange</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+    
+</resources>
+

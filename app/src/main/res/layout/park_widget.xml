@@ -1,106 +1,27 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/widget_main"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#09C"
-    android:padding="@dimen/widget_margin">
+    android:background="@color/forest_green"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="16dp">
 
-    <ImageView
-        android:id="@+id/park_widget_thumbnail"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/empty_widget_state"
-        android:contentDescription="@string/image"
-        android:scaleType="centerCrop" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/widget_title"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#7000"
-        android:orientation="vertical">
+        android:text="@string/app_name"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/park_widget_title"
-            style="@style/TextAppearance.AppCompat.Subhead"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="none"
-            android:maxLines="100"
-            android:paddingLeft="16dp"
-            android:paddingTop="16dp"
-            android:paddingRight="16dp"
-            android:paddingBottom="8dp"
-            android:scrollHorizontally="false"
-            android:textColor="@color/White"
-            tools:text="Park Title" />
+    <TextView
+        android:id="@+id/widget_subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tap to explore"
+        android:textColor="@android:color/white"
+        android:textSize="12sp" />
 
-        <!--<LinearLayout-->
-        <!--android:id="@+id/widget_weather_layout"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:orientation="horizontal"-->
-        <!--android:paddingBottom="8dp"-->
-        <!--android:paddingLeft="16dp"-->
-        <!--android:paddingRight="16dp"-->
-        <!--android:paddingTop="8dp">-->
-
-        <!--&lt;!&ndash;<TextView&ndash;&gt;-->
-        <!--&lt;!&ndash;android:id="@+id/park_widget_weather_header"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:layout_marginEnd="8dp"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:layout_marginRight="8dp"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:text="@string/curr_condition"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:textColor="@color/White" />&ndash;&gt;-->
-
-        <!--&lt;!&ndash;<TextView&ndash;&gt;-->
-        <!--&lt;!&ndash;android:id="@+id/park_widget_temp"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:layout_marginEnd="8dp"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:layout_marginRight="8dp"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:textColor="@color/White" />&ndash;&gt;-->
-
-        <!--<TextView-->
-        <!--android:id="@+id/park_widget_condition"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:textColor="@color/White" />-->
-
-        <!--</LinearLayout>-->
-
-        <!--<LinearLayout-->
-        <!--android:id="@+id/widget_distance_layout"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:orientation="horizontal"-->
-        <!--android:paddingBottom="16dp"-->
-        <!--android:paddingLeft="16dp"-->
-        <!--android:paddingRight="16dp"-->
-        <!--android:paddingTop="8dp">-->
-
-        <!--<TextView-->
-        <!--android:id="@+id/park_widget_distance_header"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginEnd="8dp"-->
-        <!--android:layout_marginRight="8dp"-->
-        <!--android:text="@string/distance"-->
-        <!--android:textColor="@color/White" />-->
-
-        <!--<TextView-->
-        <!--android:id="@+id/park_widget_distance"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginEnd="8dp"-->
-        <!--android:layout_marginRight="8dp"-->
-        <!--android:textColor="@color/White" />-->
-
-        <!--</LinearLayout>-->
-
-    </LinearLayout>
-
-
-</RelativeLayout>
+</LinearLayout>

@@ -1,60 +1,30 @@
 <resources>
 
-    <!-- Base application theme. -->
+    <!-- Base application theme (legacy compatibility) -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-    </style>
-
-    <style name="DetailTheme" parent="AppTheme">
-        <item name="windowActionBarOverlay">true</item>
-        <item name="colorPrimary">@android:color/transparent</item>
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-
-    <style name="TabLayoutTheme" parent="AppTheme">
-        <item name="android:singleLine">true</item>
-    </style>
-
+    
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:windowContentOverlay">@null</item>
-        <item name="windowActionBarOverlay">true</item>
-        <item name="colorPrimary">@android:color/transparent</item>
     </style>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
-        <item name="android:color">@android:color/white</item>
-    </style>
-
-    <style name="DetailDialog" parent="AppTheme">
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowFullscreen">true</item>
-        <item name="android:windowIsFloating">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
-        <item name="android:windowSoftInputMode">adjustPan</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowMinWidthMinor">90%</item>
-        <item name="android:windowMinWidthMajor">60%</item>
-    </style>
-
-    <style name="LoginTheme" parent="FirebaseUI">
-        <!-- Required for sign-in flow styling -->
+    <!-- Login theme for FirebaseUI -->
+    <style name="LoginTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-
         <item name="colorControlNormal">@color/colorPrimary</item>
         <item name="colorControlActivated">@color/colorPrimaryDark</item>
         <item name="colorControlHighlight">@color/colorPrimary</item>
-        <item name="android:windowBackground">@color/colorAccent2</item>
+        <item name="android:windowBackground">@color/light_sage</item>
     </style>
 
 </resources>

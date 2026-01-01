@@ -1,116 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.sjani.usnationalparkguide">
+    xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Network permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    
+    <!-- Location permissions -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
-    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
-    <uses-permission android:name="android.permission.READ_SYNC_STATS" />
-    <uses-permission android:name="android.permission.VIBRATE" />
+    
+    <!-- Notification permission for Android 13+ (API 33+) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
-        android:allowBackup="true"
         android:name=".NPGApplication"
+        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:enableOnBackInvokedCallback="true"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:theme="@style/Theme.USNationalParkGuide"
+        tools:targetApi="36">
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-1510923228147176~5607247189" />
 
         <activity
-            android:name=".UI.MainList.MainListActivity"
+            android:name=".MainActivity"
+            android:exported="true"
             android:label="@string/app_name"
-            android:launchMode="singleTask"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/Theme.USNationalParkGuide">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <!-- Branch URI scheme -->
-            <intent-filter>
-                <data android:scheme="npgapp-android" android:host="open" />
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-            </intent-filter>
-
-            <!-- Branch App Links -->
-            <intent-filter android:autoVerify="true">
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https" android:host="npg.app.link" />
-            </intent-filter>
-
         </activity>
 
-        <activity
-            android:name=".UI.Details.DetailsActivity"
-            android:parentActivityName=".UI.MainList.MainListActivity"
-            android:theme="@style/DetailTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".UI.MainList.MainListActivity" />
-        </activity>
-        <activity
-            android:name=".UI.Details.Trails.TrailDetailActivity"
-            android:parentActivityName=".UI.Details.DetailsActivity"
-            android:theme="@style/DetailTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".UI.Details.DetailsActivity" />
-        </activity>
-        <activity
-            android:name=".UI.Details.Campgrounds.CampDetailActivity"
-            android:parentActivityName=".UI.Details.DetailsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".UI.Details.DetailsActivity" />
-        </activity>
-
-        <receiver android:name=".UI.Widget.ParkWidgetProvider">
+        <receiver
+            android:name=".widget.ParkWidgetReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
-
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/park_widget_info" />
-        </receiver>
-
-        <service
-            android:name=".UI.Widget.ParkWidgetService"
-            android:exported="false"
-            android:permission="android.permission.BIND_REMOTEVIEWS" />
-
-        <activity
-            android:name=".UI.Settings.SettingsActivity"
-            android:parentActivityName=".UI.MainList.MainListActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".UI.MainList.MainListActivity" />
-        </activity>
-
-        <!-- Branch init -->
-        <meta-data android:name="io.branch.sdk.BranchKey" android:value="undefined" />
-        <meta-data android:name="io.branch.sdk.BranchKey.test" android:value="undefined" />
-
-        <!-- Branch testing (TestMode "true" to simulate fresh installs on dev environment) -->
-        <meta-data android:name="io.branch.sdk.TestMode" android:value="false" />
-
-        <!-- Branch install referrer tracking -->
-        <receiver android:name="io.branch.referral.InstallListener" android:exported="true">
-            <intent-filter>
-                <action android:name="com.android.vending.INSTALL_REFERRER" />
-            </intent-filter>
         </receiver>
 
     </application>
