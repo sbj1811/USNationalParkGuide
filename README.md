@@ -8,7 +8,7 @@ Perfect for tourists, hikers, and outdoor enthusiasts planning their next advent
 
 ![NPS App][NPS-app]
 
-[NPS-app]: ./media/app_banner.jpg
+[NPS-app]: ./redesign_assets_v1/screenshots/banner.png
 
 ## Features
 
@@ -71,12 +71,11 @@ Perfect for tourists, hikers, and outdoor enthusiasts planning their next advent
 
 | Onboarding | Home | Park Details |
 |------------|------|--------------|
-| ![Onboarding](redesign_assets_v1/mocks/onboarding_screen_1080x2400.png) | ![Home](redesign_assets_v1/mocks/home_screen_1080x2400.png) | ![Details](redesign_assets_v1/mocks/park_detail_screen_1080x2400.png) |
-
+| ![Onboarding](redesign_assets_v1/screenshots/welcome.png) | ![Home](redesign_assets_v1/screenshots/home.png) | ![Details](redesign_assets_v1/screenshots/park_detail.png) |
+![park_detail.png](redesign_assets_v1/screenshots/park_detail.png)
 | Trails | Campgrounds | Conditions |
 |--------|-------------|------------|
-| ![Trails](redesign_assets_v1/mocks/trails_screen_1080x2400.png) | ![Campgrounds](redesign_assets_v1/mocks/campground_screen_1080x2400.png) | ![Conditions](redesign_assets_v1/mocks/conditions_screen_1080x2400.png) |
-
+| ![Trails](redesign_assets_v1/mocks/trails_screen_1080x2400.png) | ![Campgrounds] |(redesign_assets_v1/screenshots/camp.png) ![Alerts](redesign_assets_v1/screenshots/alerts.png) |
 ## Getting Started
 
 ### Prerequisites

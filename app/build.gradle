@@ -13,9 +13,11 @@ android {
     defaultConfig {
         applicationId "com.sjani.usnationalparkguide"
         minSdk 23
-        targetSdk 36
-        versionCode 15
-        versionName "2026.1.1"
+        // Target SDK 34 to avoid 16KB page size requirement until libraries are updated
+        targetSdk 34
+        // Use a high versionCode to ensure upgrade path from any previous version
+        versionCode 100
+        versionName "2026.1.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         
         vectorDrawables {
