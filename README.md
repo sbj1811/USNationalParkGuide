@@ -62,26 +62,25 @@ Perfect for tourists, hikers, and outdoor enthusiasts planning their next advent
 | Widgets | [Glance](https://developer.android.com/jetpack/compose/glance) for App Widgets |
 
 ### Build Configuration
-- **Target SDK**: 36 (Android 16)
-- **Min SDK**: 24 (Android 7.0)
+- **Target SDK**: 35 (Android 15)
+- **Min SDK**: 23 (Android 6.0)
 - **Kotlin**: 1.9.24
 - **Compose BOM**: 2024.11.00
 
 ## Screenshots
 
-| Onboarding | Home | Park Details |
-|------------|------|--------------|
-| ![Onboarding](redesign_assets_v1/screenshots/welcome.png) | ![Home](redesign_assets_v1/screenshots/home.png) | ![Details](redesign_assets_v1/screenshots/park_detail.png) |
-![park_detail.png](redesign_assets_v1/screenshots/park_detail.png)
-| Trails | Campgrounds | Conditions |
-|--------|-------------|------------|
-| ![Trails](redesign_assets_v1/mocks/trails_screen_1080x2400.png) | ![Campgrounds] |(redesign_assets_v1/screenshots/camp.png) ![Alerts](redesign_assets_v1/screenshots/alerts.png) |
+| Onboarding                                                                    | Home                                                             | Park Details                                                            |
+|-------------------------------------------------------------------------------|------------------------------------------------------------------|-------------------------------------------------------------------------|
+| <img width="250" src="redesign_assets_v1/screenshots/welcome.png"/>           | <img width="250" src="redesign_assets_v1/screenshots/home.png"/> | <img width="250" src="redesign_assets_v1/screenshots/park_detail.png"/> |
+| Trails                                                                        | Campgrounds                                                      | Conditions                                                              |
+| --------                                                                      | -------------                                                    | ------------                                                            |
+| <img width="250" src="redesign_assets_v1/mocks/trails_screen_1080x2400.png"/> | <img width="250" src="redesign_assets_v1/screenshots/camp.png"/> | <img width="250" src="redesign_assets_v1/screenshots/alerts.png"/>      |
 ## Getting Started
 
 ### Prerequisites
 - Android Studio Ladybug or later
 - JDK 17+
-- Android SDK 36
+- Android SDK 35
 
 ### API Keys
 You'll need to obtain API keys for:
