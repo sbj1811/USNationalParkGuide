@@ -16,8 +16,8 @@ android {
         // Updated to target SDK 36 (Android 16) for Play Store compliance
         targetSdk 36
         // Use a high versionCode to ensure upgrade path from any previous version
-        versionCode 100
-        versionName "2026.1.2"
+        versionCode 101
+        versionName "2026.1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         
         vectorDrawables {
